@@ -2,14 +2,14 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "../screens/Login";
 import DrawerNavigator from "./DrawerNavigator";
-import LeadDetails from "../screens/Leads/LeadDetails";
+import LeadDetails from "../screens/Leads/LeadDetails/LeadDetails";
 
 const Stack = createNativeStackNavigator();
 
 export default function Route() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Main">
         <Stack.Screen
           name="Login"
           component={Login}

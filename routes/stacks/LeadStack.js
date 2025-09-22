@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { colors } from "../../constants/colors";
 import LeadsMain from "../../screens/Leads/LeadsMain";
-import LeadDetails from "../../screens/Leads/LeadDetails";
+import LeadDetails from "../../screens/Leads/LeadDetails/LeadDetails";
 
 const Stack = createNativeStackNavigator();
 
