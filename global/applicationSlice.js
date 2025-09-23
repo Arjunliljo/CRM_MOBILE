@@ -1,7 +1,7 @@
 // src/features/counterSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
-const lead = {
+const application = {
   img: "https://static.vecteezy.com/system/resources/thumbnails/036/594/092/small/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg",
   name: "John Doe",
   phone: "1234567890",
@@ -17,11 +17,11 @@ const lead = {
   course: "Bachelor of Science",
 };
 
-const leadSlice = createSlice({
-  name: "lead",
+const applicationSlice = createSlice({
+  name: "student",
   initialState: { value: 0, curLead: lead, source: "Source" },
   reducers: {
-    setCurLead: (state, action) => {
+    setCurApplication: (state, action) => {
       state.curLead = action.payload;
     },
     setCurSource: (state, action) => {
@@ -58,12 +58,12 @@ export const {
   setCurUser,
   setCurRole,
   setCurForm,
-  setCurLead,
+  setCurApplication,
   setCurStatus,
   setCurSubStatus,
   setCurDistrict,
   setCurCountry,
   setCurBranch,
   setCurSource,
-} = leadSlice.actions;
-export default leadSlice.reducer;
+} = applicationSlice.actions;
+export default applicationSlice.reducer;
