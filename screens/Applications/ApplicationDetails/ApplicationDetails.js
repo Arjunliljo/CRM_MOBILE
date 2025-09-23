@@ -33,6 +33,11 @@ export default function ApplicationDetails({ route }) {
   const [editable, setEditable] = useState(initial);
   const [isEditingContact, setIsEditingContact] = useState(false);
   const [isEditingDetails, setIsEditingDetails] = useState(false);
+  const [isEditingRemark, setIsEditingRemark] = useState(false);
+  const [remarkDraft, setRemarkDraft] = useState(
+    initial?.remark || initial?.remarks || ""
+  );
+  const [isRemarkExpanded, setIsRemarkExpanded] = useState(false);
 
   if (!editable) {
     return (
@@ -114,6 +119,15 @@ export default function ApplicationDetails({ route }) {
     { key: "identity", label: "Identity" },
     { key: "financial", label: "Financial" },
   ];
+
+  const saveRemark = () => {
+    setEditable((prev) => ({ ...prev, remark: remarkDraft }));
+    setIsEditingRemark(false);
+  };
+  const cancelRemark = () => {
+    setRemarkDraft(editable?.remark || editable?.remarks || "");
+    setIsEditingRemark(false);
+  };
 
   return (
     <ScrollView
@@ -491,7 +505,118 @@ export default function ApplicationDetails({ route }) {
         )}
       </View>
 
+      {/* Remark */}
+      <View style={styles.card}>
+        <View style={styles.cardHeaderRow}>
+          <Text style={styles.cardTitle}>Remark</Text>
+          {!isEditingRemark ? (
+            <TouchableOpacity
+              style={styles.editChip}
+              onPress={() => setIsEditingRemark(true)}
+              activeOpacity={0.7}
+            >
+              <Ionicons
+                name="create-outline"
+                size={14}
+                color={colors.primary}
+              />
+              <Text style={styles.editChipText}>Edit</Text>
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.editActionsRow}>
+              <TouchableOpacity
+                style={[styles.editChip, styles.editChipPrimary]}
+                onPress={saveRemark}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="checkmark" size={14} color={colors.whiteText} />
+                <Text style={styles.editChipTextPrimary}>Save</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.editChip}
+                onPress={cancelRemark}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="close" size={14} color={colors.primary} />
+                <Text style={styles.editChipText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+
+        {!isEditingRemark ? (
+          <View>
+            <View style={styles.remarkBox}>
+              {editable?.remark || editable?.remarks ? (
+                <Text style={styles.remarkText}>
+                  {(() => {
+                    const text = editable.remark || editable.remarks || "";
+                    const isLong = text.length > 140;
+                    if (!isRemarkExpanded && isLong)
+                      return `${text.slice(0, 140).trim()}…`;
+                    return text;
+                  })()}
+                </Text>
+              ) : (
+                <Text style={styles.remarkPlaceholder}>No remarks yet</Text>
+              )}
+            </View>
+            {Boolean(editable?.remark || editable?.remarks) &&
+              (editable?.remark || editable?.remarks || "").length > 140 && (
+                <TouchableOpacity
+                  onPress={() => setIsRemarkExpanded((p) => !p)}
+                  style={styles.remarkToggle}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.remarkToggleText}>
+                    {isRemarkExpanded ? "Show less" : "Show more"}
+                  </Text>
+                </TouchableOpacity>
+              )}
+          </View>
+        ) : (
+          <View>
+            <View style={styles.formGroup}>
+              <Text style={styles.formLabel}>Remark</Text>
+              <TextInput
+                style={styles.textArea}
+                multiline
+                value={remarkDraft}
+                onChangeText={(t) => setRemarkDraft(t)}
+              />
+            </View>
+          </View>
+        )}
+      </View>
+
       <View>
+        {/* Chat CTA */}
+        <TouchableOpacity
+          style={styles.ctaCard}
+          onPress={() =>
+            navigation.navigate("LeadChat", {
+              leadId: editable?.id || editable?._id,
+              leadName: editable?.name,
+            })
+          }
+          activeOpacity={0.85}
+        >
+          <View style={styles.ctaIconWrap}>
+            <Ionicons
+              name="chatbubble-ellipses-outline"
+              size={20}
+              color={colors.primary}
+            />
+          </View>
+          <View style={styles.ctaTextWrap}>
+            <Text style={styles.ctaTitle}>Chat</Text>
+            <Text style={styles.ctaSubtitle}>
+              Open application conversation
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={colors.primary} />
+        </TouchableOpacity>
+
         <SegmentTabs
           tabs={docTabs}
           activeKey={activeDocTab}
