@@ -2,14 +2,8 @@ import { StyleSheet } from "react-native";
 import { colors } from "../../../constants/colors";
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  contentContainer: {
-    padding: 16,
-    paddingBottom: 32,
-  },
+  container: { flex: 1, backgroundColor: colors.background },
+  contentContainer: { padding: 16, paddingBottom: 32 },
   header: {
     backgroundColor: colors.cardBackground,
     borderRadius: 16,
@@ -21,15 +15,8 @@ export const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 2,
   },
-  headerTop: {
-    height: 56,
-    backgroundColor: colors.primary,
-  },
-  headerContent: {
-    padding: 16,
-    flexDirection: "row",
-    alignItems: "center",
-  },
+  headerTop: { height: 56, backgroundColor: colors.primary },
+  headerContent: { padding: 16, flexDirection: "row", alignItems: "center" },
   avatar: {
     width: 72,
     height: 72,
@@ -47,14 +34,8 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  avatarInitials: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: colors.primary,
-  },
-  headerInfo: {
-    flex: 1,
-  },
+  avatarInitials: { fontSize: 28, fontWeight: "700", color: colors.primary },
+  headerInfo: { flex: 1 },
   topRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -104,64 +85,7 @@ export const styles = StyleSheet.create({
     fontWeight: "600",
     marginLeft: 6,
   },
-  badgesRow: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  addDocButton: {
-    marginTop: 12,
-    alignSelf: "flex-start",
-    backgroundColor: colors.primary,
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  addDocButtonText: {
-    color: colors.whiteText,
-    fontWeight: "700",
-    fontSize: 12,
-  },
-  ctaCard: {
-    marginBottom: 16,
-    backgroundColor: colors.cardBackground,
-    borderRadius: 12,
-    padding: 14,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    shadowColor: colors.shadow,
-    shadowOpacity: 0.04,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 1,
-    width: "100%",
-  },
-  ctaIconWrap: {
-    width: 36,
-    height: 36,
-    borderRadius: 8,
-    backgroundColor: colors.navActive,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  ctaTextWrap: {
-    flex: 1,
-  },
-  ctaTitle: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: colors.primaryText,
-    marginBottom: 2,
-  },
-  ctaSubtitle: {
-    fontSize: 12,
-    color: colors.secondaryText,
-  },
+  badgesRow: { flexDirection: "row", gap: 8 },
   badge: {
     flexDirection: "row",
     alignItems: "center",
@@ -209,19 +133,9 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.divider,
   },
-  itemContent: {
-    marginLeft: 12,
-    flex: 1,
-  },
-  itemLabel: {
-    fontSize: 12,
-    color: colors.secondaryText,
-    marginBottom: 2,
-  },
-  itemValue: {
-    fontSize: 16,
-    color: colors.primaryText,
-  },
+  itemContent: { marginLeft: 12, flex: 1 },
+  itemLabel: { fontSize: 12, color: colors.secondaryText, marginBottom: 2 },
+  itemValue: { fontSize: 16, color: colors.primaryText },
   iconBadge: {
     width: 36,
     height: 36,
@@ -245,11 +159,7 @@ export const styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: "600",
   },
-  editActionsRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
+  editActionsRow: { flexDirection: "row", alignItems: "center", gap: 8 },
   editChipPrimary: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
@@ -260,14 +170,8 @@ export const styles = StyleSheet.create({
     color: colors.whiteText,
     fontWeight: "700",
   },
-  formGroup: {
-    marginBottom: 12,
-  },
-  formLabel: {
-    fontSize: 12,
-    color: colors.secondaryText,
-    marginBottom: 6,
-  },
+  formGroup: { marginBottom: 12 },
+  formLabel: { fontSize: 12, color: colors.secondaryText, marginBottom: 6 },
   input: {
     borderWidth: 1,
     borderColor: colors.border,
@@ -278,11 +182,7 @@ export const styles = StyleSheet.create({
     color: colors.primaryText,
     backgroundColor: colors.backgroundLight,
   },
-  actionsRow: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 16,
-  },
+  actionsRow: { flexDirection: "row", gap: 12, marginBottom: 16 },
   actionButton: {
     flex: 1,
     flexDirection: "row",
@@ -299,11 +199,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderColor: colors.primary,
   },
-  actionLabel: {
-    fontSize: 14,
-    color: colors.primary,
-    fontWeight: "600",
-  },
+  actionLabel: { fontSize: 14, color: colors.primary, fontWeight: "600" },
   actionLabelPrimary: {
     fontSize: 14,
     color: colors.whiteText,
@@ -314,5 +210,43 @@ export const styles = StyleSheet.create({
     color: colors.error,
     textAlign: "center",
     marginTop: 50,
+  },
+  ctaCard: {
+    marginBottom: 16,
+    backgroundColor: colors.cardBackground,
+    borderRadius: 12,
+    padding: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    shadowColor: colors.shadow,
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 1,
+    width: "100%",
+  },
+  ctaIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 8,
+    backgroundColor: colors.navActive,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  ctaTextWrap: {
+    flex: 1,
+  },
+  ctaTitle: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: colors.primaryText,
+    marginBottom: 2,
+  },
+  ctaSubtitle: {
+    fontSize: 12,
+    color: colors.secondaryText,
   },
 });

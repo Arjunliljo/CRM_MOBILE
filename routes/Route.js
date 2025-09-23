@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "../screens/Login";
 import DrawerNavigator from "./DrawerNavigator";
 import LeadDetails from "../screens/Leads/LeadDetails/LeadDetails";
+import ApplicationDetails from "../screens/Applications/ApplicationDetails/ApplicationDetails";
+import StudentDetails from "../screens/Students/StudentDetails/StudentDetails";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +27,24 @@ export default function Route() {
           component={LeadDetails}
           options={{
             title: "Lead Details",
+            headerShown: true,
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="StudentDetails"
+          component={StudentDetails}
+          options={{
+            title: "Student Details",
+            headerShown: true,
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="ApplicationDetails"
+          component={ApplicationDetails}
+          options={{
+            title: "Application Details",
             headerShown: true,
             headerBackTitle: "Back",
           }}

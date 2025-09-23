@@ -12,12 +12,17 @@ function CustomDrawerContent({ navigation, state }) {
     },
     {
       name: "Leads",
-      route: "LeadsList",
+      route: "Leads",
       icon: <Ionicons name="people" size={24} color={colors.iconSecondary} />,
     },
     {
-      name: "Applications",
-      route: "Application",
+      name: "Students",
+      route: "Students",
+      icon: <Ionicons name="school" size={24} color={colors.iconSecondary} />,
+    },
+    {
+      name: "Application",
+      route: "Applications",
       icon: <Ionicons name="document" size={24} color={colors.iconSecondary} />,
     },
   ];

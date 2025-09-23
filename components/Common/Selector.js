@@ -39,7 +39,13 @@ export default function Selector({
   };
 
   return (
-    <View style={[styles.container, style]}>
+    <View
+      style={[
+        styles.container,
+        style,
+        { zIndex, elevation: zIndex, position: "relative" },
+      ]}
+    >
       {label && <Text style={styles.label}>{label}</Text>}
 
       <DropDownPicker
@@ -55,7 +61,10 @@ export default function Selector({
         multiple={multiple}
         disabled={disabled}
         style={styles.dropdown}
-        dropDownContainerStyle={styles.dropdownContainer}
+        dropDownContainerStyle={[
+          styles.dropdownContainer,
+          { zIndex: zIndex + 1, elevation: (zIndex || 1) + 1 },
+        ]}
         textStyle={styles.dropdownText}
         placeholderStyle={styles.placeholderText}
         selectedItemContainerStyle={styles.selectedItemContainer}
