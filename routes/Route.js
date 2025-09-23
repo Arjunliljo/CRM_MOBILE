@@ -6,6 +6,7 @@ import LeadDetails from "../screens/Leads/LeadDetails/LeadDetails";
 import ApplicationDetails from "../screens/Applications/ApplicationDetails/ApplicationDetails";
 import StudentDetails from "../screens/Students/StudentDetails/StudentDetails";
 import TaskDetails from "../screens/Tasks/TaskDetails/TaskDetails";
+import CourseListing from "../screens/University/CourseListing";
 
 const Stack = createNativeStackNavigator();
 
@@ -55,6 +56,15 @@ export default function Route() {
           component={TaskDetails}
           options={{
             title: "Task Details",
+            headerShown: true,
+            headerBackTitle: "Back",
+          }}
+        />
+
+        <Stack.Screen
+          name="CourseListing"
+          component={CourseListing}
+          options={{
             headerShown: true,
             headerBackTitle: "Back",
           }}
