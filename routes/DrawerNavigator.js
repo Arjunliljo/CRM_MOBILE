@@ -7,6 +7,7 @@ import ApplicationStack from "./stacks/ApplicationStack";
 import CustomDrawerContent from "./components/CustomDrawer";
 import LeadsStack from "./stacks/LeadStack";
 import StudentStack from "./stacks/StudentStack";
+import TaskStack from "./stacks/TaskStack";
 import DocumentUploader from "../screens/Documents/DocumentUploader";
 import { Ionicons } from "@expo/vector-icons";
 import UniversityPage from "../screens/University/UniversityPage";
@@ -38,6 +39,14 @@ export default function DrawerNavigator() {
         options={{
           title: "Dashboard",
           headerTitle: "Dashboard",
+        }}
+      />
+      <Drawer.Screen
+        name="Tasks"
+        component={TaskStack}
+        options={{
+          title: "Tasks",
+          headerTitle: "Tasks",
         }}
       />
       <Drawer.Screen

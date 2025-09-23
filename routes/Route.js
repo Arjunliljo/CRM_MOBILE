@@ -5,6 +5,7 @@ import DrawerNavigator from "./DrawerNavigator";
 import LeadDetails from "../screens/Leads/LeadDetails/LeadDetails";
 import ApplicationDetails from "../screens/Applications/ApplicationDetails/ApplicationDetails";
 import StudentDetails from "../screens/Students/StudentDetails/StudentDetails";
+import TaskDetails from "../screens/Tasks/TaskDetails/TaskDetails";
 
 const Stack = createNativeStackNavigator();
 
@@ -45,6 +46,15 @@ export default function Route() {
           component={ApplicationDetails}
           options={{
             title: "Application Details",
+            headerShown: true,
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="TaskDetails"
+          component={TaskDetails}
+          options={{
+            title: "Task Details",
             headerShown: true,
             headerBackTitle: "Back",
           }}

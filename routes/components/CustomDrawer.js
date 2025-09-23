@@ -11,6 +11,17 @@ function CustomDrawerContent({ navigation, state }) {
       icon: <Ionicons name="home" size={24} color={colors.iconSecondary} />,
     },
     {
+      name: "Tasks",
+      route: "Tasks",
+      icon: (
+        <Ionicons
+          name="checkmark-done"
+          size={24}
+          color={colors.iconSecondary}
+        />
+      ),
+    },
+    {
       name: "Leads",
       route: "Leads",
       icon: <Ionicons name="people" size={24} color={colors.iconSecondary} />,

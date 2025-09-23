@@ -19,10 +19,37 @@ const lead = {
 
 const leadSlice = createSlice({
   name: "lead",
-  initialState: { value: 0, curLead: lead },
+  initialState: { value: 0, curLead: lead, source: "Source" },
   reducers: {
     setCurLead: (state, action) => {
       state.curLead = action.payload;
+    },
+    setCurSource: (state, action) => {
+      state.source = action.payload;
+    },
+    setCurBranch: (state, action) => {
+      state.branch = action.payload;
+    },
+    setCurCountry: (state, action) => {
+      state.country = action.payload;
+    },
+    setCurDistrict: (state, action) => {
+      state.district = action.payload;
+    },
+    setCurStatus: (state, action) => {
+      state.status = action.payload;
+    },
+    setCurSubStatus: (state, action) => {
+      state.subStatus = action.payload;
+    },
+    setCurForm: (state, action) => {
+      state.form = action.payload;
+    },
+    setCurRole: (state, action) => {
+      state.role = action.payload;
+    },
+    setCurUser: (state, action) => {
+      state.user = action.payload;
     },
   },
 });
