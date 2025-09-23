@@ -16,7 +16,7 @@ import { colors } from "../../constants/colors";
 const dummyImageUrl =
   "https://static.vecteezy.com/system/resources/thumbnails/036/594/092/small/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg";
 
-const LeadCard = ({ Lead }) => {
+const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const navigation = useNavigation();
   const swipeableRef = React.useRef(null);
@@ -48,7 +48,11 @@ const LeadCard = ({ Lead }) => {
 
   // === Tap on card ===
   const handleCardPress = () => {
-    navigation.navigate("LeadDetails", { lead: Lead });
+    if (isSelectionMode) {
+      onSelection?.();
+    } else {
+      navigation.navigate("LeadDetails", { lead: Lead });
+    }
   };
 
   const toggleExpanded = (e) => {
@@ -97,11 +101,24 @@ const LeadCard = ({ Lead }) => {
     >
       <TouchableOpacity
         activeOpacity={0.8}
-        style={styles.cardContainer}
+        style={[
+          styles.cardContainer,
+          isSelectionMode && styles.selectionModeCard,
+          isSelected && styles.selectedCard,
+        ]}
         onPress={handleCardPress}
       >
         {/* Header */}
         <View style={styles.header}>
+          {isSelectionMode && (
+            <View style={styles.selectionIndicator}>
+              <Ionicons
+                name={isSelected ? "checkmark-circle" : "ellipse-outline"}
+                size={24}
+                color={isSelected ? colors.primary : colors.secondaryText}
+              />
+            </View>
+          )}
           <View style={styles.avatar}>
             <Image
               source={{ uri: Lead?.img || dummyImageUrl }}
@@ -319,6 +336,18 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 11,
     textAlign: "center",
+  },
+  // Selection Mode Styles
+  selectionModeCard: {
+    borderWidth: 2,
+    borderColor: colors.border,
+  },
+  selectedCard: {
+    borderColor: colors.primary,
+    backgroundColor: colors.navActive,
+  },
+  selectionIndicator: {
+    marginRight: 12,
   },
 });
 

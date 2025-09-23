@@ -21,6 +21,8 @@ export default function LeadsMain() {
   const [activeTab, setActiveTab] = useState("all");
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState(null);
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
+  const [selectedLeads, setSelectedLeads] = useState([]);
 
   const handleTabPress = (tabId) => {
     if (tabId === "all") {
@@ -53,6 +55,34 @@ export default function LeadsMain() {
     setActiveTab("all"); // Reset to All Leads when modal closes
   };
 
+  const toggleSelectionMode = () => {
+    setIsSelectionMode(!isSelectionMode);
+    if (isSelectionMode) {
+      // Exit selection mode - clear selections
+      setSelectedLeads([]);
+    }
+  };
+
+  const handleLeadSelection = (leadId) => {
+    setSelectedLeads((prev) => {
+      if (prev.includes(leadId)) {
+        return prev.filter((id) => id !== leadId);
+      } else {
+        return [...prev, leadId];
+      }
+    });
+  };
+
+  const selectAllLeads = () => {
+    // This will be implemented when we pass leads data
+    // For now, we'll handle it in AllLeads component
+  };
+
+  const handleBulkAction = (action) => {
+    console.log(`Performing ${action} on leads:`, selectedLeads);
+    // Handle bulk actions like delete, assign, etc.
+  };
+
   const tabs = [
     { id: "all", label: "All Leads", icon: "list" },
     { id: "filters", label: "Filters", icon: "funnel" },
@@ -62,9 +92,87 @@ export default function LeadsMain() {
 
   return (
     <View style={styles.container}>
+      {/* Header with Select Button */}
+      {activeTab === "all" && (
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>All Leads</Text>
+          <View style={styles.headerActions}>
+            {isSelectionMode && (
+              <Text style={styles.selectedCount}>
+                {selectedLeads.length} selected
+              </Text>
+            )}
+            <TouchableOpacity
+              style={[
+                styles.selectButton,
+                isSelectionMode && styles.selectButtonActive,
+              ]}
+              onPress={toggleSelectionMode}
+            >
+              <Ionicons
+                name={isSelectionMode ? "close" : "checkmark-circle-outline"}
+                size={20}
+                color={isSelectionMode ? colors.whiteText : colors.primary}
+              />
+              <Text
+                style={[
+                  styles.selectButtonText,
+                  isSelectionMode && styles.selectButtonTextActive,
+                ]}
+              >
+                {isSelectionMode ? "Cancel" : "Select"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+
+      {/* Selection Actions Bar */}
+      {isSelectionMode && selectedLeads.length > 0 && (
+        <View style={styles.selectionActionsBar}>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => handleBulkAction("delete")}
+          >
+            <Ionicons name="trash-outline" size={18} color={colors.error} />
+            <Text style={[styles.actionButtonText, { color: colors.error }]}>
+              Delete
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => handleBulkAction("assign")}
+          >
+            <Ionicons
+              name="person-add-outline"
+              size={18}
+              color={colors.primary}
+            />
+            <Text style={styles.actionButtonText}>Assign</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => handleBulkAction("export")}
+          >
+            <Ionicons
+              name="download-outline"
+              size={18}
+              color={colors.success}
+            />
+            <Text style={[styles.actionButtonText, { color: colors.success }]}>
+              Export
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       {/* Main Content - Always show All Leads */}
       <View style={styles.content}>
-        <AllLeads />
+        <AllLeads
+          isSelectionMode={isSelectionMode}
+          selectedLeads={selectedLeads}
+          onLeadSelection={handleLeadSelection}
+        />
       </View>
 
       {/* Modal for other tabs */}
@@ -187,5 +295,78 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     flex: 1,
+  },
+  // Header Styles
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: colors.cardBackground,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: colors.primaryText,
+  },
+  headerActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  selectedCount: {
+    fontSize: 14,
+    color: colors.secondaryText,
+    fontWeight: "600",
+  },
+  selectButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: colors.navActive,
+    borderWidth: 1,
+    borderColor: colors.primary,
+  },
+  selectButtonActive: {
+    backgroundColor: colors.primary,
+  },
+  selectButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: colors.primary,
+  },
+  selectButtonTextActive: {
+    color: colors.whiteText,
+  },
+  // Selection Actions Bar
+  selectionActionsBar: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: colors.cardBackground,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  actionButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: colors.inputBackground,
+  },
+  actionButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: colors.primary,
   },
 });

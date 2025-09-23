@@ -211,7 +211,11 @@ const dummyLeads = [
   },
 ];
 
-export default function AllLeads() {
+export default function AllLeads({
+  isSelectionMode,
+  selectedLeads,
+  onLeadSelection,
+}) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredLeads, setFilteredLeads] = useState(dummyLeads);
 
@@ -248,7 +252,14 @@ export default function AllLeads() {
       <FlatList
         data={filteredLeads}
         keyExtractor={(item) => item._id}
-        renderItem={({ item }) => <LeadCard Lead={item} />}
+        renderItem={({ item }) => (
+          <LeadCard
+            Lead={item}
+            isSelectionMode={isSelectionMode}
+            isSelected={selectedLeads?.includes(item._id)}
+            onSelection={() => onLeadSelection?.(item._id)}
+          />
+        )}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
       />
