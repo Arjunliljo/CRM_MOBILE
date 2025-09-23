@@ -128,6 +128,8 @@ export default function LeadDetails({ route }) {
     setIsEditingRemark(false);
   };
 
+  // No inline chat here; chat is a separate screen now
+
   const toOptionValue = (options, valueOrLabel) => {
     if (!valueOrLabel) return null;
     const lower = String(valueOrLabel).toLowerCase();
@@ -656,6 +658,31 @@ export default function LeadDetails({ route }) {
 
       {/* Add Document CTA (under Lead Details card) */}
       <View>
+        {/* Chat CTA - opens separate screen */}
+        <TouchableOpacity
+          style={styles.ctaCard}
+          onPress={() =>
+            navigation.navigate("LeadChat", {
+              leadId: editableLead?.id || editableLead?._id,
+              leadName: editableLead?.name,
+            })
+          }
+          activeOpacity={0.85}
+        >
+          <View style={styles.ctaIconWrap}>
+            <Ionicons
+              name="chatbubble-ellipses-outline"
+              size={20}
+              color={colors.primary}
+            />
+          </View>
+          <View style={styles.ctaTextWrap}>
+            <Text style={styles.ctaTitle}>Chat</Text>
+            <Text style={styles.ctaSubtitle}>Open lead conversation</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={colors.primary} />
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.ctaCard}
           onPress={() => navigation.navigate("Main", { screen: "Documents" })}

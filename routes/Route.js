@@ -7,6 +7,7 @@ import ApplicationDetails from "../screens/Applications/ApplicationDetails/Appli
 import StudentDetails from "../screens/Students/StudentDetails/StudentDetails";
 import TaskDetails from "../screens/Tasks/TaskDetails/TaskDetails";
 import CourseListing from "../screens/University/CourseListing";
+import LeadChat from "../screens/Leads/LeadDetails/LeadChat";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,15 @@ export default function Route() {
           component={LeadDetails}
           options={{
             title: "Lead Details",
+            headerShown: true,
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="LeadChat"
+          component={LeadChat}
+          options={{
+            title: "Chat",
             headerShown: true,
             headerBackTitle: "Back",
           }}

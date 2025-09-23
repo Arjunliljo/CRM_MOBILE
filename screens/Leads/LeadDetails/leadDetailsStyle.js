@@ -353,4 +353,63 @@ export const styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: "600",
   },
+  chatContainer: {
+    gap: 8,
+    marginBottom: 12,
+  },
+  chatEmptyText: {
+    fontSize: 12,
+    color: colors.secondaryText,
+    textAlign: "center",
+    paddingVertical: 8,
+  },
+  chatBubble: {
+    maxWidth: "85%",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 12,
+  },
+  chatBubbleLeft: {
+    alignSelf: "flex-start",
+    backgroundColor: colors.backgroundLight,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  chatBubbleRight: {
+    alignSelf: "flex-end",
+    backgroundColor: colors.primary,
+  },
+  chatAuthor: {
+    fontSize: 10,
+    fontWeight: "700",
+    color: colors.secondaryText,
+    marginBottom: 2,
+  },
+  chatText: {
+    fontSize: 14,
+    color: colors.primaryText,
+  },
+  chatInputRow: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    gap: 8,
+  },
+  chatInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 14,
+    backgroundColor: colors.backgroundLight,
+    color: colors.primaryText,
+    maxHeight: 120,
+  },
+  chatSendButton: {
+    backgroundColor: colors.primary,
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
 });
