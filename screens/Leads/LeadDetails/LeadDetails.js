@@ -25,6 +25,7 @@ export default function LeadDetails({ route }) {
   const [editableLead, setEditableLead] = useState(lead);
   const [isEditingContact, setIsEditingContact] = useState(false);
   const [isEditingDetails, setIsEditingDetails] = useState(false);
+  const [isEditingRemark, setIsEditingRemark] = useState(false);
 
   const [contactDraft, setContactDraft] = useState({
     phone: lead?.phone || "",
@@ -37,6 +38,11 @@ export default function LeadDetails({ route }) {
     country: lead?.country || "",
     followupDate: lead?.followupDate || "",
   });
+
+  const [remarkDraft, setRemarkDraft] = useState(
+    lead?.remark || lead?.remarks || ""
+  );
+  const [isRemarkExpanded, setIsRemarkExpanded] = useState(false);
 
   const hasImage = Boolean(editableLead?.img);
 
@@ -112,6 +118,16 @@ export default function LeadDetails({ route }) {
     setIsEditingDetails(false);
   };
 
+  const saveRemark = () => {
+    setEditableLead((prev) => ({ ...prev, remark: remarkDraft }));
+    setIsEditingRemark(false);
+  };
+
+  const cancelRemark = () => {
+    setRemarkDraft(editableLead?.remark || editableLead?.remarks || "");
+    setIsEditingRemark(false);
+  };
+
   const toOptionValue = (options, valueOrLabel) => {
     if (!valueOrLabel) return null;
     const lower = String(valueOrLabel).toLowerCase();
@@ -150,6 +166,13 @@ export default function LeadDetails({ route }) {
     { key: "identity", label: "Identity" },
     { key: "financial", label: "Financial" },
   ];
+
+  const remarkText = editableLead?.remark || editableLead?.remarks || "";
+  const isLongRemark = (remarkText || "").length > 140;
+  const displayRemark =
+    !isRemarkExpanded && isLongRemark
+      ? `${remarkText.slice(0, 140).trim()}…`
+      : remarkText;
 
   return (
     <ScrollView
@@ -550,6 +573,81 @@ export default function LeadDetails({ route }) {
                 onChangeText={(t) =>
                   setDetailsDraft((p) => ({ ...p, followupDate: t }))
                 }
+              />
+            </View>
+          </View>
+        )}
+      </View>
+
+      {/* Remark */}
+      <View style={styles.card}>
+        <View style={styles.cardHeaderRow}>
+          <Text style={styles.cardTitle}>Remark</Text>
+          {!isEditingRemark ? (
+            <TouchableOpacity
+              style={styles.editChip}
+              onPress={() => setIsEditingRemark(true)}
+              activeOpacity={0.7}
+            >
+              <Ionicons
+                name="create-outline"
+                size={14}
+                color={colors.primary}
+              />
+              <Text style={styles.editChipText}>Edit</Text>
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.editActionsRow}>
+              <TouchableOpacity
+                style={[styles.editChip, styles.editChipPrimary]}
+                onPress={saveRemark}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="checkmark" size={14} color={colors.whiteText} />
+                <Text style={styles.editChipTextPrimary}>Save</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.editChip}
+                onPress={cancelRemark}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="close" size={14} color={colors.primary} />
+                <Text style={styles.editChipText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+
+        {!isEditingRemark ? (
+          <View>
+            <View style={styles.remarkBox}>
+              {remarkText ? (
+                <Text style={styles.remarkText}>{displayRemark}</Text>
+              ) : (
+                <Text style={styles.remarkPlaceholder}>No remarks yet</Text>
+              )}
+            </View>
+            {remarkText && isLongRemark && (
+              <TouchableOpacity
+                onPress={() => setIsRemarkExpanded((p) => !p)}
+                style={styles.remarkToggle}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.remarkToggleText}>
+                  {isRemarkExpanded ? "Show less" : "Show more"}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        ) : (
+          <View>
+            <View style={styles.formGroup}>
+              <Text style={styles.formLabel}>Remark</Text>
+              <TextInput
+                style={styles.textArea}
+                multiline
+                value={remarkDraft}
+                onChangeText={(t) => setRemarkDraft(t)}
               />
             </View>
           </View>

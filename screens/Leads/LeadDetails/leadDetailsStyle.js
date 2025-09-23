@@ -278,6 +278,18 @@ export const styles = StyleSheet.create({
     color: colors.primaryText,
     backgroundColor: colors.backgroundLight,
   },
+  textArea: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 14,
+    color: colors.primaryText,
+    backgroundColor: colors.backgroundLight,
+    minHeight: 100,
+    textAlignVertical: "top",
+  },
   actionsRow: {
     flexDirection: "row",
     gap: 12,
@@ -314,5 +326,31 @@ export const styles = StyleSheet.create({
     color: colors.error,
     textAlign: "center",
     marginTop: 50,
+  },
+  remarkBox: {
+    backgroundColor: colors.backgroundLight,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 12,
+    padding: 12,
+  },
+  remarkText: {
+    fontSize: 14,
+    color: colors.primaryText,
+    lineHeight: 20,
+  },
+  remarkPlaceholder: {
+    fontSize: 14,
+    color: colors.secondaryText,
+    fontStyle: "italic",
+  },
+  remarkToggle: {
+    marginTop: 8,
+    alignSelf: "flex-end",
+  },
+  remarkToggleText: {
+    fontSize: 12,
+    color: colors.primary,
+    fontWeight: "600",
   },
 });
