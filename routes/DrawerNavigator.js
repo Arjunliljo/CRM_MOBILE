@@ -10,7 +10,7 @@ import StudentStack from "./stacks/StudentStack";
 import TaskStack from "./stacks/TaskStack";
 import DocumentUploader from "../screens/Documents/DocumentUploader";
 import { Ionicons } from "@expo/vector-icons";
-import UniversityPage from "../screens/University/UniversityPage";
+import UniversityList from "../screens/University/UniversityList";
 
 const Drawer = createDrawerNavigator();
 
@@ -75,7 +75,7 @@ export default function DrawerNavigator() {
       />
       <Drawer.Screen
         name="University"
-        component={UniversityPage}
+        component={UniversityList}
         options={({ navigation }) => ({
           title: "University",
           headerTitle: "University",
