@@ -19,7 +19,7 @@ const application = {
 
 const applicationSlice = createSlice({
   name: "student",
-  initialState: { value: 0, curLead: lead, source: "Source" },
+  initialState: { value: 0, curLead: application, source: "Source" },
   reducers: {
     setCurApplication: (state, action) => {
       state.curLead = action.payload;
