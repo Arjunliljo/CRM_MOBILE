@@ -9,6 +9,7 @@ const getStatusName = (status, statuses) => {
 };
 
 const getCountryName = (country, countries) => {
+  if (!country) return "N/A";
   const countryData = countries.find((c) => c._id === country);
   return countryData ? countryData.name : "N/A";
 };

@@ -32,6 +32,7 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
   const navigation = useNavigation();
   const swipeableRef = React.useRef(null);
   const dispatch = useDispatch();
+
   // === Swipe actions ===
   const handleSwipeLeft = () => {
     const phoneNumber = "+918714441727";
@@ -63,7 +64,7 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
       onSelection?.();
     } else {
       dispatch(setCurLead(Lead));
-      navigation.navigate("LeadDetails", { lead: Lead });
+      navigation.navigate("LeadDetails");
     }
   };
 

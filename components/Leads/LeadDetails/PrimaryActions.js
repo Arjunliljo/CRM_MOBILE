@@ -4,17 +4,17 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../../constants/colors";
 import { styles } from "../../../screens/Leads/LeadDetails/leadDetailsStyle";
 
-export default function PrimaryActions({ editableLead }) {
+export default function PrimaryActions({ phone, email }) {
   const handleCall = () => {
-    if (editableLead?.phone) Linking.openURL(`tel:${editableLead.phone}`);
+    if (phone) Linking.openURL(`tel:${phone}`);
   };
 
   const handleSms = () => {
-    if (editableLead?.phone) Linking.openURL(`sms:${editableLead.phone}`);
+    if (phone) Linking.openURL(`sms:${phone}`);
   };
 
   const handleEmail = () => {
-    if (editableLead?.email) Linking.openURL(`mailto:${editableLead.email}`);
+    if (email) Linking.openURL(`mailto:${email}`);
   };
 
   return (

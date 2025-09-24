@@ -11,6 +11,10 @@ import ContactInfoCard from "../../../components/Leads/LeadDetails/ContactInfoCa
 import LeadDetailsCard from "../../../components/Leads/LeadDetails/LeadDetailsCard";
 import RemarkCard from "../../../components/Leads/LeadDetails/RemarkCard";
 import CTACards from "../../../components/Leads/LeadDetails/CTACards";
+import {
+  getBranchName,
+  getCountryName,
+} from "../../../helpers/bootstrapHelpers";
 
 export default function LeadDetails({ route }) {
   const { curLead: lead } = useSelector((state) => state.lead);
@@ -19,159 +23,40 @@ export default function LeadDetails({ route }) {
   const branches = useSelector((state) => state.bootstrap.branches);
   const countries = useSelector((state) => state.bootstrap.countries);
   const substatuses = useSelector((state) => state.bootstrap.substatuses);
-  const navigation = useNavigation();
 
-  const [editableLead, setEditableLead] = useState(lead);
-  const [isEditingContact, setIsEditingContact] = useState(false);
-  const [isEditingDetails, setIsEditingDetails] = useState(false);
-  const [isEditingRemark, setIsEditingRemark] = useState(false);
-  const [statusList, setStatusList] = useState([]);
-  const [substatusList, setSubstatusList] = useState([]);
+  if (!lead) return null;
 
-  useEffect(() => {
-    setStatusList(
-      statuses
-        .map((s) => (!s.isApplication ? { label: s.name, value: s._id } : null))
-        .filter(Boolean)
-    );
-  }, [statuses]);
-
-  useEffect(() => {
-    setSubstatusList(
-      substatuses
-        .map((s) =>
-          s.status === editableLead.status
-            ? { label: s.subStatus, value: s._id }
-            : null
-        )
-        .filter(Boolean)
-    );
-  }, [editableLead.status]);
-
-  const [contactDraft, setContactDraft] = useState({
-    phone: lead?.phone || "",
-    email: lead?.email || "",
-    district: lead?.district || "",
-  });
-
-  const [detailsDraft, setDetailsDraft] = useState({
-    leadSource: lead?.leadSource || lead?.source || "",
-    country: lead?.country || "",
-    followupDate: lead?.followupDate || "",
-  });
-
-  const [remarkDraft, setRemarkDraft] = useState(
-    lead?.remark || lead?.remarks || ""
-  );
-  const [isRemarkExpanded, setIsRemarkExpanded] = useState(false);
-
-  // actions are handled inside PrimaryActions component
-
-  if (!editableLead) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>No lead data available</Text>
-      </View>
-    );
-  }
-
-  useEffect(() => {
-    console.log(statusList, "statusList>>>>>");
-  }, [statusList]);
-
-  // header visuals are handled inside LeadHeader component
-
-  const saveContact = () => {
-    setEditableLead((prev) => ({ ...prev, ...contactDraft }));
-    setIsEditingContact(false);
+  const handleStatusChange = async (status, subStatus) => {
+    try {
+      // status and sub status api call
+    } catch (error) {}
   };
 
-  const cancelContact = () => {
-    setContactDraft({
-      phone: editableLead?.phone || "",
-      email: editableLead?.email || "",
-      district: editableLead?.district || "",
-    });
-    setIsEditingContact(false);
-  };
-
-  const saveDetails = () => {
-    setEditableLead((prev) => ({
-      ...prev,
-      leadSource: detailsDraft.leadSource,
-      country: detailsDraft.country,
-      followupDate: detailsDraft.followupDate,
-    }));
-    setIsEditingDetails(false);
-  };
-
-  const cancelDetails = () => {
-    setDetailsDraft({
-      leadSource: editableLead?.leadSource || editableLead?.source || "",
-      country: editableLead?.country || "",
-      followupDate: editableLead?.followupDate || "",
-    });
-    setIsEditingDetails(false);
-  };
-
-  const saveRemark = () => {
-    setEditableLead((prev) => ({ ...prev, remark: remarkDraft }));
-    setIsEditingRemark(false);
-  };
-
-  const cancelRemark = () => {
-    setRemarkDraft(editableLead?.remark || editableLead?.remarks || "");
-    setIsEditingRemark(false);
-  };
-
-  // No inline chat here; chat is a separate screen now
-
-  const handleStatusChange = (val) => {
-    console.log(val, "Status Changed>>>>>");
-    setEditableLead((prev) => ({ ...prev, status: val }));
-  };
-
-  const handleSubStatusChange = (val) => {
-    //  setEditableLead((prev) => ({ ...prev, substatus: val }));
-  };
-
-  const remarkText = editableLead?.remark || editableLead?.remarks || "";
-
-  useEffect(() => {
-    setEditableLead(lead);
-  }, [lead]);
-
-  useEffect(() => {
-    setContactDraft({
-      phone: editableLead?.phone || "",
-      email: editableLead?.email || "",
-      district: editableLead?.district || "",
-    });
-  }, [editableLead]);
-
+  //name, status, branch, followup, source, country
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
       <LeadHeader
-        editableLead={editableLead}
-        statuses={statuses}
-        branches={branches}
-        countries={countries}
+        data={{
+          branch: getBranchName(lead.branch, branches),
+          name: lead.name,
+          country: getCountryName(lead?.countries?.[0], countries),
+          followupDate: lead.followupDate,
+          source: lead.leadSource,
+        }}
       />
 
-      <PrimaryActions editableLead={editableLead} />
+      <PrimaryActions data={{ phone: lead?.phone, email: lead?.email }} />
 
       <StatusControls
-        statusItems={statusList}
-        substatusItems={substatusList}
-        editableLead={editableLead}
-        onStatusChange={handleStatusChange}
-        onSubStatusChange={handleSubStatusChange}
+        onHandleChange={handleStatusChange}
+        curStatus={lead.status}
+        curSubStatus={lead.subStatus}
       />
 
-      <ContactInfoCard
+      {/* <ContactInfoCard
         isEditing={isEditingContact}
         setIsEditing={setIsEditingContact}
         editableLead={editableLead}
@@ -179,9 +64,9 @@ export default function LeadDetails({ route }) {
         setContactDraft={setContactDraft}
         onSave={saveContact}
         onCancel={cancelContact}
-      />
+      /> */}
 
-      <LeadDetailsCard
+      {/* <LeadDetailsCard
         isEditing={isEditingDetails}
         setIsEditing={setIsEditingDetails}
         editableLead={editableLead}
@@ -189,9 +74,9 @@ export default function LeadDetails({ route }) {
         setDetailsDraft={setDetailsDraft}
         onSave={saveDetails}
         onCancel={cancelDetails}
-      />
+      /> */}
 
-      <RemarkCard
+      {/* <RemarkCard
         isEditing={isEditingRemark}
         setIsEditing={setIsEditingRemark}
         remarkText={remarkText}
@@ -201,10 +86,10 @@ export default function LeadDetails({ route }) {
         setIsRemarkExpanded={setIsRemarkExpanded}
         onSave={saveRemark}
         onCancel={cancelRemark}
-      />
+      /> */}
 
-      <CTACards navigation={navigation} editableLead={editableLead} />
-      <ActivityLog title="Activity Log" activities={[]} />
+      {/* <CTACards navigation={navigation} editableLead={editableLead} />
+      <ActivityLog title="Activity Log" activities={[]} /> */}
     </ScrollView>
   );
 }
