@@ -28,7 +28,7 @@ export default function Booktstrap() {
   });
   const substatusConfigs = useQuery({
     queryKey: ["substatuses"],
-    queryFn: () => api.get("/substatus"),
+    queryFn: () => api.get("/status/substatus"),
   });
   const roleConfigs = useQuery({
     queryKey: ["roles"],

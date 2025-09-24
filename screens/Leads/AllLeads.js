@@ -238,6 +238,12 @@ export default function AllLeads({
     }
   }, [leads]);
 
+  const handleEndReached = () => {
+    if (!isLoadingMore && hasMore) {
+      fetchNextPage();
+    }
+  };
+
   if (isLoading) {
     return <LoadingScreen />;
   }
@@ -285,6 +291,11 @@ export default function AllLeads({
         )}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={0.5}
+        refreshing={isLoading}
+        onRefresh={refetch}
+        ListFooterComponent={isLoadingMore ? <LoadingScreen /> : null}
       />
     </View>
   );

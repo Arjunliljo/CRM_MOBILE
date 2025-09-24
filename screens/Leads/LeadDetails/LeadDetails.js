@@ -13,13 +13,22 @@ import { colors } from "../../../constants/colors";
 import { styles } from "./leadDetailsStyle";
 import { useSelector } from "react-redux";
 import Selector from "../../../components/Common/Selector";
-import { leadStatuses, leadSubStatuses } from "../../../constants/dropdownData";
 import { useNavigation } from "@react-navigation/native";
-import SegmentTabs from "../../../components/Common/SegmentTabs";
 import ActivityLog from "../../../components/Common/ActivityLog";
+import {
+  getStatusName,
+  getBranchName,
+  getCountryName,
+} from "../../../helpers/bootstrapHelpers";
+import { formatDate } from "../../../helpers/dateFormater";
 
 export default function LeadDetails({ route }) {
-  const { curLead: lead } = useSelector((state) => state.lead);
+  // const { curLead: lead } = useSelector((state) => state.lead);
+  const lead = route?.params?.lead || null;
+  const statuses = useSelector((state) => state.bootstrap.statuses);
+  const branches = useSelector((state) => state.bootstrap.branches);
+  const countries = useSelector((state) => state.bootstrap.countries);
+  const substatuses = useSelector((state) => state.bootstrap.substatuses);
   const navigation = useNavigation();
 
   const [editableLead, setEditableLead] = useState(lead);
@@ -67,8 +76,11 @@ export default function LeadDetails({ route }) {
   }
 
   const universityText = editableLead?.university || editableLead?.branch || "";
-  const countryText = editableLead?.country || "";
-  const courseText = editableLead?.course || editableLead?.courseName || "";
+  const countryText =
+    editableLead?.countries?.length > 0
+      ? editableLead?.countries?.[0]
+      : editableLead?.country || "";
+  const courseText = editableLead?.course || editableLead?.courseName || false;
   const metaLine = [universityText, countryText, courseText]
     .filter(Boolean)
     .join(" • ");
@@ -130,44 +142,22 @@ export default function LeadDetails({ route }) {
 
   // No inline chat here; chat is a separate screen now
 
-  const toOptionValue = (options, valueOrLabel) => {
-    if (!valueOrLabel) return null;
-    const lower = String(valueOrLabel).toLowerCase();
-    const byValue = options.find(
-      (o) => String(o.value).toLowerCase() === lower
-    );
-    if (byValue) return byValue.value;
-    const byLabel = options.find(
-      (o) => String(o.label).toLowerCase() === lower
-    );
-    return byLabel ? byLabel.value : null;
-  };
-
-  const statusSelected = toOptionValue(leadStatuses, editableLead?.status);
-  const subStatusSelected = toOptionValue(
-    leadSubStatuses,
-    editableLead?.substatus || editableLead?.subStatus
-  );
+  const statusItems = (statuses || []).map((s) => ({
+    label: s.name,
+    value: s._id,
+  }));
+  const substatusItems = (substatuses || []).map((ss) => ({
+    label: ss.subStatus,
+    value: ss._id,
+  }));
 
   const handleStatusChange = (val) => {
-    const opt = leadStatuses.find((o) => o.value === val);
-    const label = opt?.label || val;
-    setEditableLead((prev) => ({ ...prev, status: label }));
+    setEditableLead((prev) => ({ ...prev, status: val }));
   };
 
   const handleSubStatusChange = (val) => {
-    const opt = leadSubStatuses.find((o) => o.value === val);
-    const label = opt?.label || val;
-    setEditableLead((prev) => ({ ...prev, substatus: label }));
+    setEditableLead((prev) => ({ ...prev, substatus: val }));
   };
-
-  const [activeDocTab, setActiveDocTab] = useState("all");
-  const docTabs = [
-    { key: "all", label: "All" },
-    { key: "academic", label: "Academic" },
-    { key: "identity", label: "Identity" },
-    { key: "financial", label: "Financial" },
-  ];
 
   const remarkText = editableLead?.remark || editableLead?.remarks || "";
   const isLongRemark = (remarkText || "").length > 140;
@@ -202,7 +192,9 @@ export default function LeadDetails({ route }) {
               {Boolean(editableLead?.status) && (
                 <View style={styles.statusChip}>
                   <Ionicons name="ellipse" size={10} color={statusDotColor} />
-                  <Text style={styles.statusText}>{editableLead.status}</Text>
+                  <Text style={styles.statusText}>
+                    {getStatusName(editableLead.status, statuses)}
+                  </Text>
                 </View>
               )}
             </View>
@@ -210,19 +202,30 @@ export default function LeadDetails({ route }) {
               {Boolean(universityText) && (
                 <View style={styles.metaChip}>
                   <Ionicons name="school" size={12} color={colors.primary} />
-                  <Text style={styles.metaText}>{universityText}</Text>
+                  <Text style={styles.metaText}>
+                    {getBranchName(editableLead.branch, branches)}
+                  </Text>
                 </View>
               )}
               {Boolean(countryText) && (
                 <View style={styles.metaChip}>
                   <Ionicons name="flag" size={12} color={colors.primary} />
-                  <Text style={styles.metaText}>{countryText}</Text>
+                  <Text style={styles.metaText}>
+                    {getCountryName(
+                      editableLead?.countries?.length > 0
+                        ? editableLead?.countries?.[0]
+                        : editableLead?.country,
+                      countries
+                    )}
+                  </Text>
                 </View>
               )}
               {Boolean(courseText) && (
                 <View style={styles.metaChip}>
                   <Ionicons name="book" size={12} color={colors.primary} />
-                  <Text style={styles.metaText}>{courseText}</Text>
+                  <Text style={styles.metaText}>
+                    {courseText || "Not provided"}
+                  </Text>
                 </View>
               )}
               {!universityText && !countryText && !courseText && (
@@ -241,7 +244,7 @@ export default function LeadDetails({ route }) {
                 <View style={styles.badge}>
                   <Ionicons name="calendar" size={12} color={colors.primary} />
                   <Text style={styles.badgeText}>
-                    {editableLead.followupDate}
+                    {formatDate(editableLead.followupDate)}
                   </Text>
                 </View>
               )}
@@ -297,8 +300,8 @@ export default function LeadDetails({ route }) {
         </View>
         <Selector
           label="Status"
-          options={leadStatuses}
-          selectedValue={statusSelected}
+          options={statusItems}
+          selectedValue={editableLead?.status || null}
           onValueChange={handleStatusChange}
           placeholder="Select status"
           zIndex={10000}
@@ -306,8 +309,10 @@ export default function LeadDetails({ route }) {
         />
         <Selector
           label="Substatus"
-          options={leadSubStatuses}
-          selectedValue={subStatusSelected}
+          options={substatusItems}
+          selectedValue={
+            editableLead?.substatus || editableLead?.subStatus || null
+          }
           onValueChange={handleSubStatusChange}
           placeholder="Select substatus"
           zIndex={9000}
@@ -621,7 +626,7 @@ export default function LeadDetails({ route }) {
         </View>
 
         {!isEditingRemark ? (
-          <View>
+          <>
             <View style={styles.remarkBox}>
               {remarkText ? (
                 <Text style={styles.remarkText}>{displayRemark}</Text>
@@ -640,9 +645,9 @@ export default function LeadDetails({ route }) {
                 </Text>
               </TouchableOpacity>
             )}
-          </View>
+          </>
         ) : (
-          <View>
+          <>
             <View style={styles.formGroup}>
               <Text style={styles.formLabel}>Remark</Text>
               <TextInput
@@ -652,7 +657,7 @@ export default function LeadDetails({ route }) {
                 onChangeText={(t) => setRemarkDraft(t)}
               />
             </View>
-          </View>
+          </>
         )}
       </View>
 
@@ -703,11 +708,7 @@ export default function LeadDetails({ route }) {
           </View>
           <Ionicons name="chevron-forward" size={20} color={colors.primary} />
         </TouchableOpacity>
-        <SegmentTabs
-          tabs={docTabs}
-          activeKey={activeDocTab}
-          onChange={setActiveDocTab}
-        />
+
         <TouchableOpacity
           style={[styles.ctaCard, { marginTop: 8 }]}
           onPress={() => navigation.navigate("Main", { screen: "University" })}
