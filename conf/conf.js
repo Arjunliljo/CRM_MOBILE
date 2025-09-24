@@ -1,11 +1,15 @@
 import axios from "axios";
 
-const baseUrl = "http://localhost:3000/api";
+const baseURL = "http://localhost:3000/api/v2";
+
+// In-memory auth token cache
+let __authToken = null;
 
 // Create axios instance
-const api = axios.create({
-  baseURL: "https://your-api-base-url.com/api",
+export const api = axios.create({
+  baseURL,
   timeout: 10000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -86,7 +90,7 @@ api.interceptors.response.use(
 const getAuthToken = () => {
   // Return stored auth token (from AsyncStorage, SecureStore, etc.)
   // Example: return AsyncStorage.getItem('authToken');
-  return null; // Replace with actual implementation
+  return __authToken; // Using in-memory cache for now
 };
 
 const handleUnauthorized = () => {
@@ -96,3 +100,12 @@ const handleUnauthorized = () => {
 };
 
 export default api;
+
+// Expose helpers to manage auth token
+export const setAuthToken = (token) => {
+  __authToken = token || null;
+};
+
+export const clearAuthToken = () => {
+  __authToken = null;
+};

@@ -8,17 +8,53 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../constants/colors";
+import api, { setAuthToken } from "../conf/conf";
 
 export default function Login() {
   const navigation = useNavigation();
   const [viewPassword, setViewPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleViewPassword = () => {
     setViewPassword(!viewPassword);
+  };
+  const handleLogin = async () => {
+    if (!email || !password) {
+      setError("Please enter your email and password.");
+      return;
+    }
+    setError("");
+    setLoading(true);
+    try {
+      const res = await api.post("/user/login", {
+        email: email.trim(),
+        password: password,
+      });
+
+      if (res?.status === 200 || res?.status === 201) {
+        const token = res?.data?.token || res?.data?.accessToken;
+        if (token) {
+          setAuthToken(token);
+        }
+        navigation.reset({ index: 0, routes: [{ name: "Main" }] });
+      } else {
+        setError("Login failed. Please try again.");
+      }
+    } catch (e) {
+      const message =
+        e?.response?.data?.message || e?.message || "Unable to login.";
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -70,6 +106,9 @@ export default function Login() {
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
+                value={email}
+                onChangeText={setEmail}
+                returnKeyType="next"
               />
             </View>
           </View>
@@ -88,6 +127,10 @@ export default function Login() {
                 placeholderTextColor={colors.placeholderText}
                 secureTextEntry={!viewPassword}
                 autoCapitalize="none"
+                value={password}
+                onChangeText={setPassword}
+                returnKeyType="done"
+                onSubmitEditing={handleLogin}
               />
               <TouchableOpacity
                 style={styles.eyeButton}
@@ -102,6 +145,13 @@ export default function Login() {
             </View>
           </View>
 
+          {/* Error */}
+          {!!error && (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
+          )}
+
           {/* Forgot Password */}
           <TouchableOpacity style={styles.forgotPassword}>
             <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
@@ -110,9 +160,14 @@ export default function Login() {
           {/* Login Button */}
           <TouchableOpacity
             style={styles.loginButton}
-            onPress={() => navigation.navigate("Main")}
+            onPress={handleLogin}
+            disabled={loading}
           >
-            <Text style={styles.loginButtonText}>Sign In</Text>
+            {loading ? (
+              <ActivityIndicator color={colors.whiteText} />
+            ) : (
+              <Text style={styles.loginButtonText}>Sign In</Text>
+            )}
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -210,6 +265,13 @@ const styles = StyleSheet.create({
   forgotPassword: {
     alignSelf: "flex-end",
     marginBottom: 24,
+  },
+  errorContainer: {
+    marginBottom: 12,
+  },
+  errorText: {
+    color: "#ff4d4f",
+    fontSize: 14,
   },
   forgotPasswordText: {
     fontSize: 14,

@@ -4,6 +4,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
 import { store } from "./global/store";
+import Booktstrap from "./api/Booktstrap";
 
 const queryClient = new QueryClient();
 
@@ -14,6 +15,7 @@ export default function App() {
         <StatusBar style="auto" />
         <Provider store={store}>
           <QueryClientProvider client={queryClient}>
+            <Booktstrap />
             <Route />
           </QueryClientProvider>
         </Provider>

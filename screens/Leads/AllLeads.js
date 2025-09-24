@@ -3,6 +3,7 @@ import { StyleSheet, View, FlatList, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../constants/colors";
 import LeadCard from "../../components/Leads/LeadCard";
+import { useLeads } from "./hooks/useLeads";
 
 const dummyLeads = [
   {
@@ -218,6 +219,17 @@ export default function AllLeads({
 }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredLeads, setFilteredLeads] = useState(dummyLeads);
+
+  const {
+    leads,
+    isLoading,
+    totalLeads,
+    isLoadingMore,
+    error,
+    refetch,
+    fetchNextPage,
+    hasMore,
+  } = useLeads();
 
   const handleSearch = (query) => {
     setSearchQuery(query);
