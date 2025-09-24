@@ -17,8 +17,9 @@ import {
   getStatusName,
   getCountryName,
 } from "../../helpers/bootstrapHelpers";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { formatDate } from "../../helpers/dateFormater";
+import { setCurLead } from "../../global/leadSlice";
 
 const dummyImageUrl =
   "https://static.vecteezy.com/system/resources/thumbnails/036/594/092/small/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg";
@@ -30,7 +31,7 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
   const countries = useSelector((state) => state.bootstrap.countries);
   const navigation = useNavigation();
   const swipeableRef = React.useRef(null);
-
+  const dispatch = useDispatch();
   // === Swipe actions ===
   const handleSwipeLeft = () => {
     const phoneNumber = "+918714441727";
@@ -61,6 +62,7 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
     if (isSelectionMode) {
       onSelection?.();
     } else {
+      dispatch(setCurLead(Lead));
       navigation.navigate("LeadDetails", { lead: Lead });
     }
   };

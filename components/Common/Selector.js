@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { colors } from "../../constants/colors";
@@ -22,6 +22,16 @@ export default function Selector({
   const [internalOpen, setInternalOpen] = useState(false);
   const [value, setValue] = useState(selectedValue);
   const [items, setItems] = useState(options);
+
+  // Keep items in sync with options prop
+  useEffect(() => {
+    setItems(Array.isArray(options) ? options : []);
+  }, [options]);
+
+  // Keep selected value in sync with selectedValue prop
+  useEffect(() => {
+    setValue(selectedValue);
+  }, [selectedValue]);
 
   const isOpen = onOpen !== null ? open : internalOpen;
 
@@ -57,7 +67,7 @@ export default function Selector({
         setItems={setItems}
         onChangeValue={handleValueChange}
         placeholder={placeholder}
-        searchable={false}
+        searchable={searchable}
         multiple={multiple}
         disabled={disabled}
         style={styles.dropdown}
