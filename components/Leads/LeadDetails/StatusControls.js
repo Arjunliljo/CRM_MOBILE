@@ -44,7 +44,12 @@ export default function StatusControls({
     <View style={[styles.card, { zIndex: 9000 }]}>
       <Selector
         label="Status"
-        options={statuses?.filter((val) => val?.isApplication === isStudent)}
+        options={statuses
+          ?.filter((val) => val?.isApplication === isStudent)
+          ?.map((val) => ({
+            value: val._id,
+            label: val.status || val.name,
+          }))}
         selectedValue={status || null}
         onValueChange={handleStatusChange}
         placeholder="Select status"
@@ -53,7 +58,10 @@ export default function StatusControls({
       />
       <Selector
         label="Substatus"
-        options={subStatuses}
+        options={subStatuses?.map((val) => ({
+          value: val._id,
+          label: val.subStatus || val.name,
+        }))}
         selectedValue={subStatus}
         onValueChange={handleStatusChange}
         placeholder="Select substatus"
