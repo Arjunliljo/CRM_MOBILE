@@ -54,8 +54,6 @@ export default function AllApplications() {
     refetch,
   } = useApplication();
 
-  console.log(data, "data");
-
   const handleSearch = (query) => {
     setSearchQuery(query);
     if (query) {

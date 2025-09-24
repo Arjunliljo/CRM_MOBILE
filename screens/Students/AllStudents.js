@@ -40,7 +40,7 @@ export default function AllStudents() {
   };
 
   const {
-    data,
+    data: students,
     isLoading,
     isFetchingNextPage,
     fetchNextPage,
@@ -48,8 +48,6 @@ export default function AllStudents() {
     error,
     refetch,
   } = useStudents();
-
-  console.log(data, "STudentss");
 
   return (
     <View style={styles.container}>
