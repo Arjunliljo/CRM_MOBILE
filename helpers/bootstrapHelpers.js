@@ -13,4 +13,9 @@ const getCountryName = (country, countries) => {
   return countryData ? countryData.name : "N/A";
 };
 
-export { getBranchName, getStatusName, getCountryName };
+const getSubStatusName = (subStatus, substatuses) => {
+  const subStatusData = substatuses.find((s) => s._id === subStatus);
+  return subStatusData ? subStatusData.name : "N/A";
+};
+
+export { getBranchName, getStatusName, getCountryName, getSubStatusName };

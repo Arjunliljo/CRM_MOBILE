@@ -3,6 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../constants/colors";
+import { getBranchName, getStatusName } from "../../helpers/bootstrapHelpers";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurStudent } from "../../global/studentSlice";
 
 const dummyImageUrl =
   "https://static.vecteezy.com/system/resources/thumbnails/036/594/092/small/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg";
@@ -10,8 +13,14 @@ const dummyImageUrl =
 export default function StudentCard({ student }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const branches = useSelector((state) => state.bootstrap.branches);
+  const statuses = useSelector((state) => state.bootstrap.statuses);
+  const countries = useSelector((state) => state.bootstrap.countries);
 
   const onPressCard = () => {
+    dispatch(setCurStudent(student));
     navigation.navigate("StudentDetails", { student });
   };
 
@@ -30,14 +39,18 @@ export default function StudentCard({ student }) {
         </View>
         <View style={styles.info}>
           <Text style={styles.name}>{student?.name || "N/A"}</Text>
-          <Text style={styles.company}>{student?.branch || "N/A"}</Text>
+          <Text style={styles.company}>
+            {getBranchName(student?.branch, branches) || "N/A"}
+          </Text>
         </View>
       </View>
 
       <View style={styles.actionsRow}>
         <View style={styles.actionButton}>
           <Ionicons name="flag" size={12} color={colors.primary} />
-          <Text style={styles.actionText}>{student?.status || "N/A"}</Text>
+          <Text style={styles.actionText}>
+            {getStatusName(student?.status, statuses) || "N/A"}
+          </Text>
         </View>
         <View style={styles.actionButton}>
           <Ionicons name="flag-outline" size={12} color={colors.primary} />

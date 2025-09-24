@@ -40,7 +40,7 @@ export default function AllStudents() {
   };
 
   const {
-    data: students,
+    students,
     isLoading,
     isFetchingNextPage,
     fetchNextPage,
@@ -63,7 +63,7 @@ export default function AllStudents() {
       </View>
 
       <FlatList
-        data={filtered}
+        data={students}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => <StudentCard student={item} />}
         contentContainerStyle={styles.listContainer}

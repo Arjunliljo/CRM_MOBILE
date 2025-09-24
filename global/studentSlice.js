@@ -19,10 +19,10 @@ const student = {
 
 const studentSlice = createSlice({
   name: "student",
-  initialState: { value: 0, curLead: student, source: "Source" },
+  initialState: { curStudent: 0, curLead: student, source: "Source" },
   reducers: {
     setCurStudent: (state, action) => {
-      state.curLead = action.payload;
+      state.curStudent = action.payload;
     },
     setCurSource: (state, action) => {
       state.source = action.payload;
