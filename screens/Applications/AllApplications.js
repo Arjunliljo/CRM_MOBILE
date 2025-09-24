@@ -3,6 +3,7 @@ import { StyleSheet, View, FlatList, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../constants/colors";
 import ApplicationCard from "../../components/Applications/ApplicationCard";
+import { useApplication } from "./hooks/useApplications";
 
 const dummyApplications = [
   {
@@ -42,6 +43,18 @@ const dummyApplications = [
 export default function AllApplications() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filtered, setFiltered] = useState(dummyApplications);
+
+  const {
+    data,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+    error,
+    refetch,
+  } = useApplication();
+
+  console.log(data, "data");
 
   const handleSearch = (query) => {
     setSearchQuery(query);

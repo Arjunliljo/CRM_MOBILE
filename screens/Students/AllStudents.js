@@ -3,6 +3,7 @@ import { StyleSheet, View, FlatList, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../constants/colors";
 import StudentCard from "../../components/Students/StudentCard";
+import { useStudents } from "./hooks/useStudents";
 
 const dummyStudents = [
   {
@@ -37,6 +38,18 @@ export default function AllStudents() {
       setFiltered(dummyStudents);
     }
   };
+
+  const {
+    data,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+    error,
+    refetch,
+  } = useStudents();
+
+  console.log(data, "STudentss");
 
   return (
     <View style={styles.container}>
