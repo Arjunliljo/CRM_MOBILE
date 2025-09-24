@@ -32,6 +32,12 @@ export default function LeadDetails({ route }) {
     } catch (error) {}
   };
 
+  const handleContactChange = async (data) => {
+    try {
+      // api call
+    } catch (error) {}
+  };
+
   //name, status, branch, followup, source, country
   return (
     <ScrollView
@@ -56,15 +62,21 @@ export default function LeadDetails({ route }) {
         curSubStatus={lead.subStatus}
       />
 
-      {/* <ContactInfoCard
-        isEditing={isEditingContact}
-        setIsEditing={setIsEditingContact}
-        editableLead={editableLead}
-        contactDraft={contactDraft}
-        setContactDraft={setContactDraft}
-        onSave={saveContact}
-        onCancel={cancelContact}
-      /> */}
+      <ContactInfoCard
+        // isEditing={isEditingContact}
+        // setIsEditing={setIsEditingContact}
+        // editableLead={editableLead}
+        // contactDraft={contactDraft}
+        // setContactDraft={setContactDraft}
+        // onSave={saveContact}
+        // onCancel={cancelContact}
+        data={{
+          phone: lead?.phone,
+          email: lead?.email,
+          district: lead?.district,
+        }}
+        onHandleChange={handleContactChange}
+      />
 
       {/* <LeadDetailsCard
         isEditing={isEditingDetails}

@@ -81,16 +81,25 @@ export default function StudentDetails({ route }) {
 
   // Remark handled inside RemarkCard
 
+  const handleStatusChange = async (status, subStatus) => {
+    try {
+      // status and sub status api call
+    } catch (error) {}
+  };
+
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
       <HeaderSection
-        editable={editable}
-        statusName={statusName}
-        branchName={branchName}
-        primaryCountryName={primaryCountryName}
+        data={{
+          branch: getBranchName(curStudent.branch, branches),
+          name: curStudent.name,
+          country: getCountryName(curStudent?.countries?.[0], countries),
+          followupDate: curStudent.followupDate,
+          source: curStudent.leadSource,
+        }}
       />
 
       <ActionButtonsRow
@@ -99,7 +108,11 @@ export default function StudentDetails({ route }) {
         onEmail={handleEmail}
       />
 
-      <StatusCard statusName={statusName} subStatusName={subStatusName} />
+      <StatusControls
+        onHandleChange={handleStatusChange}
+        curStatus={curStudent.status}
+        curSubStatus={curStudent.subStatus}
+      />
 
       <ContactCard
         initial={{

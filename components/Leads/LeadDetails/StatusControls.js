@@ -42,9 +42,6 @@ export default function StatusControls({
 
   return (
     <View style={[styles.card, { zIndex: 9000 }]}>
-      <View style={styles.cardHeaderRow}>
-        <Text style={styles.cardTitle}>Status</Text>
-      </View>
       <Selector
         label="Status"
         options={statuses?.filter((val) => val?.isApplication === isStudent)}

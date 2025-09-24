@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../../constants/colors";
 import { styles } from "../../../screens/Leads/LeadDetails/leadDetailsStyle";
 
-export default function ContactInfoCard({
-  isEditing,
-  setIsEditing,
-  editableLead,
-  contactDraft,
-  setContactDraft,
-  onSave,
-  onCancel,
-}) {
+export default function ContactInfoCard({ onHandleChange, data }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editPhone, setEditPhone] = useState(data.phone);
+  const [editEmail, setEditEmail] = useState(data.email);
+  const [editDistrict, setEditDistrict] = useState(data.district);
+
+  useEffect(() => {
+    setEditDistrict(data.district);
+    setEditEmail(data.email);
+    setEditPhone(data.phone);
+  }, [data]);
   return (
     <View style={styles.card}>
       <View style={styles.cardHeaderRow}>
@@ -30,7 +32,7 @@ export default function ContactInfoCard({
           <View style={styles.editActionsRow}>
             <TouchableOpacity
               style={[styles.editChip, styles.editChipPrimary]}
-              onPress={onSave}
+              onPress={onHandleChange}
               activeOpacity={0.7}
             >
               <Ionicons name="checkmark" size={14} color={colors.whiteText} />
@@ -38,7 +40,7 @@ export default function ContactInfoCard({
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.editChip}
-              onPress={onCancel}
+              onPress={() => setIsEditing(false)}
               activeOpacity={0.7}
             >
               <Ionicons name="close" size={14} color={colors.primary} />
@@ -59,7 +61,7 @@ export default function ContactInfoCard({
             <View style={styles.itemContent}>
               <Text style={styles.itemLabel}>Phone</Text>
               <Text style={styles.itemValue}>
-                {editableLead.phone || "Not provided"}
+                {data.phone || "Not provided"}
               </Text>
             </View>
           </View>
@@ -73,7 +75,7 @@ export default function ContactInfoCard({
             <View style={styles.itemContent}>
               <Text style={styles.itemLabel}>Email</Text>
               <Text style={styles.itemValue}>
-                {editableLead.email || "Not provided"}
+                {data.email || "Not provided"}
               </Text>
             </View>
           </View>
@@ -87,7 +89,7 @@ export default function ContactInfoCard({
             <View style={styles.itemContent}>
               <Text style={styles.itemLabel}>District</Text>
               <Text style={styles.itemValue}>
-                {editableLead.district || "Not provided"}
+                {data?.district || "Not provided"}
               </Text>
             </View>
           </View>
