@@ -32,7 +32,14 @@ export default function ContactInfoCard({ onHandleChange, data }) {
           <View style={styles.editActionsRow}>
             <TouchableOpacity
               style={[styles.editChip, styles.editChipPrimary]}
-              onPress={onHandleChange}
+              onPress={async () => {
+                await onHandleChange({
+                  phone: editPhone,
+                  email: editEmail,
+                  district: editDistrict,
+                });
+                setIsEditing(false);
+              }}
               activeOpacity={0.7}
             >
               <Ionicons name="checkmark" size={14} color={colors.whiteText} />
@@ -101,8 +108,8 @@ export default function ContactInfoCard({ onHandleChange, data }) {
             <TextInput
               style={styles.input}
               keyboardType="phone-pad"
-              value={contactDraft.phone}
-              onChangeText={(t) => setContactDraft((p) => ({ ...p, phone: t }))}
+              value={editPhone}
+              onChangeText={(t) => setEditPhone(t)}
             />
           </View>
           <View style={styles.formGroup}>
@@ -111,18 +118,16 @@ export default function ContactInfoCard({ onHandleChange, data }) {
               style={styles.input}
               keyboardType="email-address"
               autoCapitalize="none"
-              value={contactDraft.email}
-              onChangeText={(t) => setContactDraft((p) => ({ ...p, email: t }))}
+              value={editEmail}
+              onChangeText={(t) => setEditEmail(t)}
             />
           </View>
           <View style={styles.formGroup}>
             <Text style={styles.formLabel}>District</Text>
             <TextInput
               style={styles.input}
-              value={contactDraft.district}
-              onChangeText={(t) =>
-                setContactDraft((p) => ({ ...p, district: t }))
-              }
+              value={editDistrict}
+              onChangeText={(t) => setEditDistrict(t)}
             />
           </View>
         </View>

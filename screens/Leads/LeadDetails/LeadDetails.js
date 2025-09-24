@@ -35,6 +35,7 @@ export default function LeadDetails({ route }) {
   const handleContactChange = async (data) => {
     try {
       // api call
+      console.log(data, "in response data>>>>>");
     } catch (error) {}
   };
 
@@ -55,12 +56,12 @@ export default function LeadDetails({ route }) {
       />
 
       <PrimaryActions data={{ phone: lead?.phone, email: lead?.email }} />
-
+      {/* 
       <StatusControls
         onHandleChange={handleStatusChange}
         curStatus={lead.status}
         curSubStatus={lead.subStatus}
-      />
+      /> */}
 
       <ContactInfoCard
         // isEditing={isEditingContact}
