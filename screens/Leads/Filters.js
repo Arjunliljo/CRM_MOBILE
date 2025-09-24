@@ -10,8 +10,25 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../constants/colors";
 import Selector from "../../components/Common/Selector";
 import { filterOptions } from "../../constants/dropdownData";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Filters({ onClose }) {
+  // Access cached branches data directly from React Query cache
+  const queryClient = useQueryClient();
+  const branchesResponse = queryClient.getQueryData(["branches"]);
+
+  // Transform API response to dropdown format
+  const defaultOption = [{ label: "All Branches", value: "all" }];
+
+  let branchOptions = defaultOption;
+  if (branchesResponse?.data?.data) {
+    const apiBranches = branchesResponse.data.data.map((branch) => ({
+      label: branch.name || branch.branch_name || branch.title,
+      value: branch.id || branch._id || branch.value,
+    }));
+    branchOptions = [...defaultOption, ...apiBranches];
+  }
+
   const [selectedFilters, setSelectedFilters] = useState({
     branch: "all",
     status: "all",
@@ -82,7 +99,7 @@ export default function Filters({ onClose }) {
       <View style={styles.filterGrid}>
         <View style={styles.filterColumn}>
           <Selector
-            options={filterOptions.branch}
+            options={branchOptions}
             selectedValue={selectedFilters.branch}
             onValueChange={createFilterHandler("branch")}
             placeholder="Select Branch"

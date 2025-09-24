@@ -17,6 +17,8 @@ export default function Login() {
   const navigation = useNavigation();
   const [viewPassword, setViewPassword] = useState(false);
 
+  const [values, setValues] = useState();
+
   const handleViewPassword = () => {
     setViewPassword(!viewPassword);
   };
