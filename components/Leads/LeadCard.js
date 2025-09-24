@@ -12,12 +12,22 @@ import { Ionicons } from "@expo/vector-icons";
 import { Swipeable } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../constants/colors";
+import {
+  getBranchName,
+  getStatusName,
+  getCountryName,
+} from "../../helpers/bootstrapHelpers";
+import { useSelector } from "react-redux";
+import { formatDate } from "../../helpers/dateFormater";
 
 const dummyImageUrl =
   "https://static.vecteezy.com/system/resources/thumbnails/036/594/092/small/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg";
 
 const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const branches = useSelector((state) => state.bootstrap.branches);
+  const statuses = useSelector((state) => state.bootstrap.statuses);
+  const countries = useSelector((state) => state.bootstrap.countries);
   const navigation = useNavigation();
   const swipeableRef = React.useRef(null);
 
@@ -128,7 +138,9 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
 
           <View style={styles.info}>
             <Text style={styles.name}>{Lead?.name || "N/A"}</Text>
-            <Text style={styles.company}>{Lead?.branch || "N/A"}</Text>
+            <Text style={styles.company}>
+              {getBranchName(Lead?.branch, branches) || "N/A"}
+            </Text>
           </View>
         </View>
 
@@ -136,11 +148,22 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
         <View style={styles.actionsRow}>
           <View style={styles.actionButton}>
             <Ionicons name="flag" size={12} color={colors.primary} />
-            <Text style={styles.actionText}>{Lead?.status || "N/A"}</Text>
+            <Text style={styles.actionText}>
+              {getStatusName(Lead?.status, statuses) || "N/A"}
+            </Text>
           </View>
           <View style={styles.actionButton}>
             <Ionicons name="flag-outline" size={12} color={colors.primary} />
-            <Text style={styles.actionText}>{Lead?.country || "N/A"}</Text>
+            <Text style={styles.actionText}>
+              {Lead?.country ||
+                getCountryName(
+                  Lead?.countries?.length > 0
+                    ? Lead?.countries?.[0]
+                    : Lead?.country,
+                  countries
+                ) ||
+                "N/A"}
+            </Text>
           </View>
         </View>
 
@@ -170,7 +193,7 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
                 color={colors.secondary}
               />
               <Text style={styles.detailText}>
-                {Lead?.followupDate || "N/A"}
+                {formatDate(Lead?.followupDate) || "N/A"}
               </Text>
             </View>
           </View>
@@ -179,7 +202,7 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
         {/* Footer */}
         <TouchableOpacity style={styles.footer} onPress={toggleExpanded}>
           <Text style={styles.footerText}>
-            Added on {Lead?.createdAt || "N/A"}
+            Added on {formatDate(Lead?.createdAt) || "N/A"}
           </Text>
           <Ionicons
             name={isExpanded ? "chevron-up" : "chevron-down"}

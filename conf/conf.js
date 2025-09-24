@@ -25,11 +25,11 @@ api.interceptors.request.use(
     }
 
     // Log request for debugging
-    console.log("API Request:", {
-      method: config.method?.toUpperCase(),
-      url: config.url,
-      data: config.data,
-    });
+    // console.log("API Request:", {
+    //   method: config.method?.toUpperCase(),
+    //   url: config.url,
+    //   data: config.data,
+    // });
 
     return config;
   },
@@ -43,11 +43,11 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => {
     // Log successful response
-    console.log("API Response:", {
-      status: response.status,
-      url: response.config.url,
-      data: response.data,
-    });
+    // console.log("API Response:", {
+    //   status: response.status,
+    //   url: response.config.url,
+    //   data: response.data,
+    // });
 
     return response;
   },

@@ -22,31 +22,66 @@ const bootstrapSlice = createSlice({
   reducers: {
     setBranches: (state, action) => {
       state.branchConfigs = action.payload;
-      state.branches = action.payload.data;
+      const payloadData = action.payload?.data;
+      state.branches = Array.isArray(payloadData?.data)
+        ? payloadData.data
+        : Array.isArray(payloadData)
+        ? payloadData
+        : [];
     },
     setCountries: (state, action) => {
       state.countryConfigs = action.payload;
-      state.countries = action.payload.data;
+      const payloadData = action.payload?.data;
+      state.countries = Array.isArray(payloadData?.data)
+        ? payloadData.data
+        : Array.isArray(payloadData)
+        ? payloadData
+        : [];
     },
     setStatuses: (state, action) => {
       state.statusConfigs = action.payload;
-      state.statuses = action.payload.data;
+      const payloadData = action.payload?.data;
+      state.statuses = Array.isArray(payloadData?.data)
+        ? payloadData.data
+        : Array.isArray(payloadData)
+        ? payloadData
+        : [];
     },
     setSubstatuses: (state, action) => {
       state.substatusConfigs = action.payload;
-      state.substatuses = action.payload.data;
+      const payloadData = action.payload?.data;
+      state.substatuses = Array.isArray(payloadData?.data)
+        ? payloadData.data
+        : Array.isArray(payloadData)
+        ? payloadData
+        : [];
     },
     setRoles: (state, action) => {
       state.roleConfigs = action.payload;
-      state.roles = action.payload.data;
+      const payloadData = action.payload?.data;
+      state.roles = Array.isArray(payloadData?.data)
+        ? payloadData.data
+        : Array.isArray(payloadData)
+        ? payloadData
+        : [];
     },
     setUsers: (state, action) => {
       state.userConfigs = action.payload;
-      state.users = action.payload.data;
+      const payloadData = action.payload?.data;
+      state.users = Array.isArray(payloadData?.data)
+        ? payloadData.data
+        : Array.isArray(payloadData)
+        ? payloadData
+        : [];
     },
     setForms: (state, action) => {
       state.formConfigs = action.payload;
-      state.forms = action.payload.data;
+      const payloadData = action.payload?.data;
+      state.forms = Array.isArray(payloadData?.data)
+        ? payloadData.data
+        : Array.isArray(payloadData)
+        ? payloadData
+        : [];
     },
   },
 });
