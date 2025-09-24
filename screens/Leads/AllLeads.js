@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, FlatList, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../constants/colors";
 import LeadCard from "../../components/Leads/LeadCard";
 import { useLeads } from "./hooks/useLeads";
+import LoadingScreen from "../../components/LoadingScreen";
 
 const dummyLeads = [
   {
@@ -218,7 +219,7 @@ export default function AllLeads({
   onLeadSelection,
 }) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredLeads, setFilteredLeads] = useState(dummyLeads);
+  const [filteredLeads, setFilteredLeads] = useState([]);
 
   const {
     leads,
@@ -231,6 +232,16 @@ export default function AllLeads({
     hasMore,
   } = useLeads();
 
+  useEffect(() => {
+    if (leads.length > 0) {
+      // setFilteredLeads(leads);
+    }
+  }, [leads]);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   const handleSearch = (query) => {
     setSearchQuery(query);
     if (query) {
@@ -240,9 +251,9 @@ export default function AllLeads({
           lead.email.toLowerCase().includes(query.toLowerCase()) ||
           lead.phone.includes(query)
       );
-      setFilteredLeads(filtered);
+      // setFilteredLeads(filtered);
     } else {
-      setFilteredLeads(dummyLeads);
+      // setFilteredLeads(dummyLeads);
     }
   };
 
@@ -262,7 +273,7 @@ export default function AllLeads({
 
       {/* Leads List */}
       <FlatList
-        data={filteredLeads}
+        data={leads}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <LeadCard
