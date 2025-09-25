@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { colors } from "../../constants/colors";
 import CourseCard from "../../components/Course/CourseCard";
@@ -16,6 +16,21 @@ export default function CourseListing({ route, navigation }) {
   const [selectedCourseDetails, setSelectedCourseDetails] = useState(null);
   const dispatch = useDispatch();
   const courses = university.courses;
+
+  const selectedFromParamsCourse = route?.params?.course;
+  const selectedCourseId = selectedFromParamsCourse || null;
+
+  const orderedCourses = useMemo(() => {
+    if (!Array.isArray(courses)) return [];
+    if (!selectedCourseId) return courses;
+    const idx = courses.findIndex(
+      (c) => c?._id === selectedCourseId || c?.id === selectedCourseId
+    );
+    if (idx < 0) return courses;
+    const selected = courses[idx];
+    const rest = courses.filter((_, i) => i !== idx);
+    return [selected, ...rest];
+  }, [courses, selectedCourseId]);
 
   const showCourseDetailsModal = (course) => {
     setSelectedCourseDetails(course);
@@ -38,13 +53,14 @@ export default function CourseListing({ route, navigation }) {
 
       {/* Courses List */}
       <FlatList
-        data={courses}
-        keyExtractor={(item) => item.id}
+        data={orderedCourses}
+        keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <CourseCard
             course={item}
             university={university}
             onPress={showCourseDetailsModal}
+            selected={!!selectedCourseId && item?._id === selectedCourseId}
           />
         )}
         contentContainerStyle={styles.coursesList}

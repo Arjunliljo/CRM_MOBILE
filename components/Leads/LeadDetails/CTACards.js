@@ -33,7 +33,10 @@ export default function CTACards({ navigation, lead }) {
         onPress={() =>
           navigation.navigate("Main", {
             screen: "University",
-            params: { university: lead?.university?.[0] || lead?.university },
+            params: {
+              university: lead?.university?.[0] || lead?.university,
+              course: lead?.course?.[0] || lead?.course,
+            },
           })
         }
         containerStyle={{ marginTop: 8 }}

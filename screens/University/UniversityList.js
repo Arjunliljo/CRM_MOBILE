@@ -18,7 +18,9 @@ export default function UniversityPage({ navigation, route }) {
   const [viewMode, setViewMode] = useState("grid"); // grid or list
 
   const selectedFromParams = route?.params?.university;
+  const selectedFromParamsCourse = route?.params?.course;
   const selectedUniversityId = selectedFromParams || null;
+  const selectedCourseId = selectedFromParamsCourse || null;
 
   const {
     data,
@@ -56,6 +58,7 @@ export default function UniversityPage({ navigation, route }) {
   const navigateToCourses = (university) => {
     navigation.navigate("CourseListing", {
       university: university,
+      course: selectedCourseId,
     });
   };
 

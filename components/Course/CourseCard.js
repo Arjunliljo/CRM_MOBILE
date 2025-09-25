@@ -3,9 +3,14 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../constants/colors";
 
-const CourseCard = ({ course, university, onPress }) => (
+const CourseCard = ({ course, university, onPress, selected }) => (
   <TouchableOpacity
-    style={styles.courseCard}
+    style={[
+      styles.courseCard,
+      selected
+        ? { borderColor: colors.primary, backgroundColor: colors.navActive }
+        : null,
+    ]}
     onPress={() => onPress(course)}
     activeOpacity={0.7}
   >
