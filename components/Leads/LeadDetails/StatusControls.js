@@ -17,6 +17,7 @@ export default function StatusControls({
 
   const [status, setStatus] = useState(curStatus);
   const [subStatus, setSubStatus] = useState(curSubStatus);
+  const isUpdatingRef = useRef(false);
 
   useEffect(() => {
     setSubStatuses(statuses?.find((val) => val._id === curStatus)?.subStatuses);
