@@ -11,6 +11,7 @@ import ContactInfoCard from "../../../components/Leads/LeadDetails/ContactInfoCa
 import LeadDetailsCard from "../../../components/Leads/LeadDetails/LeadDetailsCard";
 import RemarkCard from "../../../components/Leads/LeadDetails/RemarkCard";
 import CTACards from "../../../components/Leads/LeadDetails/CTACards";
+import SelectedCourseSection from "../../../components/Leads/LeadDetails/SelectedCourseSection";
 import {
   getBranchName,
   getCountryName,
@@ -39,6 +40,16 @@ export default function LeadDetails({ route }) {
   const dispatch = useDispatch();
 
   const lead = leadData?.data.data;
+  let hasSelectedCourse = false;
+
+  if (
+    Array.isArray(lead?.university) &&
+    Array.isArray(lead?.course) &&
+    lead?.university?.length &&
+    lead?.course?.length
+  ) {
+    hasSelectedCourse = true;
+  }
 
   // NOTE: Do not return early before hooks; guards are moved below hooks
 
@@ -159,9 +170,19 @@ export default function LeadDetails({ route }) {
         onSave={saveDetails}
       />
 
+      {hasSelectedCourse && (
+        <SelectedCourseSection
+          universityId={lead?.university?.[0]}
+          courseId={lead?.course?.[0]}
+          intakeMonth={lead?.intakeMonth}
+          intakeYear={lead?.intakeYear}
+          countries={countries}
+        />
+      )}
+
       <RemarkCard remarkText={lead?.remark} onSave={saveRemark} />
 
-      <CTACards navigation={navigation} lead={lead} />
+      <CTACards navigation={navigation} lead={lead} hasSelectedCourse={hasSelectedCourse} />
       {/* <ActivityLog title="Activity Log" activities={[]} /> */}
     </ScrollView>
   );

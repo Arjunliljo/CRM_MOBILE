@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import CTAItem from "../../Common/CTAItem";
 import { styles } from "../../../screens/Leads/LeadDetails/leadDetailsStyle";
 
-export default function CTACards({ navigation, lead }) {
+export default function CTACards({ navigation, lead, hasSelectedCourse }) {
   return (
     <View>
       <CTAItem
@@ -26,21 +26,23 @@ export default function CTACards({ navigation, lead }) {
         containerStyle={{ marginTop: 8 }}
       />
 
-      <CTAItem
-        iconName="school-outline"
-        title="University & Courses"
-        subtitle="Open university selection"
-        onPress={() =>
-          navigation.navigate("Main", {
-            screen: "University",
-            params: {
-              university: lead?.university?.[0] || lead?.university,
-              course: lead?.course?.[0] || lead?.course,
-            },
-          })
-        }
-        containerStyle={{ marginTop: 8 }}
-      />
+      {!hasSelectedCourse && (
+        <CTAItem
+          iconName="school-outline"
+          title="University & Courses"
+          subtitle="Open university selection"
+          onPress={() =>
+            navigation.navigate("Main", {
+              screen: "University",
+              params: {
+                university: lead?.university?.[0] || lead?.university,
+                course: lead?.course?.[0] || lead?.course,
+              },
+            })
+          }
+          containerStyle={{ marginTop: 8 }}
+        />
+      )}
     </View>
   );
 }
