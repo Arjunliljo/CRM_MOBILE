@@ -17,7 +17,7 @@ export const useUniversities = ({
       params.append("search", searchQuery.trim());
     }
     if (country && country !== "all") {
-      params.append("country", country);
+      params.append("curCountry", country);
     }
 
     const response = await api.get(`/university?${params.toString()}`);
@@ -32,7 +32,7 @@ export const useUniversities = ({
   const query = useInfiniteQuery({
     queryKey: [
       "universities",
-      { search: searchQuery || "", country: country || "all", pageSize },
+      { search: searchQuery || "", curCountry: country || "all", pageSize },
     ],
     queryFn: fetchPage,
     getNextPageParam: (lastPage) => {

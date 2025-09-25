@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../constants/colors";
-import { countries } from "../../constants/universityData";
+import { useSelector } from "react-redux";
 
 const CountryDropdown = ({
   selectedCountry,
@@ -17,9 +17,9 @@ const CountryDropdown = ({
   showDropdown,
   setShowDropdown,
 }) => {
-  const selectedCountryData = countries.find(
-    (c) => c.value === selectedCountry
-  );
+  const { countries } = useSelector((state) => state.bootstrap);
+
+  const selectedCountryData = countries.find((c) => c._id === selectedCountry);
 
   return (
     <View style={styles.filterDropdown}>
@@ -29,9 +29,8 @@ const CountryDropdown = ({
         onPress={() => setShowDropdown(true)}
       >
         <View style={styles.dropdownButtonContent}>
-          <Text style={styles.flagEmoji}>{selectedCountryData?.flag}</Text>
           <Text style={styles.dropdownButtonText}>
-            {selectedCountryData?.label}
+            {selectedCountryData?.name || "All Countries"}
           </Text>
         </View>
         <Ionicons name="chevron-down" size={20} color={colors.secondaryText} />
@@ -58,29 +57,28 @@ const CountryDropdown = ({
             <ScrollView style={styles.optionsList}>
               {countries.map((option) => (
                 <TouchableOpacity
-                  key={option.value}
+                  key={option._id}
                   style={[
                     styles.optionItem,
-                    selectedCountry === option.value && styles.optionItemActive,
+                    selectedCountry === option._id && styles.optionItemActive,
                   ]}
                   onPress={() => {
-                    onCountrySelect(option.value);
+                    onCountrySelect(option._id);
                     setShowDropdown(false);
                   }}
                 >
                   <View style={styles.optionContent}>
-                    <Text style={styles.flagEmoji}>{option.flag}</Text>
                     <Text
                       style={[
                         styles.optionText,
-                        selectedCountry === option.value &&
+                        selectedCountry === option._id &&
                           styles.optionTextActive,
                       ]}
                     >
-                      {option.label}
+                      {option.name}
                     </Text>
                   </View>
-                  {selectedCountry === option.value && (
+                  {selectedCountry === option._id && (
                     <Ionicons
                       name="checkmark"
                       size={20}
