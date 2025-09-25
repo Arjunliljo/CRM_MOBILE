@@ -64,6 +64,7 @@ export default function LeadDetails({ route }) {
         error.response?.data?.message ||
         error.message ||
         "Failed to update lead status";
+      console.log(errorMessage, "console.log error message");
       showError(errorMessage);
     }
   };
@@ -109,7 +110,6 @@ export default function LeadDetails({ route }) {
 
       await updateLead(lead._id, data);
       showSuccess("Course selection saved to lead!");
-      dispatch(setCurSelectedCourse(null));
       refetch();
       navigation.navigate("LeadDetails", { leadId: lead._id });
     } catch (error) {
@@ -118,6 +118,8 @@ export default function LeadDetails({ route }) {
         error.message ||
         "Failed to save course selection";
       showError(errorMessage);
+    } finally {
+      dispatch(setCurSelectedCourse(null));
     }
   };
 
