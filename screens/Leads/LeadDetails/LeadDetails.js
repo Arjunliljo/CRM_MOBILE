@@ -1,8 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView } from "react-native";
+import React, { useEffect, useState, useLayoutEffect } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  BackHandler,
+} from "react-native";
 import { styles } from "./leadDetailsStyle";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import { colors } from "../../../constants/colors";
 import ActivityLog from "../../../components/Common/ActivityLog";
 import LeadHeader from "../../../components/Leads/LeadDetails/LeadHeader";
 import PrimaryActions from "../../../components/Leads/LeadDetails/PrimaryActions";
@@ -52,6 +60,35 @@ export default function LeadDetails({ route }) {
   }
 
   // NOTE: Do not return early before hooks; guards are moved below hooks
+
+  // Always go back to Main -> Leads when back is pressed
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Main", { screen: "Leads" })}
+          style={{ marginLeft: 12 }}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <Ionicons name="arrow-back" size={24} />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        navigation.navigate("Main", { screen: "Leads" });
+        return true;
+      };
+      const sub = BackHandler.addEventListener(
+        "hardwareBackPress",
+        onBackPress
+      );
+      return () => sub.remove();
+    }, [navigation])
+  );
 
   const handleStatusChange = async (status, subStatus) => {
     try {
@@ -182,7 +219,11 @@ export default function LeadDetails({ route }) {
 
       <RemarkCard remarkText={lead?.remark} onSave={saveRemark} />
 
-      <CTACards navigation={navigation} lead={lead} hasSelectedCourse={hasSelectedCourse} />
+      <CTACards
+        navigation={navigation}
+        lead={lead}
+        hasSelectedCourse={hasSelectedCourse}
+      />
       {/* <ActivityLog title="Activity Log" activities={[]} /> */}
     </ScrollView>
   );
