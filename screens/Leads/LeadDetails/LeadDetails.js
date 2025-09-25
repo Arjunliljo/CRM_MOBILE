@@ -22,6 +22,7 @@ import {
 import { useToast } from "../../../contexts/ToastContext";
 import { useGetLead } from "../hooks/useGetLead";
 import LoadingScreen from "../../../components/LoadingScreen";
+import { formatDate } from "../../../helpers/dateFormater";
 
 export default function LeadDetails({ route }) {
   // const { curLead: lead } = useSelector((state) => state.lead);
@@ -72,6 +73,8 @@ export default function LeadDetails({ route }) {
     }
   };
 
+  const saveDetails = async (data) => {};
+
   //name, status, branch, followup, source, country
   return (
     <ScrollView
@@ -106,15 +109,21 @@ export default function LeadDetails({ route }) {
         onHandleChange={handleContactChange}
       />
 
-      {/* <LeadDetailsCard
-        isEditing={isEditingDetails}
-        setIsEditing={setIsEditingDetails}
-        editableLead={editableLead}
-        detailsDraft={detailsDraft}
-        setDetailsDraft={setDetailsDraft}
+      <LeadDetailsCard
+        data={{
+          source: lead?.leadSource,
+          country: getCountryName(lead?.countries?.[0], countries),
+          followupDate: formatDate(lead?.followupDate),
+          leadId: lead?._id,
+          createdAt: formatDate(lead?.createdAt),
+        }}
+        // isEditing={isEditingDetails}
+        // setIsEditing={setIsEditingDetails}
+        // editableLead={editableLead}
+        // detailsDraft={detailsDraft}
+        // setDetailsDraft={setDetailsDraft}
         onSave={saveDetails}
-        onCancel={cancelDetails}
-      /> */}
+      />
 
       {/* <RemarkCard
         isEditing={isEditingRemark}

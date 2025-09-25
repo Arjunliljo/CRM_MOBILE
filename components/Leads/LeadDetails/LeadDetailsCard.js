@@ -1,19 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../../constants/colors";
 import { styles } from "../../../screens/Leads/LeadDetails/leadDetailsStyle";
 import { formatDate } from "../../../helpers/dateFormater";
 
-export default function LeadDetailsCard({
-  isEditing,
-  setIsEditing,
-  editableLead,
-  detailsDraft,
-  setDetailsDraft,
-  onSave,
-  onCancel,
-}) {
+export default function LeadDetailsCard({ data, onSave }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [values, setValues] = useState({
+    source: data.source,
+    country: data.country,
+    followupDate: data.followupDate,
+  });
   return (
     <View style={styles.card}>
       <View style={styles.cardHeaderRow}>
@@ -31,7 +29,7 @@ export default function LeadDetailsCard({
           <View style={styles.editActionsRow}>
             <TouchableOpacity
               style={[styles.editChip, styles.editChipPrimary]}
-              onPress={onSave}
+              onPress={() => onSave(values)}
               activeOpacity={0.7}
             >
               <Ionicons name="checkmark" size={14} color={colors.whiteText} />
@@ -39,7 +37,7 @@ export default function LeadDetailsCard({
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.editChip}
-              onPress={onCancel}
+              onPress={() => setIsEditing(false)}
               activeOpacity={0.7}
             >
               <Ionicons name="close" size={14} color={colors.primary} />
@@ -62,7 +60,7 @@ export default function LeadDetailsCard({
             <View style={styles.itemContent}>
               <Text style={styles.itemLabel}>Source</Text>
               <Text style={styles.itemValue}>
-                {editableLead.leadSource || "Not provided"}
+                {data.source || "Not provided"}
               </Text>
             </View>
           </View>
@@ -76,7 +74,7 @@ export default function LeadDetailsCard({
             <View style={styles.itemContent}>
               <Text style={styles.itemLabel}>Country</Text>
               <Text style={styles.itemValue}>
-                {editableLead.country || "Not provided"}
+                {data.country || "Not provided"}
               </Text>
             </View>
           </View>
@@ -90,7 +88,7 @@ export default function LeadDetailsCard({
             <View style={styles.itemContent}>
               <Text style={styles.itemLabel}>Follow-up</Text>
               <Text style={styles.itemValue}>
-                {editableLead.followupDate || "Not set"}
+                {data.followupDate || "Not set"}
               </Text>
             </View>
           </View>
@@ -103,9 +101,7 @@ export default function LeadDetailsCard({
             </View>
             <View style={styles.itemContent}>
               <Text style={styles.itemLabel}>Created</Text>
-              <Text style={styles.itemValue}>
-                {editableLead.createdAt || "-"}
-              </Text>
+              <Text style={styles.itemValue}>{data.createdAt || "-"}</Text>
             </View>
           </View>
         </>
@@ -115,20 +111,16 @@ export default function LeadDetailsCard({
             <Text style={styles.formLabel}>Source</Text>
             <TextInput
               style={styles.input}
-              value={detailsDraft.leadSource}
-              onChangeText={(t) =>
-                setDetailsDraft((p) => ({ ...p, leadSource: t }))
-              }
+              value={values.source}
+              onChangeText={(t) => setValues((p) => ({ ...p, source: t }))}
             />
           </View>
           <View style={styles.formGroup}>
             <Text style={styles.formLabel}>Country</Text>
             <TextInput
               style={styles.input}
-              value={detailsDraft.country}
-              onChangeText={(t) =>
-                setDetailsDraft((p) => ({ ...p, country: t }))
-              }
+              value={values.country}
+              onChangeText={(t) => setValues((p) => ({ ...p, country: t }))}
             />
           </View>
           <View style={styles.formGroup}>
@@ -136,9 +128,9 @@ export default function LeadDetailsCard({
             <TextInput
               style={styles.input}
               placeholder="YYYY-MM-DD"
-              value={formatDate(detailsDraft.followupDate)}
+              value={values.followupDate}
               onChangeText={(t) =>
-                setDetailsDraft((p) => ({ ...p, followupDate: t }))
+                setValues((p) => ({ ...p, followupDate: t }))
               }
             />
           </View>
