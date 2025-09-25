@@ -15,6 +15,7 @@ const lead = {
   university: "New York University",
   branch: "Computer Science",
   course: "Bachelor of Science",
+  selectedCourse: {},
 };
 
 const leadSlice = createSlice({
@@ -51,6 +52,9 @@ const leadSlice = createSlice({
     setCurUser: (state, action) => {
       state.user = action.payload;
     },
+    setCurSelectedCourse: (state, action) => {
+      state.selectedCourse = action.payload;
+    },
   },
 });
 
@@ -65,5 +69,6 @@ export const {
   setCurCountry,
   setCurBranch,
   setCurSource,
+  setCurSelectedCourse,
 } = leadSlice.actions;
 export default leadSlice.reducer;

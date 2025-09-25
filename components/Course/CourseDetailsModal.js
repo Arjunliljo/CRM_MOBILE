@@ -46,10 +46,11 @@ const CourseDetailsModal = ({
 
     // Call the onApply function with intake details
     onApply({
-      course,
-      university,
+      course: course?._id,
+      university: university?._id,
       intakeMonth: selectedIntakeMonth,
       intakeYear: selectedIntakeYear,
+      country: university?.country,
     });
   };
 

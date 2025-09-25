@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView } from "react-native";
 import { styles } from "./leadDetailsStyle";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import ActivityLog from "../../../components/Common/ActivityLog";
 import LeadHeader from "../../../components/Leads/LeadDetails/LeadHeader";
@@ -20,35 +20,34 @@ import {
   updateLeadDetails,
 } from "../../../api/Leads/leadBackEndHandler";
 import { useToast } from "../../../contexts/ToastContext";
+import { setCurSelectedCourse } from "../../../global/leadSlice";
 import { useGetLead } from "../hooks/useGetLead";
 import LoadingScreen from "../../../components/LoadingScreen";
 import { formatDate } from "../../../helpers/dateFormater";
 
 export default function LeadDetails({ route }) {
   // const { curLead: lead } = useSelector((state) => state.lead);
+  const { selectedCourse } = useSelector((state) => state.lead);
   const leadId = route?.params?.leadId;
   const { data: leadData, isLoading, error, refetch } = useGetLead(leadId);
   const { showError, showSuccess } = useToast();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const lead = leadData?.data.data;
-
-  // console.log(lead?.data.data, "in lead data>>>>>");
 
   const statuses = useSelector((state) => state.bootstrap.statuses);
   const branches = useSelector((state) => state.bootstrap.branches);
   const countries = useSelector((state) => state.bootstrap.countries);
   const substatuses = useSelector((state) => state.bootstrap.substatuses);
 
-  if (isLoading) return <LoadingScreen />;
-
-  if (!leadId || error) return null;
+  // NOTE: Do not return early before hooks; guards are moved below hooks
 
   const handleStatusChange = async (status, subStatus) => {
     try {
       // status and sub status api call
       const response = await updateLead(lead._id, { status, subStatus });
-      // console.log(response, "in response data>>>>>");
       showSuccess("Lead status updated successfully!");
+      // refetch();
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||
@@ -88,6 +87,32 @@ export default function LeadDetails({ route }) {
       showError(errorMessage);
     }
   };
+
+  useEffect(() => {
+    handleCourseSelection(selectedCourse);
+  }, [selectedCourse]);
+
+  const handleCourseSelection = async (data) => {
+    try {
+      if (!data || !data.course || !data.university) return;
+
+      await updateLead(lead._id, data);
+      showSuccess("Course selection saved to lead!");
+      dispatch(setCurSelectedCourse(null));
+      refetch();
+      navigation.navigate("LeadDetails", { leadId: lead._id });
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to save course selection";
+      showError(errorMessage);
+    }
+  };
+
+  if (isLoading) return <LoadingScreen />;
+
+  if (!leadId || error) return null;
 
   //name, status, branch, followup, source, country
   return (

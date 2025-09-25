@@ -5,7 +5,8 @@ import CourseCard from "../../components/Course/CourseCard";
 import CourseSearchBar from "../../components/Course/CourseSearchBar";
 import CourseResultsHeader from "../../components/Course/CourseResultsHeader";
 import CourseDetailsModal from "../../components/Course/CourseDetailsModal";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setCurSelectedCourse } from "../../global/leadSlice";
 
 export default function CourseListing({ route, navigation }) {
   const { university } = route.params;
@@ -13,7 +14,7 @@ export default function CourseListing({ route, navigation }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [showCourseDetails, setShowCourseDetails] = useState(false);
   const [selectedCourseDetails, setSelectedCourseDetails] = useState(null);
-
+  const dispatch = useDispatch();
   const courses = university.courses;
 
   const showCourseDetailsModal = (course) => {
@@ -22,6 +23,7 @@ export default function CourseListing({ route, navigation }) {
   };
 
   const handleApplyCourse = (selectionData) => {
+    dispatch(setCurSelectedCourse(selectionData));
     setShowCourseDetails(false);
   };
 
