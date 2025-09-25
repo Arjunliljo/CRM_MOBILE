@@ -3,37 +3,45 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { colors } from "../../constants/colors";
 import { getCountryName } from "../../helpers/bootstrapHelpers";
 
-const UniversityCard = ({ university, onPress, countries }) => (
+const UniversityCard = ({ university, onPress, countries, selected }) => (
   <TouchableOpacity
-    style={styles.universityCard}
+    style={[
+      styles.universityCard,
+      selected
+        ? {
+            borderColor: colors.primary,
+            backgroundColor: colors.navActive,
+          }
+        : null,
+    ]}
     onPress={() => onPress(university)}
     activeOpacity={0.7}
   >
     <View style={styles.universityHeader}>
       <View style={styles.universityLogo}>
-        <Text style={styles.logoText}>{university.name.charAt(0)}</Text>
+        <Text style={styles.logoText}>{university?.name?.charAt(0)}</Text>
       </View>
       <View style={styles.universityInfo}>
         <Text style={styles.universityName} numberOfLines={2}>
-          {university.name}
+          {university?.name}
         </Text>
         <View style={styles.locationRow}>
           <Text style={styles.countryFlag}>
-            {getCountryName(university.country, countries)}
+            {getCountryName(university?.country, countries)}
           </Text>
         </View>
       </View>
     </View>
-    {university.about ? (
+    {university?.about ? (
       <Text style={styles.universityAbout} numberOfLines={3}>
-        {university.about}
+        {university?.about}
       </Text>
     ) : null}
 
     <View style={styles.coursesPreview}>
       <Text style={styles.coursesCount}>
-        {university.courses.length} Course
-        {university.courses.length !== 1 ? "s" : ""} Available
+        {university?.courses?.length} Course
+        {university?.courses?.length !== 1 ? "s" : ""} Available
       </Text>
     </View>
   </TouchableOpacity>

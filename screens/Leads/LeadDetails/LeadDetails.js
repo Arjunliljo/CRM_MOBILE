@@ -161,7 +161,7 @@ export default function LeadDetails({ route }) {
 
       <RemarkCard remarkText={lead?.remark} onSave={saveRemark} />
 
-      <CTACards navigation={navigation} editableLead={lead} />
+      <CTACards navigation={navigation} lead={lead} />
       {/* <ActivityLog title="Activity Log" activities={[]} /> */}
     </ScrollView>
   );

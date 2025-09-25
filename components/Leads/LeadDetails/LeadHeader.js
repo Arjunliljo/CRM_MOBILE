@@ -26,10 +26,6 @@ export default function LeadHeader({ data }) {
               <Ionicons name="flag" size={12} color={colors.primary} />
               <Text style={styles.metaText}>{data.country}</Text>
             </View>
-            <View style={styles.metaChip}>
-              <Ionicons name="information-circle" size={12} />
-              <Text style={styles.metaText}>Not provided</Text>
-            </View>
           </View>
           <View style={styles.badgesRow}>
             {Boolean(data?.followupDate) && (
