@@ -19,6 +19,13 @@ export default function RemarkCard({ remarkText, onSave }) {
     setRemark(t);
   };
 
+  const handleSave = () => {
+    onSave({ remark });
+    setTimeout(() => {
+      setIsEditing(false);
+    }, 200);
+  };
+
   return (
     <View style={styles.card}>
       <View style={styles.cardHeaderRow}>
@@ -36,7 +43,7 @@ export default function RemarkCard({ remarkText, onSave }) {
           <View style={styles.editActionsRow}>
             <TouchableOpacity
               style={[styles.editChip, styles.editChipPrimary]}
-              onPress={() => onSave({ remark })}
+              onPress={handleSave}
               activeOpacity={0.7}
             >
               <Ionicons name="checkmark" size={14} color={colors.whiteText} />
