@@ -18,4 +18,13 @@ const updateLeadDetails = async (leadId, data) => {
   }
 };
 
-export { updateLead, updateLeadDetails };
+const upLoadDocument = async (data) => {
+  try {
+    const response = await api.post(`/lead/uploadLeadFile`, data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { updateLead, updateLeadDetails, upLoadDocument };

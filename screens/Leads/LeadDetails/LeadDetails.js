@@ -29,7 +29,7 @@ export default function LeadDetails({ route }) {
   const leadId = route?.params?.leadId;
   const { data: leadData, isLoading, error, refetch } = useGetLead(leadId);
   const { showError, showSuccess } = useToast();
-
+  const navigation = useNavigation();
   const lead = leadData?.data.data;
 
   // console.log(lead?.data.data, "in lead data>>>>>");
@@ -136,8 +136,8 @@ export default function LeadDetails({ route }) {
 
       <RemarkCard remarkText={lead?.remark} onSave={saveRemark} />
 
-      {/* <CTACards navigation={navigation} editableLead={editableLead} />
-      <ActivityLog title="Activity Log" activities={[]} /> */}
+      <CTACards navigation={navigation} editableLead={lead} />
+      {/* <ActivityLog title="Activity Log" activities={[]} /> */}
     </ScrollView>
   );
 }
