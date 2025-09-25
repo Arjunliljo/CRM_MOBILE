@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../constants/colors";
+import { getCountryName } from "../../helpers/bootstrapHelpers";
 
 const CourseDetailsModal = ({
   visible,
@@ -17,6 +18,7 @@ const CourseDetailsModal = ({
   course,
   university,
   onApply,
+  countries,
 }) => {
   const [selectedIntakeMonth, setSelectedIntakeMonth] = useState("");
   const [selectedIntakeYear, setSelectedIntakeYear] = useState("");
@@ -25,7 +27,12 @@ const CourseDetailsModal = ({
 
   // Generate available years (current year + next 2 years)
   const currentYear = new Date().getFullYear();
-  const availableYears = [currentYear, currentYear + 1, currentYear + 2];
+  const availableYears = [
+    currentYear,
+    currentYear + 1,
+    currentYear + 2,
+    currentYear + 3,
+  ];
 
   const handleSelectCourse = () => {
     if (!selectedIntakeMonth || !selectedIntakeYear) {
@@ -76,13 +83,12 @@ const CourseDetailsModal = ({
             <Text style={styles.courseDetailName}>{course.name}</Text>
 
             <View style={styles.universityDetailRow}>
-              <Text style={styles.universityFlag}>{university.flag}</Text>
               <View>
                 <Text style={styles.universityDetailName}>
                   {university.name}
                 </Text>
                 <Text style={styles.universityDetailLocation}>
-                  {university.location}
+                  {getCountryName(university.country, countries)}
                 </Text>
               </View>
             </View>
@@ -95,7 +101,7 @@ const CourseDetailsModal = ({
                   color={colors.primary}
                 />
                 <Text style={styles.metricLabel}>Degree</Text>
-                <Text style={styles.metricValue}>{course.degree}</Text>
+                <Text style={styles.metricValue}>{course.courseType}</Text>
               </View>
               <View style={styles.metricCard}>
                 <Ionicons
@@ -104,7 +110,7 @@ const CourseDetailsModal = ({
                   color={colors.primary}
                 />
                 <Text style={styles.metricLabel}>Duration</Text>
-                <Text style={styles.metricValue}>{course.duration}</Text>
+                <Text style={styles.metricValue}>{course.duration} months</Text>
               </View>
               <View style={styles.metricCard}>
                 <Ionicons
@@ -115,7 +121,7 @@ const CourseDetailsModal = ({
                 <Text style={styles.metricLabel}>Fee</Text>
                 <Text style={styles.metricValue}>{course.fee}</Text>
               </View>
-              <View style={styles.metricCard}>
+              {/* <View style={styles.metricCard}>
                 <Ionicons
                   name="calendar-outline"
                   size={20}
@@ -123,37 +129,33 @@ const CourseDetailsModal = ({
                 />
                 <Text style={styles.metricLabel}>Start Date</Text>
                 <Text style={styles.metricValue}>{course.startDate}</Text>
-              </View>
+              </View> */}
             </View>
 
-            <View style={styles.descriptionSection}>
-              <Text style={styles.sectionTitle}>Description</Text>
-              <Text style={styles.descriptionText}>{course.description}</Text>
-            </View>
-
-            <View style={styles.requirementsSection}>
-              <Text style={styles.sectionTitle}>Requirements</Text>
-              {course.requirements.map((req, index) => (
-                <View key={index} style={styles.requirementItem}>
-                  <Ionicons
-                    name="checkmark-circle"
-                    size={16}
-                    color={colors.success}
-                  />
-                  <Text style={styles.requirementText}>{req}</Text>
+            {/* Qualifications Section */}
+            {Array.isArray(course.qualification) &&
+              course.qualification.length > 0 && (
+                <View style={styles.requirementsSection}>
+                  <Text style={styles.sectionTitle}>Qualifications</Text>
+                  {course.qualification.map((q) => (
+                    <View
+                      key={(q && (q.id || q._id)) || Math.random().toString()}
+                      style={styles.requirementItem}
+                    >
+                      <Ionicons
+                        name="document-text-outline"
+                        size={16}
+                        color={colors.primary}
+                      />
+                      <Text style={styles.requirementText}>
+                        {(q?.qualificationId && q.qualificationId.name) ||
+                          "Qualification"}
+                        {q?.percentage != null ? ` - ${q.percentage}%` : ""}
+                      </Text>
+                    </View>
+                  ))}
                 </View>
-              ))}
-            </View>
-
-            <View style={styles.scholarshipsSection}>
-              <Text style={styles.sectionTitle}>Scholarships Available</Text>
-              {course.scholarships.map((scholarship, index) => (
-                <View key={index} style={styles.scholarshipItem}>
-                  <Ionicons name="star" size={16} color={colors.warning} />
-                  <Text style={styles.scholarshipText}>{scholarship}</Text>
-                </View>
-              ))}
-            </View>
+              )}
 
             {/* Intake Selection Section */}
             <View style={styles.intakeSelectionSection}>
@@ -163,7 +165,7 @@ const CourseDetailsModal = ({
               <View style={styles.selectionGroup}>
                 <Text style={styles.selectionLabel}>Intake Month</Text>
                 <View style={styles.optionsContainer}>
-                  {course.intakeMonth.map((month, index) => (
+                  {course.intakeMonth?.map((month, index) => (
                     <TouchableOpacity
                       key={index}
                       style={[

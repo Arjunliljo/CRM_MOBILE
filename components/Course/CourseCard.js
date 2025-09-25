@@ -37,29 +37,21 @@ const CourseCard = ({ course, university, onPress }) => (
       <View style={styles.detailRow}>
         <View style={styles.detailItem}>
           <Ionicons name="school-outline" size={16} color={colors.primary} />
-          <Text style={styles.detailText}>{course.degree}</Text>
+          <Text style={styles.detailText}>{course.courseType}</Text>
         </View>
         <View style={styles.detailItem}>
           <Ionicons name="time-outline" size={16} color={colors.primary} />
-          <Text style={styles.detailText}>{course.duration}</Text>
+          <Text style={styles.detailText}>{course.duration} months</Text>
         </View>
       </View>
 
       <View style={styles.detailRow}>
         <View style={styles.detailItem}>
           <Ionicons name="cash-outline" size={16} color={colors.primary} />
-          <Text style={styles.detailTextBold}>{course.fee}</Text>
-        </View>
-        <View style={styles.detailItem}>
-          <Ionicons name="calendar-outline" size={16} color={colors.primary} />
-          <Text style={styles.detailText}>{course.startDate}</Text>
+          <Text style={styles.detailTextBold}>{course.fee} </Text>
         </View>
       </View>
     </View>
-
-    <Text style={styles.courseDescription} numberOfLines={2}>
-      {course.description}
-    </Text>
   </TouchableOpacity>
 );
 
