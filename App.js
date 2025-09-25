@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
 import { store } from "./global/store";
 import Booktstrap from "./api/Booktstrap";
+import { ToastProvider } from "./contexts/ToastContext";
 
 const queryClient = new QueryClient();
 
@@ -15,8 +16,10 @@ export default function App() {
         <StatusBar style="auto" />
         <Provider store={store}>
           <QueryClientProvider client={queryClient}>
-            <Booktstrap />
-            <Route />
+            <ToastProvider>
+              <Booktstrap />
+              <Route />
+            </ToastProvider>
           </QueryClientProvider>
         </Provider>
       </GestureHandlerRootView>

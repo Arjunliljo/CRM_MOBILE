@@ -64,7 +64,7 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
       onSelection?.();
     } else {
       dispatch(setCurLead(Lead));
-      navigation.navigate("LeadDetails");
+      navigation.navigate("LeadDetails", { leadId: Lead._id });
     }
   };
 

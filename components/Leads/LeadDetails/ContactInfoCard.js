@@ -34,9 +34,12 @@ export default function ContactInfoCard({ onHandleChange, data }) {
               style={[styles.editChip, styles.editChipPrimary]}
               onPress={async () => {
                 await onHandleChange({
-                  phone: editPhone,
-                  email: editEmail,
-                  district: editDistrict,
+                  leadId: data.leadId,
+                  details: {
+                    phone: editPhone,
+                    email: editEmail,
+                    district: editDistrict,
+                  },
                 });
                 setIsEditing(false);
               }}

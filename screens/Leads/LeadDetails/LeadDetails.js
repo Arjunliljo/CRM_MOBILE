@@ -15,28 +15,61 @@ import {
   getBranchName,
   getCountryName,
 } from "../../../helpers/bootstrapHelpers";
+import {
+  updateLead,
+  updateLeadDetails,
+} from "../../../api/Leads/leadBackEndHandler";
+import { useToast } from "../../../contexts/ToastContext";
+import { useGetLead } from "../hooks/useGetLead";
+import LoadingScreen from "../../../components/LoadingScreen";
 
 export default function LeadDetails({ route }) {
-  const { curLead: lead } = useSelector((state) => state.lead);
+  // const { curLead: lead } = useSelector((state) => state.lead);
+  const leadId = route?.params?.leadId;
+  const { data: leadData, isLoading, error, refetch } = useGetLead(leadId);
+  const { showError, showSuccess } = useToast();
+
+  const lead = leadData?.data.data;
+
+  // console.log(lead?.data.data, "in lead data>>>>>");
 
   const statuses = useSelector((state) => state.bootstrap.statuses);
   const branches = useSelector((state) => state.bootstrap.branches);
   const countries = useSelector((state) => state.bootstrap.countries);
   const substatuses = useSelector((state) => state.bootstrap.substatuses);
 
-  if (!lead) return null;
+  if (isLoading) return <LoadingScreen />;
+
+  if (!leadId || error) return null;
 
   const handleStatusChange = async (status, subStatus) => {
     try {
       // status and sub status api call
-    } catch (error) {}
+      const response = await updateLead(lead._id, { status, subStatus });
+      // console.log(response, "in response data>>>>>");
+      showSuccess("Lead status updated successfully!");
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update lead status";
+      showError(errorMessage);
+    }
   };
 
   const handleContactChange = async (data) => {
     try {
       // api call
-      console.log(data, "in response data>>>>>");
-    } catch (error) {}
+      const response = await updateLeadDetails(lead._id, data);
+      showSuccess("Lead contact updated successfully!");
+      refetch();
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update lead contact";
+      showError(errorMessage);
+    }
   };
 
   //name, status, branch, followup, source, country
@@ -56,25 +89,19 @@ export default function LeadDetails({ route }) {
       />
 
       <PrimaryActions data={{ phone: lead?.phone, email: lead?.email }} />
-      {/* 
+
       <StatusControls
         onHandleChange={handleStatusChange}
         curStatus={lead.status}
         curSubStatus={lead.subStatus}
-      /> */}
+      />
 
       <ContactInfoCard
-        // isEditing={isEditingContact}
-        // setIsEditing={setIsEditingContact}
-        // editableLead={editableLead}
-        // contactDraft={contactDraft}
-        // setContactDraft={setContactDraft}
-        // onSave={saveContact}
-        // onCancel={cancelContact}
         data={{
           phone: lead?.phone,
           email: lead?.email,
           district: lead?.district,
+          leadId: lead?._id,
         }}
         onHandleChange={handleContactChange}
       />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { View, Text } from "react-native";
 import Selector from "../../Common/Selector";
 import { styles } from "../../../screens/Leads/LeadDetails/leadDetailsStyle";
@@ -20,24 +20,56 @@ export default function StatusControls({
 
   useEffect(() => {
     setSubStatuses(statuses?.find((val) => val._id === curStatus)?.subStatuses);
-  }, [statuses]);
+  }, [statuses, curStatus]);
 
   useEffect(() => {
-    setStatus(curStatus);
-    setSubStatus(curSubStatus);
-  }, [curStatus, curSubStatus]);
+    if (curStatus !== status || curSubStatus !== subStatus) {
+      setStatus(curStatus);
+      setSubStatus(curSubStatus);
+      setSubStatuses(
+        statuses?.find((val) => val._id === curStatus)?.subStatuses
+      );
+    }
+  }, [curStatus, curSubStatus, status, subStatus]);
 
   const handleStatusChange = async (value) => {
-    const status = statuses?.find((val) => val._id === value);
-    setStatus(status?._id);
-    setSubStatuses(status?.subStatuses);
-    setSubStatus(status?.subStatuses?.[0]?._id);
+    if (isUpdatingRef.current || value === status) return;
 
-    //api call
-    await onHandleChange(status, subStatus);
+    const statusObj = statuses?.find((val) => val._id === value);
+    const newSubStatus = statusObj?.subStatuses?.[0]?._id;
+
+    // Don't proceed if the status is the same as current
+    if (statusObj?._id === status) return;
+
+    isUpdatingRef.current = true;
+
+    setStatus(statusObj?._id);
+    setSubStatuses(statusObj?.subStatuses);
+    setSubStatus(newSubStatus);
+
+    try {
+      //api call with the new substatus
+      await onHandleChange(statusObj?._id, newSubStatus);
+    } finally {
+      isUpdatingRef.current = false;
+    }
   };
-  const handleSubStatusChange = () => {
-    //api call
+
+  const handleSubStatusChange = async (value) => {
+    if (isUpdatingRef.current) return;
+
+    // Don't proceed if the substatus is the same as current
+    if (value === subStatus) return;
+
+    isUpdatingRef.current = true;
+    setSubStatus(value);
+
+    try {
+      //api call
+      await onHandleChange(status, value);
+    } finally {
+      isUpdatingRef.current = false;
+    }
   };
 
   return (
@@ -63,7 +95,7 @@ export default function StatusControls({
           label: val.subStatus || val.name,
         }))}
         selectedValue={subStatus}
-        onValueChange={handleStatusChange}
+        onValueChange={handleSubStatusChange}
         placeholder="Select substatus"
         zIndex={9000}
         zIndexInverse={1000}
