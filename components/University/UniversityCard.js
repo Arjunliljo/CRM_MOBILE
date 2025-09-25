@@ -1,8 +1,9 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { colors } from "../../constants/colors";
+import { getCountryName } from "../../helpers/bootstrapHelpers";
 
-const UniversityCard = ({ university, onPress }) => (
+const UniversityCard = ({ university, onPress, countries }) => (
   <TouchableOpacity
     style={styles.universityCard}
     onPress={() => onPress(university)}
@@ -17,12 +18,17 @@ const UniversityCard = ({ university, onPress }) => (
           {university.name}
         </Text>
         <View style={styles.locationRow}>
-          <Text style={styles.countryFlag}>{university.flag}</Text>
-          <Text style={styles.universityLocation}>{university.location}</Text>
+          <Text style={styles.countryFlag}>
+            {getCountryName(university.country, countries)}
+          </Text>
         </View>
-        <Text style={styles.universityRanking}>{university.ranking}</Text>
       </View>
     </View>
+    {university.about ? (
+      <Text style={styles.universityAbout} numberOfLines={3}>
+        {university.about}
+      </Text>
+    ) : null}
 
     <View style={styles.coursesPreview}>
       <Text style={styles.coursesCount}>
@@ -93,6 +99,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.primary,
     fontWeight: "600",
+  },
+  universityAbout: {
+    fontSize: 13,
+    color: colors.secondaryText,
+    marginBottom: 8,
   },
   coursesPreview: {
     borderTopWidth: 1,
