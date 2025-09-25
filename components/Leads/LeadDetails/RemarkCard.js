@@ -1,25 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../../constants/colors";
 import { styles } from "../../../screens/Leads/LeadDetails/leadDetailsStyle";
 
-export default function RemarkCard({
-  isEditing,
-  setIsEditing,
-  remarkText,
-  remarkDraft,
-  setRemarkDraft,
-  isRemarkExpanded,
-  setIsRemarkExpanded,
-  onSave,
-  onCancel,
-}) {
+export default function RemarkCard({ remarkText, onSave }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [remark, setRemark] = useState(remarkText || "");
+  const [isRemarkExpanded, setIsRemarkExpanded] = useState(false);
+
   const isLongRemark = (remarkText || "").length > 140;
   const displayRemark =
     !isRemarkExpanded && isLongRemark
       ? `${remarkText.slice(0, 140).trim()}…`
       : remarkText;
+
+  const handleRemarkChange = (t) => {
+    setRemark(t);
+  };
 
   return (
     <View style={styles.card}>
@@ -38,7 +36,7 @@ export default function RemarkCard({
           <View style={styles.editActionsRow}>
             <TouchableOpacity
               style={[styles.editChip, styles.editChipPrimary]}
-              onPress={onSave}
+              onPress={() => onSave({ remark })}
               activeOpacity={0.7}
             >
               <Ionicons name="checkmark" size={14} color={colors.whiteText} />
@@ -46,7 +44,7 @@ export default function RemarkCard({
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.editChip}
-              onPress={onCancel}
+              onPress={() => setIsEditing(false)}
               activeOpacity={0.7}
             >
               <Ionicons name="close" size={14} color={colors.primary} />
@@ -84,8 +82,8 @@ export default function RemarkCard({
             <TextInput
               style={styles.textArea}
               multiline
-              value={remarkDraft}
-              onChangeText={(t) => setRemarkDraft(t)}
+              value={remark}
+              onChangeText={handleRemarkChange}
             />
           </View>
         </>

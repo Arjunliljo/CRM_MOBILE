@@ -74,6 +74,20 @@ export default function LeadDetails({ route }) {
   };
 
   const saveDetails = async (data) => {};
+  const saveRemark = async (data) => {
+    try {
+      // api call
+      const response = await updateLead(lead._id, data);
+      showSuccess("Lead remark updated successfully!");
+      refetch();
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update lead remark";
+      showError(errorMessage);
+    }
+  };
 
   //name, status, branch, followup, source, country
   return (
@@ -117,25 +131,10 @@ export default function LeadDetails({ route }) {
           leadId: lead?._id,
           createdAt: formatDate(lead?.createdAt),
         }}
-        // isEditing={isEditingDetails}
-        // setIsEditing={setIsEditingDetails}
-        // editableLead={editableLead}
-        // detailsDraft={detailsDraft}
-        // setDetailsDraft={setDetailsDraft}
         onSave={saveDetails}
       />
 
-      {/* <RemarkCard
-        isEditing={isEditingRemark}
-        setIsEditing={setIsEditingRemark}
-        remarkText={remarkText}
-        remarkDraft={remarkDraft}
-        setRemarkDraft={setRemarkDraft}
-        isRemarkExpanded={isRemarkExpanded}
-        setIsRemarkExpanded={setIsRemarkExpanded}
-        onSave={saveRemark}
-        onCancel={cancelRemark}
-      /> */}
+      <RemarkCard remarkText={lead?.remark} onSave={saveRemark} />
 
       {/* <CTACards navigation={navigation} editableLead={editableLead} />
       <ActivityLog title="Activity Log" activities={[]} /> */}
