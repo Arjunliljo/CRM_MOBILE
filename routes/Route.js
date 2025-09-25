@@ -77,6 +77,7 @@ export default function Route() {
           options={{
             headerShown: true,
             headerBackTitle: "Back",
+            title: "Course Listing",
           }}
         />
       </Stack.Navigator>

@@ -28,17 +28,17 @@ import { formatDate } from "../../../helpers/dateFormater";
 export default function LeadDetails({ route }) {
   // const { curLead: lead } = useSelector((state) => state.lead);
   const { selectedCourse } = useSelector((state) => state.lead);
+  const branches = useSelector((state) => state.bootstrap.branches);
+  const countries = useSelector((state) => state.bootstrap.countries);
+
   const leadId = route?.params?.leadId;
   const { data: leadData, isLoading, error, refetch } = useGetLead(leadId);
+
   const { showError, showSuccess } = useToast();
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const lead = leadData?.data.data;
 
-  const statuses = useSelector((state) => state.bootstrap.statuses);
-  const branches = useSelector((state) => state.bootstrap.branches);
-  const countries = useSelector((state) => state.bootstrap.countries);
-  const substatuses = useSelector((state) => state.bootstrap.substatuses);
+  const lead = leadData?.data.data;
 
   // NOTE: Do not return early before hooks; guards are moved below hooks
 
@@ -94,7 +94,7 @@ export default function LeadDetails({ route }) {
 
   const handleCourseSelection = async (data) => {
     try {
-      if (!data || !data.course || !data.university) return;
+      if (!data || !data.course || !data.university || !data.country) return;
 
       await updateLead(lead._id, data);
       showSuccess("Course selection saved to lead!");
