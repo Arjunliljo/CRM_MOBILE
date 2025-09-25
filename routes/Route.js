@@ -15,79 +15,67 @@ const Stack = createNativeStackNavigator();
 
 // Main navigation component that handles auth-based routing
 function AppNavigator() {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return <LoadingScreen message="Checking authentication..." />;
-  }
-
   return (
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName={isAuthenticated ? "Main" : "Login"}
+        initialRouteName={"Login"}
       >
-        {!isAuthenticated ? (
-          // Auth Stack - Only Login screen when not authenticated
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{ headerShown: false }}
-          />
-        ) : (
-          // App Stack - All protected screens when authenticated
-          <>
-            <Stack.Screen
-              name="Main"
-              component={DrawerNavigator}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="LeadDetails"
-              component={LeadDetails}
-              options={{
-                title: "Lead Details",
-                headerShown: true,
-                headerBackTitle: "Back",
-              }}
-            />
-            <Stack.Screen
-              name="StudentDetails"
-              component={StudentDetails}
-              options={{
-                title: "Student Details",
-                headerShown: true,
-                headerBackTitle: "Back",
-              }}
-            />
-            <Stack.Screen
-              name="ApplicationDetails"
-              component={ApplicationDetails}
-              options={{
-                title: "Application Details",
-                headerShown: true,
-                headerBackTitle: "Back",
-              }}
-            />
-            <Stack.Screen
-              name="TaskDetails"
-              component={TaskDetails}
-              options={{
-                title: "Task Details",
-                headerShown: true,
-                headerBackTitle: "Back",
-              }}
-            />
-            <Stack.Screen
-              name="CourseListing"
-              component={CourseListing}
-              options={{
-                headerShown: true,
-                headerBackTitle: "Back",
-              }}
-            />
-          </>
-        )}
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="Main"
+          component={DrawerNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LeadDetails"
+          component={LeadDetails}
+          options={{
+            title: "Lead Details",
+            headerShown: true,
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="StudentDetails"
+          component={StudentDetails}
+          options={{
+            title: "Student Details",
+            headerShown: true,
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="ApplicationDetails"
+          component={ApplicationDetails}
+          options={{
+            title: "Application Details",
+            headerShown: true,
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="TaskDetails"
+          component={TaskDetails}
+          options={{
+            title: "Task Details",
+            headerShown: true,
+            headerBackTitle: "Back",
+          }}
+        />
+        <Stack.Screen
+          name="CourseListing"
+          component={CourseListing}
+          options={{
+            headerShown: true,
+            headerBackTitle: "Back",
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
