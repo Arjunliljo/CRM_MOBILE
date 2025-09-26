@@ -1,88 +1,131 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import Selector from "../../Common/Selector";
 import { styles } from "../../../screens/Leads/LeadDetails/leadDetailsStyle";
 import { useSelector } from "react-redux";
+import { updateLead } from "../../../api/Leads/leadBackEndHandler";
+import { useToast } from "../../../contexts/ToastContext";
 
 export default function StatusControls({
   curStatus,
   curSubStatus,
-  onHandleChange,
+  leadId,
   isStudent = false,
+  refetch,
 }) {
+  const { showSuccess, showError } = useToast();
   const { statuses } = useSelector((state) => state.bootstrap);
+
+  const [status, setStatus] = useState(curStatus);
+  const [subStatus, setSubStatus] = useState(curSubStatus);
   const [subStatuses, setSubStatuses] = useState(
     statuses?.find((val) => val._id === curStatus)?.subStatuses
   );
 
-  const [status, setStatus] = useState(curStatus);
-  const [subStatus, setSubStatus] = useState(curSubStatus);
   const isUpdatingRef = useRef(false);
 
+  // Update substatuses when status changes
   useEffect(() => {
-    setSubStatuses(statuses?.find((val) => val._id === curStatus)?.subStatuses);
+    if (statuses && curStatus) {
+      const newSubStatuses = statuses?.find(
+        (val) => val._id === curStatus
+      )?.subStatuses;
+      setSubStatuses(newSubStatuses);
+    }
   }, [statuses, curStatus]);
 
+  // Sync local state with props (but not during API updates)
   useEffect(() => {
-    if (curStatus !== status || curSubStatus !== subStatus) {
+    if (!isUpdatingRef.current) {
       setStatus(curStatus);
       setSubStatus(curSubStatus);
-      setSubStatuses(
-        statuses?.find((val) => val._id === curStatus)?.subStatuses
-      );
     }
-  }, [curStatus, curSubStatus, status, subStatus]);
+  }, [curStatus, curSubStatus]);
+
+  const updateStatus = async (newStatus, newSubStatus) => {
+    const response = await updateLead(leadId, {
+      status: newStatus,
+      subStatus: newSubStatus,
+    });
+    showSuccess("Lead status updated successfully!");
+    refetch?.();
+  };
+
+  const handleError = (error, fallbackMessage) => {
+    const errorMessage =
+      error.response?.data?.message || error.message || fallbackMessage;
+    showError(errorMessage);
+  };
 
   const handleStatusChange = async (value) => {
     if (isUpdatingRef.current || value === status) return;
 
     const statusObj = statuses?.find((val) => val._id === value);
-    const newSubStatus = statusObj?.subStatuses?.[0]?._id;
+    if (!statusObj || statusObj._id === status) return;
 
-    // Don't proceed if the status is the same as current
-    if (statusObj?._id === status) return;
-
+    const newSubStatus = statusObj.subStatuses?.[0]?._id;
     isUpdatingRef.current = true;
 
-    setStatus(statusObj?._id);
-    setSubStatuses(statusObj?.subStatuses);
+    // Store original values for rollback
+    const originalValues = { status, subStatus, subStatuses };
+
+    // Optimistic update
+    setStatus(statusObj._id);
+    setSubStatuses(statusObj.subStatuses);
     setSubStatus(newSubStatus);
 
     try {
-      //api call with the new substatus
-      await onHandleChange(statusObj?._id, newSubStatus);
+      await updateStatus(statusObj._id, newSubStatus);
+    } catch (error) {
+      // Rollback on failure
+      setStatus(originalValues.status);
+      setSubStatus(originalValues.subStatus);
+      setSubStatuses(originalValues.subStatuses);
+      handleError(error, "Failed to update lead status");
     } finally {
       isUpdatingRef.current = false;
     }
   };
 
   const handleSubStatusChange = async (value) => {
-    if (isUpdatingRef.current) return;
-
-    // Don't proceed if the substatus is the same as current
-    if (value === subStatus) return;
+    if (isUpdatingRef.current || value === subStatus) return;
 
     isUpdatingRef.current = true;
+    const originalSubStatus = subStatus;
+
+    // Optimistic update
     setSubStatus(value);
 
     try {
-      //api call
-      await onHandleChange(status, value);
+      await updateStatus(status, value);
+    } catch (error) {
+      // Rollback on failure
+      setSubStatus(originalSubStatus);
+      handleError(error, "Failed to update lead substatus");
     } finally {
       isUpdatingRef.current = false;
     }
   };
 
+  const statusOptions =
+    statuses
+      ?.filter((val) => val?.isApplication === isStudent)
+      ?.map((val) => ({
+        value: val._id,
+        label: val.status || val.name,
+      })) || [];
+
+  const subStatusOptions =
+    subStatuses?.map((val) => ({
+      value: val._id,
+      label: val.subStatus || val.name,
+    })) || [];
+
   return (
     <View style={[styles.card, { zIndex: 9000 }]}>
       <Selector
         label="Status"
-        options={statuses
-          ?.filter((val) => val?.isApplication === isStudent)
-          ?.map((val) => ({
-            value: val._id,
-            label: val.status || val.name,
-          }))}
+        options={statusOptions}
         selectedValue={status || null}
         onValueChange={handleStatusChange}
         placeholder="Select status"
@@ -91,10 +134,7 @@ export default function StatusControls({
       />
       <Selector
         label="Substatus"
-        options={subStatuses?.map((val) => ({
-          value: val._id,
-          label: val.subStatus || val.name,
-        }))}
+        options={subStatusOptions}
         selectedValue={subStatus}
         onValueChange={handleSubStatusChange}
         placeholder="Select substatus"

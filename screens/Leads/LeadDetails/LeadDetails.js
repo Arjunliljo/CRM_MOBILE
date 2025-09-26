@@ -53,22 +53,6 @@ export default function LeadDetails({ route }) {
 
   // NOTE: Do not return early before hooks; guards are moved below hooks
 
-  const handleStatusChange = async (status, subStatus) => {
-    try {
-      // status and sub status api call
-      const response = await updateLead(lead._id, { status, subStatus });
-      showSuccess("Lead status updated successfully!");
-      // refetch();
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "Failed to update lead status";
-      console.log(errorMessage, "console.log error message");
-      showError(errorMessage);
-    }
-  };
-
   const handleContactChange = async (data) => {
     try {
       // api call
@@ -147,9 +131,10 @@ export default function LeadDetails({ route }) {
       <PrimaryActions data={{ phone: lead?.phone, email: lead?.email }} />
 
       <StatusControls
-        onHandleChange={handleStatusChange}
         curStatus={lead.status}
         curSubStatus={lead.subStatus}
+        leadId={lead?._id}
+        refetch={refetch}
       />
 
       <ContactInfoCard
