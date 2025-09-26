@@ -44,13 +44,22 @@ export default function Booktstrap() {
   });
 
   useEffect(() => {
-    if (branchConfigs.data) dispatch(setBranches(branchConfigs.data));
-    if (countryConfigs.data) dispatch(setCountries(countryConfigs.data));
-    if (statusConfigs.data) dispatch(setStatuses(statusConfigs.data));
-    if (substatusConfigs.data) dispatch(setSubstatuses(substatusConfigs.data));
-    if (roleConfigs.data) dispatch(setRoles(roleConfigs.data));
-    if (userConfigs.data) dispatch(setUsers(userConfigs.data));
-    if (formConfigs.data) dispatch(setForms(formConfigs.data));
+    if (branchConfigs.data)
+      dispatch(setBranches(branchConfigs.data?.data ?? branchConfigs.data));
+    if (countryConfigs.data)
+      dispatch(setCountries(countryConfigs.data?.data ?? countryConfigs.data));
+    if (statusConfigs.data)
+      dispatch(setStatuses(statusConfigs.data?.data ?? statusConfigs.data));
+    if (substatusConfigs.data)
+      dispatch(
+        setSubstatuses(substatusConfigs.data?.data ?? substatusConfigs.data)
+      );
+    if (roleConfigs.data)
+      dispatch(setRoles(roleConfigs.data?.data ?? roleConfigs.data));
+    if (userConfigs.data)
+      dispatch(setUsers(userConfigs.data?.data ?? userConfigs.data));
+    if (formConfigs.data)
+      dispatch(setForms(formConfigs.data?.data ?? formConfigs.data));
   }, [
     branchConfigs.data,
     countryConfigs.data,

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://localhost:3000/api/v2";
+const baseURL = "http://192.168.1.12:3000/api/v2";
 
 // In-memory auth token cache
 let __authToken = null;

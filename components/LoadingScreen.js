@@ -1,7 +1,10 @@
-import { View, ActivityIndicator, StyleSheet } from "react-native-web";
+import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { colors } from "../constants/colors";
 
-export default function LoadingScreen(size = "small", color = colors.primary) {
+export default function LoadingScreen({
+  size = "small",
+  color = colors.primary,
+} = {}) {
   return (
     <View style={styles.container}>
       <ActivityIndicator size={size} color={color} />
