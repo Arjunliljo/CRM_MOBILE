@@ -20,7 +20,7 @@ const lead = {
 
 const leadSlice = createSlice({
   name: "lead",
-  initialState: { value: 0, curLead: lead, source: "Source" },
+  initialState: { value: 0, curLead: lead, source: "Source", searchQuery: "" },
   reducers: {
     setCurLead: (state, action) => {
       state.curLead = action.payload;
@@ -55,6 +55,9 @@ const leadSlice = createSlice({
     setCurSelectedCourse: (state, action) => {
       state.selectedCourse = action.payload;
     },
+    setLeadSearchQuery: (state, action) => {
+      state.searchQuery = action.payload ?? "";
+    },
   },
 });
 
@@ -70,5 +73,6 @@ export const {
   setCurBranch,
   setCurSource,
   setCurSelectedCourse,
+  setLeadSearchQuery,
 } = leadSlice.actions;
 export default leadSlice.reducer;

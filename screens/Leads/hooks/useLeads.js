@@ -1,10 +1,12 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import api from "../../../conf/conf";
 import queryClient from "../../../conf/reactQuery";
+import { useSelector } from "react-redux";
 
 const LIMIT = 50;
 
 export const useLeads = () => {
+  const searchQuery = useSelector((state) => state.lead.searchQuery) || "";
   // Build the base endpoint without page parameter
 
   let endpoint = `/lead/aggregate?sort=-assignedDate&isStudent=false&limit=${LIMIT}&page=`;
@@ -19,9 +21,12 @@ export const useLeads = () => {
     error,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ["leads"],
+    queryKey: ["leads", searchQuery],
     queryFn: ({ pageParam = 1 }) => {
-      const point = endpoint + pageParam;
+      let point = endpoint + pageParam;
+      if (searchQuery) {
+        point += `&search=${encodeURIComponent(searchQuery)}`;
+      }
       return api.get(point);
     },
     getNextPageParam: (lastPage, allPages) => {
