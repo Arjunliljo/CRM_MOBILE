@@ -8,6 +8,8 @@ import StudentDetails from "../screens/Students/StudentDetails/StudentDetails";
 import TaskDetails from "../screens/Tasks/TaskDetails/TaskDetails";
 import CourseListing from "../screens/University/CourseListing";
 import LeadChat from "../screens/Leads/LeadDetails/LeadChat";
+import { TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,11 +30,18 @@ export default function Route() {
         <Stack.Screen
           name="LeadDetails"
           component={LeadDetails}
-          options={{
+          options={({ navigation }) => ({
             title: "Lead Details",
             headerShown: true,
             headerBackTitle: "Back",
-          }}
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Main", { screen: "Leads" })}
+              >
+                <Ionicons name="arrow-back" size={24} color="black" />
+              </TouchableOpacity>
+            ),
+          })}
         />
         <Stack.Screen
           name="LeadChat"
