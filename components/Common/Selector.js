@@ -73,13 +73,19 @@ export default function Selector({
         multiple={multiple}
         disabled={disabled}
         dropDownDirection="AUTO"
-        style={styles.dropdown}
+        style={[styles.dropdown, disabled && styles.dropdownDisabled]}
         dropDownContainerStyle={[
           styles.dropdownContainer,
           { zIndex: zIndex + 1, elevation: (zIndex || 1) + 1 },
         ]}
-        textStyle={styles.dropdownText}
-        placeholderStyle={styles.placeholderText}
+        textStyle={[
+          styles.dropdownText,
+          disabled && styles.dropdownTextDisabled,
+        ]}
+        placeholderStyle={[
+          styles.placeholderText,
+          disabled && styles.dropdownTextDisabled,
+        ]}
         selectedItemContainerStyle={styles.selectedItemContainer}
         selectedItemLabelStyle={styles.selectedItemLabel}
         listItemContainerStyle={styles.listItemContainer}
@@ -119,6 +125,11 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     minHeight: 50,
   },
+  dropdownDisabled: {
+    backgroundColor: colors.border,
+    borderColor: colors.border,
+    opacity: 0.7,
+  },
   dropdownContainer: {
     backgroundColor: colors.dropdownContainerBackground,
     borderRadius: 8,
@@ -139,6 +150,9 @@ const styles = StyleSheet.create({
   dropdownText: {
     fontSize: 14,
     color: colors.primaryText,
+  },
+  dropdownTextDisabled: {
+    color: colors.iconLight,
   },
   placeholderText: {
     fontSize: 14,

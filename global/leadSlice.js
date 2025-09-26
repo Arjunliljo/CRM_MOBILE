@@ -18,42 +18,55 @@ const lead = {
   selectedCourse: {},
 };
 
+const initialState = {
+  value: 0,
+  curLead: lead,
+  source: "Source",
+  searchQuery: "",
+  curBranch: "All",
+  curCountry: "All",
+  curSource: "All",
+  curStatus: "All",
+  curSubStatus: "All",
+  curForm: "All",
+  curRole: "All",
+  curUser: "All",
+  curSelectedCourse: "All",
+};
+
 const leadSlice = createSlice({
   name: "lead",
-  initialState: { value: 0, curLead: lead, source: "Source", searchQuery: "" },
+  initialState: initialState,
   reducers: {
     setCurLead: (state, action) => {
       state.curLead = action.payload;
     },
     setCurSource: (state, action) => {
-      state.source = action.payload;
+      state.curSource = action.payload;
     },
     setCurBranch: (state, action) => {
-      state.branch = action.payload;
+      state.curBranch = action.payload;
     },
     setCurCountry: (state, action) => {
-      state.country = action.payload;
-    },
-    setCurDistrict: (state, action) => {
-      state.district = action.payload;
+      state.curCountry = action.payload;
     },
     setCurStatus: (state, action) => {
-      state.status = action.payload;
+      state.curStatus = action.payload;
     },
     setCurSubStatus: (state, action) => {
-      state.subStatus = action.payload;
+      state.curSubStatus = action.payload;
     },
     setCurForm: (state, action) => {
-      state.form = action.payload;
+      state.curForm = action.payload;
     },
     setCurRole: (state, action) => {
-      state.role = action.payload;
+      state.curRole = action.payload;
     },
     setCurUser: (state, action) => {
-      state.user = action.payload;
+      state.curUser = action.payload;
     },
     setCurSelectedCourse: (state, action) => {
-      state.selectedCourse = action.payload;
+      state.curSelectedCourse = action.payload;
     },
     setLeadSearchQuery: (state, action) => {
       state.searchQuery = action.payload ?? "";
@@ -68,7 +81,6 @@ export const {
   setCurLead,
   setCurStatus,
   setCurSubStatus,
-  setCurDistrict,
   setCurCountry,
   setCurBranch,
   setCurSource,

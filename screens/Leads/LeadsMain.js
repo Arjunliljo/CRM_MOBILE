@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../constants/colors";
+import { useSelector } from "react-redux";
 
 // Import the separate screen components
 import AllLeads from "./AllLeads";
@@ -18,6 +19,29 @@ import Analytics from "./Analytics";
 import AddLead from "./AddLead";
 
 export default function LeadsMain() {
+  // Determine if any filters are applied
+  const {
+    searchQuery = "",
+    curBranch,
+    curCountry,
+    curStatus,
+    curSubStatus,
+    curForm,
+    curRole,
+    curUser,
+    curSource,
+  } = useSelector((state) => state.lead) || {};
+  const hasActiveFilters =
+    [
+      curBranch,
+      curCountry,
+      curStatus,
+      curSubStatus,
+      curForm,
+      curRole,
+      curUser,
+      curSource,
+    ].some((v) => v && v !== "All") || (searchQuery || "").trim() !== "";
   const [activeTab, setActiveTab] = useState("all");
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState(null);
@@ -210,11 +234,16 @@ export default function LeadsMain() {
             ]}
             onPress={() => handleTabPress(tab.id)}
           >
-            <Ionicons
-              name={tab.icon}
-              size={20}
-              color={activeTab === tab.id ? colors.primary : colors.iconLight}
-            />
+            <View style={styles.iconWrap}>
+              <Ionicons
+                name={tab.icon}
+                size={20}
+                color={activeTab === tab.id ? colors.primary : colors.iconLight}
+              />
+              {tab.id === "filters" && hasActiveFilters && (
+                <View style={styles.filterBadgeDot} />
+              )}
+            </View>
             <Text
               style={[
                 styles.tabLabel,
@@ -266,6 +295,18 @@ const styles = StyleSheet.create({
   activeTabLabel: {
     color: colors.primary,
     fontWeight: "600",
+  },
+  iconWrap: {
+    position: "relative",
+  },
+  filterBadgeDot: {
+    position: "absolute",
+    top: -2,
+    right: -6,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.primary,
   },
   // Modal Styles
   modalContainer: {

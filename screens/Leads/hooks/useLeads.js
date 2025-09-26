@@ -6,10 +6,27 @@ import { useSelector } from "react-redux";
 const LIMIT = 50;
 
 export const useLeads = () => {
-  const searchQuery = useSelector((state) => state.lead.searchQuery) || "";
-  // Build the base endpoint without page parameter
+  // Select filters/state
+  const {
+    searchQuery = "",
+    curBranch,
+    curCountry,
+    curStatus,
+    curSubStatus,
+    curForm,
+    curRole,
+    curUser,
+    curSelectedCourse,
+  } = useSelector((state) => state.lead) || {};
 
-  let endpoint = `/lead/aggregate?sort=-assignedDate&isStudent=false&limit=${LIMIT}&page=`;
+  // Base endpoint (without page)
+  const baseEndpoint = `/lead/aggregate?sort=-assignedDate&isStudent=false&limit=${LIMIT}&page=`;
+
+  // Helper to add a param only when valid
+  const addParam = (params, key, value) => {
+    if (value && value !== "All")
+      params.push(`${key}=${encodeURIComponent(value)}`);
+  };
 
   // Use React Query's useInfiniteQuery for pagination
   const {
@@ -21,13 +38,33 @@ export const useLeads = () => {
     error,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ["leads", searchQuery],
+    queryKey: [
+      "leads",
+      searchQuery,
+      curBranch,
+      curCountry,
+      curStatus,
+      curSubStatus,
+      curForm,
+      curRole,
+      curUser,
+      curSelectedCourse,
+    ],
     queryFn: ({ pageParam = 1 }) => {
-      let point = endpoint + pageParam;
-      if (searchQuery) {
-        point += `&search=${encodeURIComponent(searchQuery)}`;
-      }
-      return api.get(point);
+      const params = [];
+      addParam(params, "search", searchQuery);
+      addParam(params, "branch", curBranch);
+      addParam(params, "country", curCountry);
+      addParam(params, "status", curStatus);
+      addParam(params, "subStatus", curSubStatus);
+      addParam(params, "form", curForm);
+      addParam(params, "role", curRole);
+      addParam(params, "user", curUser);
+      addParam(params, "selectedCourse", curSelectedCourse);
+
+      const querySuffix = params.length ? `&${params.join("&")}` : "";
+      const url = `${baseEndpoint}${pageParam}${querySuffix}`;
+      return api.get(url);
     },
     getNextPageParam: (lastPage, allPages) => {
       // Check if the last page has data and if it's less than the limit, it's the last page
