@@ -35,7 +35,7 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
 
   // === Swipe actions ===
   const handleSwipeLeft = () => {
-    const phoneNumber = "+918714441727";
+    const phoneNumber = Lead?.phone;
     const url = `whatsapp://send?phone=${phoneNumber}`;
     Linking.openURL(url).catch(() =>
       Alert.alert("Error", "Could not open WhatsApp")
@@ -47,7 +47,7 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
   };
 
   const handleSwipeRight = () => {
-    const phoneNumber = "8714441727";
+    const phoneNumber = Lead?.phone;
     const url = `tel:${phoneNumber}`;
     Linking.openURL(url).catch(() =>
       Alert.alert("Error", "Could not make phone call")
@@ -96,7 +96,7 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
         </View>
         <View style={styles.swipeTextContainer}>
           <Text style={styles.swipeTitle}>Call</Text>
-          <Text style={styles.swipeSubtitle}>8714441727</Text>
+          <Text style={styles.swipeSubtitle}>{Lead?.phone}</Text>
         </View>
       </View>
     </View>
