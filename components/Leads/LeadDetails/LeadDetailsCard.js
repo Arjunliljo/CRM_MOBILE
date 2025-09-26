@@ -1,17 +1,40 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  Platform,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../../constants/colors";
 import { styles } from "../../../screens/Leads/LeadDetails/leadDetailsStyle";
 import { formatDate } from "../../../helpers/dateFormater";
+import Selector from "../../Common/Selector";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function LeadDetailsCard({ data, onSave }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [isCountryOpen, setIsCountryOpen] = useState(false);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [values, setValues] = useState({
     source: data.source,
-    country: data.country,
+    country: data.countryId,
     followupDate: data.followupDate,
   });
+
+  const parseToDate = (dateLike) => {
+    if (!dateLike) return new Date();
+    const d = new Date(dateLike);
+    return isNaN(d.getTime()) ? new Date() : d;
+  };
+
+  const formatYMD = (dateObj) => {
+    const y = dateObj.getFullYear();
+    const m = `${dateObj.getMonth() + 1}`.padStart(2, "0");
+    const d = `${dateObj.getDate()}`.padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  };
   return (
     <View style={styles.card}>
       <View style={styles.cardHeaderRow}>
@@ -74,7 +97,7 @@ export default function LeadDetailsCard({ data, onSave }) {
             <View style={styles.itemContent}>
               <Text style={styles.itemLabel}>Country</Text>
               <Text style={styles.itemValue}>
-                {data.country || "Not provided"}
+                {data.countryName || "Not provided"}
               </Text>
             </View>
           </View>
@@ -107,32 +130,58 @@ export default function LeadDetailsCard({ data, onSave }) {
         </>
       ) : (
         <View>
-          <View style={styles.formGroup}>
-            <Text style={styles.formLabel}>Source</Text>
-            <TextInput
-              style={styles.input}
-              value={values.source}
-              onChangeText={(t) => setValues((p) => ({ ...p, source: t }))}
-            />
-          </View>
-          <View style={styles.formGroup}>
+          <View
+            style={[
+              styles.formGroup,
+              {
+                position: "relative",
+                zIndex: isCountryOpen ? 8000 : 1,
+                marginBottom: isCountryOpen ? 260 : 12,
+              },
+            ]}
+          >
             <Text style={styles.formLabel}>Country</Text>
-            <TextInput
-              style={styles.input}
-              value={values.country}
-              onChangeText={(t) => setValues((p) => ({ ...p, country: t }))}
+            <Selector
+              options={data?.countries?.map((country) => ({
+                label: country.name,
+                value: country._id,
+              }))}
+              selectedValue={values.country}
+              zIndex={7000}
+              zIndexInverse={7000}
+              open={isCountryOpen}
+              onOpen={setIsCountryOpen}
+              onValueChange={(t) => setValues((p) => ({ ...p, country: t }))}
             />
           </View>
           <View style={styles.formGroup}>
             <Text style={styles.formLabel}>Follow-up</Text>
-            <TextInput
+            <TouchableOpacity
               style={styles.input}
-              placeholder="YYYY-MM-DD"
-              value={values.followupDate}
-              onChangeText={(t) =>
-                setValues((p) => ({ ...p, followupDate: t }))
-              }
-            />
+              activeOpacity={0.7}
+              onPress={() => setIsDatePickerOpen(true)}
+            >
+              <Text style={{ color: colors.primaryText }}>
+                {values.followupDate || "YYYY-MM-DD"}
+              </Text>
+            </TouchableOpacity>
+
+            {isDatePickerOpen && (
+              <DateTimePicker
+                value={parseToDate(values.followupDate)}
+                mode="date"
+                display={Platform.OS === "ios" ? "spinner" : "default"}
+                onChange={(event, selectedDate) => {
+                  if (Platform.OS !== "ios") {
+                    setIsDatePickerOpen(false);
+                  }
+                  if (event.type === "dismissed") return;
+                  const next = selectedDate || parseToDate(values.followupDate);
+                  const formatted = formatYMD(next);
+                  setValues((p) => ({ ...p, followupDate: formatted }));
+                }}
+              />
+            )}
           </View>
         </View>
       )}

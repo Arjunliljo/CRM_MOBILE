@@ -16,8 +16,8 @@ export default function Selector({
   open = false,
   onOpen = null,
   onClose = null,
-  zIndex = 1000,
-  zIndexInverse = 1000,
+  zIndex = 5000,
+  zIndexInverse = 5000,
 }) {
   const [internalOpen, setInternalOpen] = useState(false);
   const [value, setValue] = useState(selectedValue);
@@ -72,6 +72,7 @@ export default function Selector({
         searchable={searchable}
         multiple={multiple}
         disabled={disabled}
+        dropDownDirection="AUTO"
         style={styles.dropdown}
         dropDownContainerStyle={[
           styles.dropdownContainer,

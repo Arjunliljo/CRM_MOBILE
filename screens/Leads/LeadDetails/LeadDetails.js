@@ -150,10 +150,12 @@ export default function LeadDetails({ route }) {
       <LeadDetailsCard
         data={{
           source: lead?.leadSource,
-          country: getCountryName(lead?.countries?.[0], countries),
+          countryId: lead?.countries?.[0],
+          countryName: getCountryName(lead?.countries?.[0], countries),
           followupDate: formatDate(lead?.followupDate),
           leadId: lead?._id,
           createdAt: formatDate(lead?.createdAt),
+          countries: countries,
         }}
         onSave={saveDetails}
       />
