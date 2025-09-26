@@ -118,6 +118,7 @@ export default function LeadDetails({ route }) {
         error.message ||
         "Failed to save course selection";
       showError(errorMessage);
+      navigation.navigate("LeadDetails", { leadId: lead._id });
     } finally {
       dispatch(setCurSelectedCourse(null));
     }
