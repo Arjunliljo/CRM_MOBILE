@@ -139,7 +139,7 @@ export default function LeadDetailsCard({ data, refetch }) {
             <View style={styles.itemContent}>
               <Text style={styles.itemLabel}>Follow-up</Text>
               <Text style={styles.itemValue}>
-                {data.followupDate || "Not set"}
+                {formatDate(data.followupDate) || "Not set"}
               </Text>
             </View>
           </View>
@@ -190,7 +190,7 @@ export default function LeadDetailsCard({ data, refetch }) {
               onPress={() => setIsDatePickerOpen(true)}
             >
               <Text style={{ color: colors.primaryText }}>
-                {values.followupDate || "YYYY-MM-DD"}
+                {formatDate(values.followupDate) || "YYYY-MM-DD"}
               </Text>
             </TouchableOpacity>
 

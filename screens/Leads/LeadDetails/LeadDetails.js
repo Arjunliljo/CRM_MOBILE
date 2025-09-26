@@ -151,7 +151,7 @@ export default function LeadDetails({ route }) {
           source: lead?.leadSource,
           countryId: lead?.countries?.[0],
           countryName: getCountryName(lead?.countries?.[0], countries),
-          followupDate: formatDate(lead?.followupDate),
+          followupDate: lead?.followupDate,
           leadId: lead?._id,
           createdAt: formatDate(lead?.createdAt),
           countries: countries,
