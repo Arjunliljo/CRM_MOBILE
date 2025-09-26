@@ -31,7 +31,7 @@ const initialState = {
   curForm: "All",
   curRole: "All",
   curUser: "All",
-  curSelectedCourse: "All",
+  curSelectedCourse: {},
 };
 
 const leadSlice = createSlice({

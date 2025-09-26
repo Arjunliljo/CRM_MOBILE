@@ -28,7 +28,8 @@ import { formatDate } from "../../../helpers/dateFormater";
 
 export default function LeadDetails({ route }) {
   // const { curLead: lead } = useSelector((state) => state.lead);
-  const { selectedCourse } = useSelector((state) => state.lead);
+  const { curSelectedCourse } = useSelector((state) => state.lead);
+  console.log("selectedCourse", curSelectedCourse);
   const branches = useSelector((state) => state.bootstrap.branches);
   const countries = useSelector((state) => state.bootstrap.countries);
 
@@ -84,10 +85,12 @@ export default function LeadDetails({ route }) {
   };
 
   useEffect(() => {
-    handleCourseSelection(selectedCourse);
-  }, [selectedCourse]);
+    console.log("selectedCourse", curSelectedCourse);
+    handleCourseSelection(curSelectedCourse);
+  }, [curSelectedCourse]);
 
   const handleCourseSelection = async (data) => {
+    console.log("data", data);
     try {
       if (!data || !data.course || !data.university || !data.country) return;
 
