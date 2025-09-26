@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -12,16 +12,27 @@ import { styles } from "../../../screens/Leads/LeadDetails/leadDetailsStyle";
 import { formatDate } from "../../../helpers/dateFormater";
 import Selector from "../../Common/Selector";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { updateLead } from "../../../api/Leads/leadBackEndHandler";
+import { useToast } from "../../../contexts/ToastContext";
 
-export default function LeadDetailsCard({ data, onSave }) {
+export default function LeadDetailsCard({ data, refetch }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isCountryOpen, setIsCountryOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const { showSuccess, showError } = useToast();
   const [values, setValues] = useState({
     source: data.source,
     country: data.countryId,
     followupDate: data.followupDate,
   });
+
+  useEffect(() => {
+    setValues({
+      source: data.source,
+      country: data.countryId,
+      followupDate: data.followupDate,
+    });
+  }, [data]);
 
   const parseToDate = (dateLike) => {
     if (!dateLike) return new Date();
@@ -34,6 +45,23 @@ export default function LeadDetailsCard({ data, onSave }) {
     const m = `${dateObj.getMonth() + 1}`.padStart(2, "0");
     const d = `${dateObj.getDate()}`.padStart(2, "0");
     return `${y}-${m}-${d}`;
+  };
+
+  const saveDetails = async (details) => {
+    try {
+      // api call
+      const response = await updateLead(data?.leadId, details);
+      showSuccess("Lead details updated successfully!");
+      refetch();
+      setIsEditing(false);
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update lead details";
+      showError(errorMessage);
+      setIsEditing(false);
+    }
   };
   return (
     <View style={styles.card}>
@@ -52,7 +80,7 @@ export default function LeadDetailsCard({ data, onSave }) {
           <View style={styles.editActionsRow}>
             <TouchableOpacity
               style={[styles.editChip, styles.editChipPrimary]}
-              onPress={() => onSave(values)}
+              onPress={() => saveDetails(values)}
               activeOpacity={0.7}
             >
               <Ionicons name="checkmark" size={14} color={colors.whiteText} />

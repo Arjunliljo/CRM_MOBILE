@@ -68,7 +68,6 @@ export default function LeadDetails({ route }) {
     }
   };
 
-  const saveDetails = async (data) => {};
   const saveRemark = async (data) => {
     try {
       // api call
@@ -157,7 +156,7 @@ export default function LeadDetails({ route }) {
           createdAt: formatDate(lead?.createdAt),
           countries: countries,
         }}
-        onSave={saveDetails}
+        refetch={refetch}
       />
 
       {hasSelectedCourse && (
