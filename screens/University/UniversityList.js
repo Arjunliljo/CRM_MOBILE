@@ -40,21 +40,50 @@ export default function UniversityPage({ navigation, route }) {
 
   const universities = useMemo(() => {
     const items = data?.pages?.flatMap((p) => p.items) || [];
+
+    // If no selected university, return all items
     if (!selectedUniversityId) return items;
+
+    // Check if selected university is already in the filtered results
     const idx = items.findIndex((u) => u?._id === selectedUniversityId);
     if (idx >= 0) {
+      // Selected university is already in filtered results, just move it to top
       const selected = items[idx];
       const rest = items.filter((_, i) => i !== idx);
       return [selected, ...rest];
     }
+
+    // Selected university is not in filtered results, check if it should be included
     const selectedResolved = fetchedSelectedUniversity?.data?.data;
     if (selectedResolved && selectedResolved?._id) {
-      // Avoid dupes if later pages include it
-      if (items.some((u) => u?._id === selectedResolved._id)) return items;
-      return [selectedResolved, ...items];
+      // Check if selected university matches current search/filter criteria
+      const matchesSearch =
+        !searchQuery ||
+        selectedResolved.name
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        selectedResolved.country
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase());
+
+      const matchesCountry =
+        selectedCountry === "all" ||
+        selectedResolved.country === selectedCountry;
+
+      // Only include selected university if it matches current criteria
+      if (matchesSearch && matchesCountry) {
+        return [selectedResolved, ...items];
+      }
     }
+
     return items;
-  }, [data, selectedUniversityId, fetchedSelectedUniversity]);
+  }, [
+    data,
+    selectedUniversityId,
+    fetchedSelectedUniversity,
+    searchQuery,
+    selectedCountry,
+  ]);
   const navigateToCourses = (university) => {
     navigation.navigate("CourseListing", {
       university: university,
