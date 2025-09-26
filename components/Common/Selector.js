@@ -35,9 +35,10 @@ export default function Selector({
 
   const isOpen = onOpen !== null ? open : internalOpen;
 
-  const handleValueChange = (newValue) => {
-    setValue(newValue);
-    onValueChange && onValueChange(newValue);
+  const handleSelectItem = (item) => {
+    if (!item) return;
+    // Only fire external change handler for explicit user selections
+    onValueChange && onValueChange(item.value);
   };
 
   const handleSetOpen = (openState) => {
@@ -65,7 +66,8 @@ export default function Selector({
         setOpen={handleSetOpen}
         setValue={setValue}
         setItems={setItems}
-        onChangeValue={handleValueChange}
+        // Trigger external change ONLY on user selection to avoid loops
+        onSelectItem={handleSelectItem}
         placeholder={placeholder}
         searchable={searchable}
         multiple={multiple}
