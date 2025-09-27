@@ -15,7 +15,6 @@ export default function AllLeads({
 }) {
   const dispatch = useDispatch();
   const searchQuery = useSelector((state) => state.lead.searchQuery) || "";
-  const [filteredLeads, setFilteredLeads] = useState([]);
 
   const {
     leads,
@@ -28,21 +27,11 @@ export default function AllLeads({
     hasMore,
   } = useLeads();
 
-  useEffect(() => {
-    if (leads.length > 0) {
-      // setFilteredLeads(leads);
-    }
-  }, [leads]);
-
   const handleEndReached = () => {
     if (!isLoadingMore && hasMore) {
       fetchNextPage();
     }
   };
-
-  // if (isLoading) {
-  //   return <LoadingScreen />;
-  // }
 
   const handleSearch = (query) => {
     dispatch(setLeadSearchQuery(query));

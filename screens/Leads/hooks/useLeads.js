@@ -24,8 +24,17 @@ export const useLeads = () => {
 
   // Helper to add a param only when valid
   const addParam = (params, key, value) => {
-    if (value && value !== "All")
-      params.push(`${key}=${encodeURIComponent(value)}`);
+    if (value && value !== "All") {
+      // Handle object values (like curSelectedCourse)
+      if (typeof value === "object" && value !== null) {
+        // Only add if object has meaningful content
+        if (Object.keys(value).length > 0) {
+          params.push(`${key}=${encodeURIComponent(JSON.stringify(value))}`);
+        }
+      } else {
+        params.push(`${key}=${encodeURIComponent(value)}`);
+      }
+    }
   };
 
   // Use React Query's useInfiniteQuery for pagination
