@@ -12,8 +12,6 @@ import { colors } from "../../constants/colors";
 
 import AllTasks from "./AllTasks";
 import Filters from "./Filters";
-import Analytics from "./Analytics";
-import AddTask from "./AddTask";
 
 export default function TasksMain() {
   const [activeTab, setActiveTab] = useState("all");
@@ -35,10 +33,6 @@ export default function TasksMain() {
     switch (tabId) {
       case "filters":
         return <Filters onClose={closeModal} />;
-      case "analytics":
-        return <Analytics onClose={closeModal} />;
-      case "add":
-        return <AddTask onClose={closeModal} />;
       default:
         return null;
     }
@@ -52,8 +46,6 @@ export default function TasksMain() {
   const tabs = [
     { id: "all", label: "All Tasks", icon: "list" },
     { id: "filters", label: "Filters", icon: "funnel" },
-    { id: "analytics", label: "Analytics", icon: "bar-chart" },
-    { id: "add", label: "Add Task", icon: "add-circle" },
   ];
 
   return (
