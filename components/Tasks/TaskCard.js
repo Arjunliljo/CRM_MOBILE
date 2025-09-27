@@ -7,7 +7,7 @@ import { colors } from "../../constants/colors";
 const dummyImageUrl =
   "https://static.vecteezy.com/system/resources/thumbnails/036/594/092/small/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg";
 
-export default function TaskCard({ task }) {
+export default function TaskCard({ task, activeTab }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const navigation = useNavigation();
 
@@ -15,10 +15,23 @@ export default function TaskCard({ task }) {
     navigation.navigate("TaskDetails", { task });
   };
 
+  // Determine card background color based on activeTab
+  const getCardBackgroundColor = () => {
+    if (activeTab === "pending") {
+      return colors.pendingCardBackground;
+    } else if (activeTab === "closed") {
+      return colors.closedCardBackground;
+    }
+    return colors.cardBackground; // Default fallback
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      style={styles.cardContainer}
+      style={[
+        styles.cardContainer,
+        { backgroundColor: getCardBackgroundColor() },
+      ]}
       onPress={onPressCard}
     >
       <View style={styles.header}>
@@ -81,7 +94,6 @@ export default function TaskCard({ task }) {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: colors.cardBackground,
     padding: 16,
     borderRadius: 16,
     marginBottom: 16,

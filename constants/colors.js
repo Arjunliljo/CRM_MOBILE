@@ -45,6 +45,10 @@ export const colors = {
   error: "#FF3B30",
   info: "#5AC8FA",
 
+  // Card Colors for Task States
+  pendingCardBackground: "#FFE5E5", // Light black/pink for pending tasks
+  closedCardBackground: "#E5F3FF", // Light blue for closed tasks
+
   // Navigation Colors
   navActive: "#E3F2FD",
   navInactive: "#999999",

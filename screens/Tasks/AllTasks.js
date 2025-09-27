@@ -130,7 +130,9 @@ export default function AllTasks() {
         <FlatList
           data={leads}
           keyExtractor={(item) => item._id}
-          renderItem={({ item }) => <TaskCard task={item} />}
+          renderItem={({ item }) => (
+            <TaskCard task={item} activeTab={activeTab} />
+          )}
           contentContainerStyle={styles.listContainer}
           showsVerticalScrollIndicator={false}
         />
