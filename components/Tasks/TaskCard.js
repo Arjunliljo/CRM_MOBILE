@@ -7,9 +7,11 @@ import {
   Image,
   Platform,
   Alert,
+  Linking,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { Swipeable } from "react-native-gesture-handler";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { colors } from "../../constants/colors";
 import { updateTask } from "../../api/Tasks/taskBackendHandler";
@@ -22,6 +24,32 @@ const TaskCard = memo(({ task, activeTab, onRefresh }) => {
   const [followupDate, setFollowupDate] = useState(new Date());
   const [tempDate, setTempDate] = useState(new Date());
   const navigation = useNavigation();
+  const swipeableRef = React.useRef(null);
+
+  // === Swipe actions ===
+  const handleSwipeLeft = () => {
+    const phoneNumber = task?.phone;
+    const url = `whatsapp://send?phone=${phoneNumber}`;
+    Linking.openURL(url).catch(() =>
+      Alert.alert("Error", "Could not open WhatsApp")
+    );
+    // Close the swipe after action
+    setTimeout(() => {
+      swipeableRef.current?.close();
+    }, 100);
+  };
+
+  const handleSwipeRight = () => {
+    const phoneNumber = task?.phone;
+    const url = `tel:${phoneNumber}`;
+    Linking.openURL(url).catch(() =>
+      Alert.alert("Error", "Could not make phone call")
+    );
+    // Close the swipe after action
+    setTimeout(() => {
+      swipeableRef.current?.close();
+    }, 100);
+  };
 
   const onPressCard = () => {
     if (task?.type == "lead") {
@@ -105,6 +133,35 @@ const TaskCard = memo(({ task, activeTab, onRefresh }) => {
     });
   };
 
+  // Swipe action render functions
+  const renderRightActions = () => (
+    <View style={styles.rightSwipeContainer}>
+      <View style={styles.swipeContent}>
+        <View style={styles.swipeIconWrapper}>
+          <Ionicons name="logo-whatsapp" size={24} color="#fff" />
+        </View>
+        <View style={styles.swipeTextContainer}>
+          <Text style={styles.swipeTitle}>WhatsApp</Text>
+          <Text style={styles.swipeSubtitle}>Send Message</Text>
+        </View>
+      </View>
+    </View>
+  );
+
+  const renderLeftActions = () => (
+    <View style={styles.leftSwipeContainer}>
+      <View style={styles.swipeContent}>
+        <View style={styles.swipeIconWrapper}>
+          <Ionicons name="call" size={24} color="#fff" />
+        </View>
+        <View style={styles.swipeTextContainer}>
+          <Text style={styles.swipeTitle}>Call</Text>
+          <Text style={styles.swipeSubtitle}>{task?.phone}</Text>
+        </View>
+      </View>
+    </View>
+  );
+
   const isPendingCard = activeTab === "pending";
 
   // Determine card background color based on activeTab
@@ -117,7 +174,8 @@ const TaskCard = memo(({ task, activeTab, onRefresh }) => {
     return colors.cardBackground; // Default fallback
   };
 
-  return (
+  const cardContent = (
+    
     <TouchableOpacity
       activeOpacity={0.8}
       style={[
@@ -198,6 +256,26 @@ const TaskCard = memo(({ task, activeTab, onRefresh }) => {
       )}
     </TouchableOpacity>
   );
+
+  // Conditionally wrap with Swipeable only for pending cards
+  if (isPendingCard) {
+    return (
+      <Swipeable
+        ref={swipeableRef}
+        renderLeftActions={renderLeftActions}
+        onSwipeableLeftOpen={handleSwipeRight}
+        renderRightActions={renderRightActions}
+        onSwipeableRightOpen={handleSwipeLeft}
+        rightThreshold={40}
+        leftThreshold={40}
+      >
+        {cardContent}
+      </Swipeable>
+    );
+  }
+
+  // For closed cards, return without Swipeable wrapper
+  return cardContent;
 });
 
 // Custom comparison function for memo
@@ -313,5 +391,61 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: colors.primaryText,
+  },
+  // Swipe action styles
+  rightSwipeContainer: {
+    backgroundColor: "#25D366",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 120,
+    borderRadius: 16,
+    marginBottom: 16,
+    shadowColor: colors.shadow,
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  leftSwipeContainer: {
+    backgroundColor: "#007AFF",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 120,
+    borderRadius: 16,
+    marginBottom: 16,
+    shadowColor: colors.shadow,
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  swipeContent: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 16,
+  },
+  swipeIconWrapper: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  swipeTextContainer: {
+    alignItems: "center",
+  },
+  swipeTitle: {
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: 14,
+    marginBottom: 2,
+  },
+  swipeSubtitle: {
+    color: "rgba(255, 255, 255, 0.8)",
+    fontWeight: "500",
+    fontSize: 11,
+    textAlign: "center",
   },
 });
