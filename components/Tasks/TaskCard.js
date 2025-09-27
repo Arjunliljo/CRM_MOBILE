@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -7,7 +7,7 @@ import { colors } from "../../constants/colors";
 const dummyImageUrl =
   "https://static.vecteezy.com/system/resources/thumbnails/036/594/092/small/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg";
 
-export default function TaskCard({ task, activeTab }) {
+const TaskCard = memo(({ task, activeTab }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const navigation = useNavigation();
 
@@ -90,7 +90,12 @@ export default function TaskCard({ task, activeTab }) {
       </TouchableOpacity>
     </TouchableOpacity>
   );
-}
+});
+
+// Custom comparison function for memo
+TaskCard.displayName = "TaskCard";
+
+export default TaskCard;
 
 const styles = StyleSheet.create({
   cardContainer: {
