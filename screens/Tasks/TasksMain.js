@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../constants/colors";
+import { useSelector } from "react-redux";
 
 import AllTasks from "./AllTasks";
 import Filters from "./Filters";
@@ -17,6 +18,19 @@ export default function TasksMain() {
   const [activeTab, setActiveTab] = useState("all");
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState(null);
+
+  // Get filter state to check if filters are applied
+  const { branch, status, subStatus, role, selectedUser } = useSelector(
+    (state) => state.task
+  );
+
+  // Check if any filters are applied (not "All")
+  const hasActiveFilters =
+    branch !== "All" ||
+    status !== "All" ||
+    subStatus !== "All" ||
+    role !== "All" ||
+    selectedUser !== "All";
 
   const handleTabPress = (tabId) => {
     if (tabId === "all") {
@@ -84,11 +98,16 @@ export default function TasksMain() {
             ]}
             onPress={() => handleTabPress(tab.id)}
           >
-            <Ionicons
-              name={tab.icon}
-              size={20}
-              color={activeTab === tab.id ? colors.primary : colors.iconLight}
-            />
+            <View style={styles.iconContainer}>
+              <Ionicons
+                name={tab.icon}
+                size={20}
+                color={activeTab === tab.id ? colors.primary : colors.iconLight}
+              />
+              {tab.id === "filters" && hasActiveFilters && (
+                <View style={styles.filterDot} />
+              )}
+            </View>
             <Text
               style={[
                 styles.tabLabel,
@@ -122,6 +141,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   activeTabButton: { backgroundColor: colors.navActive, borderRadius: 8 },
+  iconContainer: {
+    position: "relative",
+  },
+  filterDot: {
+    position: "absolute",
+    top: -2,
+    right: -2,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.error,
+    borderWidth: 1,
+    borderColor: colors.cardBackground,
+  },
   tabLabel: {
     fontSize: 10,
     color: colors.iconLight,

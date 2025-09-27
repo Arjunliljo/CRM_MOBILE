@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -9,18 +9,30 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../constants/colors";
 import Selector from "../../components/Common/Selector";
-import { filterOptions } from "../../constants/dropdownData";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setBranch,
+  setStatus,
+  setSubStatus,
+  setRole,
+  setSelectedUser,
+} from "../../global/taskSlice";
 
 export default function Filters({ onClose }) {
+  const { branches, statuses, substatuses, roles, users } = useSelector(
+    (state) => state.bootstrap
+  );
+  const { branch, status, subStatus, role, selectedUser } = useSelector(
+    (state) => state.task
+  );
+  const dispatch = useDispatch();
+
   const [selectedFilters, setSelectedFilters] = useState({
-    branch: "all",
-    status: "all",
-    subStatus: "all",
-    country: "all",
-    form: "all",
-    source: "all",
-    role: "all",
-    user: "all",
+    branch: branch,
+    status: status,
+    subStatus: subStatus,
+    role: role,
+    user: selectedUser,
   });
   const [openDropdown, setOpenDropdown] = useState(null);
 
@@ -37,16 +49,24 @@ export default function Filters({ onClose }) {
       branch: "all",
       status: "all",
       subStatus: "all",
-      country: "all",
-      form: "all",
-      source: "all",
       role: "all",
       user: "all",
     });
-    setOpenDropdown(null);
+    setOpenDropdown(null); // Close any open dropdown
+    dispatch(setBranch("All"));
+    dispatch(setStatus("All"));
+    dispatch(setSubStatus("All"));
+    dispatch(setRole("All"));
+    dispatch(setSelectedUser("All"));
   };
+
   const applyFilters = () => {
-    console.log("Applied Task Filters:", selectedFilters);
+    const norm = (v) => (v && v !== "all" ? v : "All");
+    dispatch(setBranch(norm(selectedFilters.branch)));
+    dispatch(setStatus(norm(selectedFilters.status)));
+    dispatch(setSubStatus(norm(selectedFilters.subStatus)));
+    dispatch(setRole(norm(selectedFilters.role)));
+    dispatch(setSelectedUser(norm(selectedFilters.user)));
     if (onClose) onClose();
   };
 
@@ -55,101 +75,77 @@ export default function Filters({ onClose }) {
       <View style={styles.filterGrid}>
         <View style={styles.filterColumn}>
           <Selector
-            options={filterOptions.branch}
+            options={branches.map((branch) => ({
+              label: branch.name,
+              value: branch.id,
+            }))}
             selectedValue={selectedFilters.branch}
             onValueChange={createFilterHandler("branch")}
             placeholder="Select Branch"
             label="Branch"
-            searchable={true}
             open={openDropdown === "branch"}
             onOpen={(isOpen) => handleDropdownOpen("branch", isOpen)}
             zIndex={getZIndex("branch")}
             zIndexInverse={1000}
           />
           <Selector
-            options={filterOptions.subStatus}
-            selectedValue={selectedFilters.subStatus}
-            onValueChange={createFilterHandler("subStatus")}
-            placeholder="Select Sub Status"
-            label="Sub Status"
-            searchable={true}
-            open={openDropdown === "subStatus"}
-            onOpen={(isOpen) => handleDropdownOpen("subStatus", isOpen)}
-            zIndex={getZIndex("subStatus")}
-            zIndexInverse={1000}
-          />
-          <Selector
-            options={filterOptions.form}
-            selectedValue={selectedFilters.form}
-            onValueChange={createFilterHandler("form")}
-            placeholder="Select Form"
-            label="Form"
-            searchable={true}
-            open={openDropdown === "form"}
-            onOpen={(isOpen) => handleDropdownOpen("form", isOpen)}
-            zIndex={getZIndex("form")}
-            zIndexInverse={1000}
-          />
-          <Selector
-            options={filterOptions.role}
+            options={roles.map((role) => ({
+              label: role.name,
+              value: role.id,
+            }))}
             selectedValue={selectedFilters.role}
             onValueChange={createFilterHandler("role")}
             placeholder="Select Role"
             label="Role"
-            searchable={true}
             open={openDropdown === "role"}
             onOpen={(isOpen) => handleDropdownOpen("role", isOpen)}
             zIndex={getZIndex("role")}
             zIndexInverse={1000}
           />
+          <Selector
+            options={users.map((user) => ({
+              label: user.name,
+              value: user.id,
+            }))}
+            selectedValue={selectedFilters.user}
+            onValueChange={createFilterHandler("user")}
+            placeholder="Select User"
+            label="User"
+            open={openDropdown === "user"}
+            onOpen={(isOpen) => handleDropdownOpen("user", isOpen)}
+            zIndex={getZIndex("user")}
+            zIndexInverse={1000}
+          />
         </View>
         <View style={styles.filterColumn}>
           <Selector
-            options={filterOptions.status}
+            options={statuses
+              .filter((status) => !status.isApplication)
+              .map((status) => ({
+                label: status.name,
+                value: status.id,
+              }))}
             selectedValue={selectedFilters.status}
             onValueChange={createFilterHandler("status")}
             placeholder="Select Status"
             label="Status"
-            searchable={true}
             open={openDropdown === "status"}
             onOpen={(isOpen) => handleDropdownOpen("status", isOpen)}
             zIndex={getZIndex("status")}
             zIndexInverse={1000}
           />
           <Selector
-            options={filterOptions.country}
-            selectedValue={selectedFilters.country}
-            onValueChange={createFilterHandler("country")}
-            placeholder="Select Country"
-            label="Country"
-            searchable={true}
-            open={openDropdown === "country"}
-            onOpen={(isOpen) => handleDropdownOpen("country", isOpen)}
-            zIndex={getZIndex("country")}
-            zIndexInverse={1000}
-          />
-          <Selector
-            options={filterOptions.source}
-            selectedValue={selectedFilters.source}
-            onValueChange={createFilterHandler("source")}
-            placeholder="Select Source"
-            label="Source"
-            searchable={true}
-            open={openDropdown === "source"}
-            onOpen={(isOpen) => handleDropdownOpen("source", isOpen)}
-            zIndex={getZIndex("source")}
-            zIndexInverse={1000}
-          />
-          <Selector
-            options={filterOptions.user}
-            selectedValue={selectedFilters.user}
-            onValueChange={createFilterHandler("user")}
-            placeholder="Select User"
-            label="User"
-            searchable={true}
-            open={openDropdown === "user"}
-            onOpen={(isOpen) => handleDropdownOpen("user", isOpen)}
-            zIndex={getZIndex("user")}
+            options={substatuses.map((sub) => ({
+              label: sub.subStatus || sub.name || sub.label,
+              value: sub.id || sub._id || sub.value,
+            }))}
+            selectedValue={selectedFilters.subStatus}
+            onValueChange={createFilterHandler("subStatus")}
+            placeholder="Sub Status"
+            label="Sub Status"
+            open={openDropdown === "subStatus"}
+            onOpen={(isOpen) => handleDropdownOpen("subStatus", isOpen)}
+            zIndex={getZIndex("subStatus")}
             zIndexInverse={1000}
           />
         </View>
