@@ -8,11 +8,16 @@ const dummyImageUrl =
   "https://static.vecteezy.com/system/resources/thumbnails/036/594/092/small/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg";
 
 const TaskCard = memo(({ task, activeTab }) => {
+  console.log("TaskCard rendered", task);
   const [isExpanded, setIsExpanded] = useState(false);
   const navigation = useNavigation();
 
   const onPressCard = () => {
-    navigation.navigate("TaskDetails", { task });
+    if (task?.type == "lead") {
+      navigation.navigate("LeadDetails", { leadId: task?._id });
+    } else {
+      // temporary , it will be changed to application details
+    }
   };
 
   // Determine card background color based on activeTab
