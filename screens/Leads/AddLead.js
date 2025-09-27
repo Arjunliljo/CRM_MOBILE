@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -10,16 +10,23 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
+import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../constants/colors";
 import Selector from "../../components/Common/Selector";
+import { addLead } from "../../api/Leads/leadBackEndHandler";
 import {
-  leadSources,
-  countries,
-  branches,
+  leadSourceManualVisible,
   districts,
-} from "../../constants/dropdownData";
+} from "../../constants/hardCodedData";
+import { useSelector } from "react-redux";
+import { useToast } from "../../contexts/ToastContext";
 
 export default function AddLead() {
+  const navigation = useNavigation();
+  const { countries, branches, statuses } = useSelector(
+    (state) => state.bootstrap
+  );
+  const { showSuccess, showError } = useToast();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -88,31 +95,50 @@ export default function AddLead() {
       Alert.alert("Error", "Please enter the phone number");
       return false;
     }
+    if (!formData.leadSource.trim()) {
+      Alert.alert("Error", "Please select the lead source");
+      return false;
+    }
+    if (!formData.country.trim()) {
+      Alert.alert("Error", "Please select the country");
+      return false;
+    }
+    if (!formData.district.trim()) {
+      Alert.alert("Error", "Please select the district");
+      return false;
+    }
+    if (!formData.branch.trim()) {
+      Alert.alert("Error", "Please select the branch");
+      return false;
+    }
     return true;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (validateForm()) {
-      // Here you would typically send the data to your backend
-      Alert.alert("Success", "Lead added successfully!", [
-        {
-          text: "OK",
-          onPress: () => {
-            // Reset form
-            setFormData({
-              name: "",
-              email: "",
-              phone: "",
-              leadSource: "",
-              country: "",
-              district: "",
-              branch: "",
-              notes: "",
-            });
-            setSelectedFile(null);
-          },
-        },
-      ]);
+      const statusTheNew = statuses?.find((val) => val.priority === 1);
+      const subStatusTheNew = statusTheNew?.subStatuses[0]?._id;
+
+      formData.statusId = statusTheNew?._id;
+      formData.subStatusId = subStatusTheNew;
+      // console.log("formData", formData);
+      try {
+        const response = await addLead(formData);
+        showSuccess("Lead added successfully!");
+        console.log("response", response);
+        // Navigate back to leads list after successful API call
+        navigation.goBack();
+      } catch (error) {
+        // Handle different error structures
+        let errorMessage = "Failed to add lead. Please try again.";
+
+        if (error.response?.data?.message) {
+          errorMessage = error.response.data.message;
+        }
+
+        showError(errorMessage);
+      }
+      // Alert.alert("Success", "Lead added successfully!");
     }
   };
 
@@ -164,7 +190,10 @@ export default function AddLead() {
         <View style={styles.inputGroup}>
           <Selector
             label="Lead Source"
-            options={leadSources}
+            options={leadSourceManualVisible?.map((source) => ({
+              label: source,
+              value: source,
+            }))}
             selectedValue={formData.leadSource}
             onValueChange={(value) => handleInputChange("leadSource", value)}
             placeholder="Select source"
@@ -179,7 +208,10 @@ export default function AddLead() {
         <View style={styles.inputGroup}>
           <Selector
             label="Country"
-            options={countries}
+            options={countries?.map((country) => ({
+              label: country?.name,
+              value: country?._id,
+            }))}
             selectedValue={formData.country}
             onValueChange={(value) => handleInputChange("country", value)}
             placeholder="Select country"
@@ -194,7 +226,10 @@ export default function AddLead() {
         <View style={styles.inputGroup}>
           <Selector
             label="District/City"
-            options={districts}
+            options={districts?.map((district) => ({
+              label: district,
+              value: district,
+            }))}
             selectedValue={formData.district}
             onValueChange={(value) => handleInputChange("district", value)}
             placeholder="Select district or city"
@@ -210,7 +245,10 @@ export default function AddLead() {
         <View style={styles.inputGroup}>
           <Selector
             label="Branch"
-            options={branches}
+            options={branches?.map((branch) => ({
+              label: branch?.name,
+              value: branch?._id,
+            }))}
             selectedValue={formData.branch}
             onValueChange={(value) => handleInputChange("branch", value)}
             placeholder="Select branch"

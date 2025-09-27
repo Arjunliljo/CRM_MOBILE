@@ -1,0 +1,31 @@
+export const leadSourceManualVisible = [
+  "Manual",
+  "Incoming",
+  "Marketing Team",
+  "German Expo",
+  "Instagram",
+  "WhatsApp",
+  "Google",
+  "Tamil Leads",
+  "Referal Key",
+  "Expo Lead Calicut",
+  "Register Lead Calicut Event",
+];
+
+export const districts = [
+    "N/A",
+    "Thiruvananthapuram",
+    "Kollam",
+    "Pathanamthitta",
+    "Alappuzha",
+    "Kottayam",
+    "Idukki",
+    "Ernakulam",
+    "Thrissur",
+    "Palakkad",
+    "Malappuram",
+    "Kozhikode",
+    "Wayanad",
+    "Kannur",
+    "Kasaragod",
+  ];

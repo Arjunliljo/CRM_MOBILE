@@ -9,6 +9,7 @@ import {
   Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../constants/colors";
 import { useSelector } from "react-redux";
 
@@ -16,9 +17,9 @@ import { useSelector } from "react-redux";
 import AllLeads from "./AllLeads";
 import Filters from "./Filters";
 import Analytics from "./Analytics";
-import AddLead from "./AddLead";
 
 export default function LeadsMain() {
+  const navigation = useNavigation();
   // Determine if any filters are applied
   const {
     searchQuery = "",
@@ -53,6 +54,9 @@ export default function LeadsMain() {
       // Show All Leads directly (not in modal)
       setActiveTab(tabId);
       setModalVisible(false);
+    } else if (tabId === "add") {
+      // Navigate to AddLead route instead of modal
+      navigation.navigate("AddLead");
     } else {
       // Show other tabs in modal
       setActiveTab(tabId);
@@ -67,8 +71,6 @@ export default function LeadsMain() {
         return <Filters onClose={closeModal} />;
       case "analytics":
         return <Analytics onClose={closeModal} />;
-      case "add":
-        return <AddLead onClose={closeModal} />;
       default:
         return null;
     }

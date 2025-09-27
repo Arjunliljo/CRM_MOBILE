@@ -121,10 +121,10 @@ const Toast = ({
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    top: 50,
+    top: 60,
     left: 20,
     right: 20,
-    zIndex: 9999,
+    zIndex: 99999,
     borderRadius: 8,
     shadowColor: "#000",
     shadowOffset: {
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5,
+    elevation: 10,
   },
   content: {
     flexDirection: "row",
@@ -165,4 +165,3 @@ const styles = StyleSheet.create({
 });
 
 export default Toast;
-  
