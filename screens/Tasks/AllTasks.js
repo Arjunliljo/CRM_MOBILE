@@ -58,6 +58,7 @@ export default function AllTasks() {
   // Local state
   const [activeTab, setActiveTab] = useState(TAB_TYPES.PENDING);
   const [refreshing, setRefreshing] = useState(false);
+  const [localSearchQuery, setLocalSearchQuery] = useState("");
 
   // Animation refs
   const buttonShimmerAnimation = useRef(new Animated.Value(0)).current;
@@ -75,6 +76,15 @@ export default function AllTasks() {
     const newTab = completedFollowups ? TAB_TYPES.CLOSED : TAB_TYPES.PENDING;
     setActiveTab(newTab);
   }, [completedFollowups]);
+
+  // Debounce search query
+  useEffect(() => {
+    const debounceTimer = setTimeout(() => {
+      dispatch(setSearchQuery(localSearchQuery));
+    }, 500); // 500ms delay
+
+    return () => clearTimeout(debounceTimer);
+  }, [localSearchQuery, dispatch]);
 
   // Call API when screen is focused (when task route is clicked)
   useFocusEffect(
@@ -123,12 +133,9 @@ export default function AllTasks() {
   }, [isLoading, buttonShimmerAnimation]);
 
   // Event handlers
-  const handleSearch = useCallback(
-    (query) => {
-      dispatch(setSearchQuery(query));
-    },
-    [dispatch]
-  );
+  const handleSearch = useCallback((query) => {
+    setLocalSearchQuery(query);
+  }, []);
 
   const handleTabChange = useCallback(
     (tab) => {
@@ -176,13 +183,13 @@ export default function AllTasks() {
   return (
     <View style={styles.container}>
       {/* Search Bar */}
-      <View style={styles.searchContainer}> 
+      <View style={styles.searchContainer}>
         <Ionicons name="search" size={20} color={colors.iconLight} />
         <TextInput
           style={styles.searchInput}
           placeholder="Search"
           placeholderTextColor={colors.placeholderText}
-          value={searchQuery}
+          value={localSearchQuery}
           onChangeText={handleSearch}
         />
       </View>
