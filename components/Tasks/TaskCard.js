@@ -12,12 +12,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { colors } from "../../constants/colors";
+import { updateTask } from "../../api/Tasks/taskBackendHandler";
 
 const dummyImageUrl =
   "https://static.vecteezy.com/system/resources/thumbnails/036/594/092/small/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg";
 
-const TaskCard = memo(({ task, activeTab }) => {
-  console.log("TaskCard rendered", task);
+const TaskCard = memo(({ task, activeTab, onRefresh }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [followupDate, setFollowupDate] = useState(new Date());
   const [tempDate, setTempDate] = useState(new Date());
@@ -69,21 +69,26 @@ const TaskCard = memo(({ task, activeTab }) => {
 
   const updateFollowupDate = async (newDate) => {
     try {
+      const response = await updateTask(task._id, {
+        followupDate: newDate,
+      });
+
       // Update local state immediately for better UX
       setFollowupDate(newDate);
 
-      // Here you would call your API
       console.log("Updating followup date via API:", {
         taskId: task._id,
         newFollowupDate: newDate,
         taskName: task.name,
       });
 
-      // Example API call (replace with your actual API call)
-      // await updateTaskFollowupDate(task._id, newDate);
-
       // Show success message
       Alert.alert("Success", "Followup date updated successfully!");
+
+      // Call onRefresh to update the parent component
+      if (onRefresh) {
+        onRefresh();
+      }
     } catch (error) {
       // Revert the date if API call fails
       setFollowupDate(followupDate);

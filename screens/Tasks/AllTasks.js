@@ -13,9 +13,11 @@ import {
   Text,
   TouchableOpacity,
   Animated,
+  RefreshControl,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
+import { useFocusEffect } from "@react-navigation/native";
 
 // Local imports
 import { colors } from "../../constants/colors";
@@ -55,6 +57,7 @@ export default function AllTasks() {
   // Local state
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState(TAB_TYPES.PENDING);
+  const [refreshing, setRefreshing] = useState(false);
 
   // Animation refs
   const buttonShimmerAnimation = useRef(new Animated.Value(0)).current;
@@ -72,6 +75,30 @@ export default function AllTasks() {
     const newTab = completedFollowups ? TAB_TYPES.CLOSED : TAB_TYPES.PENDING;
     setActiveTab(newTab);
   }, [completedFollowups]);
+
+  // Call API when screen is focused (when task route is clicked)
+  useFocusEffect(
+    useCallback(() => {
+      // Refetch data when the screen comes into focus
+      if (refetch) {
+        refetch();
+      }
+    }, [refetch])
+  );
+
+  // Handle pull-to-refresh
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      if (refetch) {
+        await refetch();
+      }
+    } catch (error) {
+      console.error("Error refreshing tasks:", error);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refetch]);
 
   useEffect(() => {
     if (!isLoading) return;
@@ -110,7 +137,9 @@ export default function AllTasks() {
 
   // Memoized functions for performance
   const renderItem = useCallback(
-    ({ item }) => <TaskCard task={item} activeTab={activeTab} />,
+    ({ item }) => (
+      <TaskCard task={item} activeTab={activeTab} onRefresh={refetch} />
+    ),
     [activeTab]
   );
 
@@ -247,6 +276,14 @@ export default function AllTasks() {
           updateCellsBatchingPeriod={50}
           initialNumToRender={10}
           windowSize={10}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={[colors.primary]}
+              tintColor={colors.primary}
+            />
+          }
         />
       )}
     </View>
