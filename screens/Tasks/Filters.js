@@ -75,10 +75,13 @@ export default function Filters({ onClose }) {
       <View style={styles.filterGrid}>
         <View style={styles.filterColumn}>
           <Selector
-            options={branches.map((branch) => ({
-              label: branch.name,
-              value: branch.id,
-            }))}
+            options={[
+              { label: "All Branches", value: "all" },
+              ...branches.map((branch) => ({
+                label: branch.name,
+                value: branch.id,
+              })),
+            ]}
             selectedValue={selectedFilters.branch}
             onValueChange={createFilterHandler("branch")}
             placeholder="Select Branch"
@@ -89,10 +92,13 @@ export default function Filters({ onClose }) {
             zIndexInverse={1000}
           />
           <Selector
-            options={roles.map((role) => ({
-              label: role.name,
-              value: role.id,
-            }))}
+            options={[
+              { label: "All Roles", value: "all" },
+              ...roles.map((role) => ({
+                label: role.name,
+                value: role.id,
+              })),
+            ]}
             selectedValue={selectedFilters.role}
             onValueChange={createFilterHandler("role")}
             placeholder="Select Role"
@@ -103,10 +109,13 @@ export default function Filters({ onClose }) {
             zIndexInverse={1000}
           />
           <Selector
-            options={users.map((user) => ({
-              label: user.name,
-              value: user.id,
-            }))}
+            options={[
+              { label: "All Users", value: "all" },
+              ...users.map((user) => ({
+                label: user.name,
+                value: user.id,
+              })),
+            ]}
             selectedValue={selectedFilters.user}
             onValueChange={createFilterHandler("user")}
             placeholder="Select User"
@@ -119,12 +128,15 @@ export default function Filters({ onClose }) {
         </View>
         <View style={styles.filterColumn}>
           <Selector
-            options={statuses
-              .filter((status) => !status.isApplication)
-              .map((status) => ({
-                label: status.name,
-                value: status.id,
-              }))}
+            options={[
+              { label: "All Statuses", value: "all" },
+              ...statuses
+                .filter((status) => !status.isApplication)
+                .map((status) => ({
+                  label: status.name,
+                  value: status.id,
+                })),
+            ]}
             selectedValue={selectedFilters.status}
             onValueChange={createFilterHandler("status")}
             placeholder="Select Status"
@@ -135,10 +147,13 @@ export default function Filters({ onClose }) {
             zIndexInverse={1000}
           />
           <Selector
-            options={substatuses.map((sub) => ({
-              label: sub.subStatus || sub.name || sub.label,
-              value: sub.id || sub._id || sub.value,
-            }))}
+            options={[
+              { label: "All Sub Statuses", value: "all" },
+              ...substatuses.map((sub) => ({
+                label: sub.subStatus || sub.name || sub.label,
+                value: sub.id || sub._id || sub.value,
+              })),
+            ]}
             selectedValue={selectedFilters.subStatus}
             onValueChange={createFilterHandler("subStatus")}
             placeholder="Sub Status"
