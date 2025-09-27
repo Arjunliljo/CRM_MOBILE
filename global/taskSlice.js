@@ -8,6 +8,7 @@ const initialState = {
   endDate: "2025-09-27",
   status: "All Statuses",
   subStatus: "All Sub Statuses",
+  searchQuery: "",
 };
 
 const taskSlice = createSlice({
@@ -17,8 +18,11 @@ const taskSlice = createSlice({
     setCompletedFollowups: (state, action) => {
       state.completedFollowups = action.payload;
     },
+    setSearchQuery: (state, action) => {
+      state.searchQuery = action.payload;
+    },
   },
 });
 
-export const { setCompletedFollowups } = taskSlice.actions;
+export const { setCompletedFollowups, setSearchQuery } = taskSlice.actions;
 export default taskSlice.reducer;

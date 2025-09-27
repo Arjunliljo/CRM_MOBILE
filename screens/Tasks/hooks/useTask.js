@@ -3,12 +3,14 @@ import api from "../../../conf/conf";
 import { useSelector } from "react-redux";
 
 export const useTask = () => {
-  const { completedFollowups } = useSelector((state) => state.task);
+  const { completedFollowups, searchQuery } = useSelector(
+    (state) => state.task
+  );
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ["task", completedFollowups],
+    queryKey: ["task", completedFollowups, searchQuery],
     queryFn: () =>
       api.get(
-        `dashboard/fetch-leads?key=&completedFollowups=${completedFollowups}`
+        `dashboard/fetch-leads?key=${searchQuery}&completedFollowups=${completedFollowups}`
       ),
   });
 

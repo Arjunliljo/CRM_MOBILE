@@ -25,7 +25,7 @@ import TaskCard from "../../components/Tasks/TaskCard";
 import TaskCardSkeleton from "../../components/Tasks/TaskCardSkeleton";
 import StatsSkeleton from "../../components/Tasks/StatsSkeleton";
 import { useTask } from "./hooks/useTask";
-import { setCompletedFollowups } from "../../global/taskSlice";
+import { setCompletedFollowups, setSearchQuery } from "../../global/taskSlice";
 
 // Constants
 const TAB_TYPES = {
@@ -52,10 +52,10 @@ export default function AllTasks() {
     endDate,
     status,
     subStatus,
+    searchQuery,
   } = useSelector((state) => state.task);
 
   // Local state
-  const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState(TAB_TYPES.PENDING);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -123,9 +123,12 @@ export default function AllTasks() {
   }, [isLoading, buttonShimmerAnimation]);
 
   // Event handlers
-  const handleSearch = useCallback((query) => {
-    setSearchQuery(query);
-  }, []);
+  const handleSearch = useCallback(
+    (query) => {
+      dispatch(setSearchQuery(query));
+    },
+    [dispatch]
+  );
 
   const handleTabChange = useCallback(
     (tab) => {
@@ -140,7 +143,7 @@ export default function AllTasks() {
     ({ item }) => (
       <TaskCard task={item} activeTab={activeTab} onRefresh={refetch} />
     ),
-    [activeTab]
+    [activeTab, refetch]
   );
 
   const keyExtractor = useCallback((item) => item._id, []);
@@ -173,7 +176,7 @@ export default function AllTasks() {
   return (
     <View style={styles.container}>
       {/* Search Bar */}
-      <View style={styles.searchContainer}>
+      <View style={styles.searchContainer}> 
         <Ionicons name="search" size={20} color={colors.iconLight} />
         <TextInput
           style={styles.searchInput}
