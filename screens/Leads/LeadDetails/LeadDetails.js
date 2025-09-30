@@ -158,6 +158,7 @@ export default function LeadDetails({ route }) {
         }}
         refetch={refetch}
       />
+      <RemarkCard remarkText={lead?.remark} onSave={saveRemark} />
 
       {hasSelectedCourse && (
         <SelectedCourseSection
@@ -168,9 +169,6 @@ export default function LeadDetails({ route }) {
           countries={countries}
         />
       )}
-
-      <RemarkCard remarkText={lead?.remark} onSave={saveRemark} />
-
       <CTACards
         navigation={navigation}
         lead={lead}

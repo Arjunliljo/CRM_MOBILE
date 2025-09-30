@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../../constants/colors";
 import { styles } from "./applicationDetailsStyle";
 import Selector from "../../../components/Common/Selector";
-import SegmentTabs from "../../../components/Common/SegmentTabs";
+
 import ActivityLog from "../../../components/Common/ActivityLog";
 
 const applicationStatuses = [
@@ -617,11 +617,6 @@ export default function ApplicationDetails({ route }) {
           <Ionicons name="chevron-forward" size={20} color={colors.primary} />
         </TouchableOpacity>
 
-        <SegmentTabs
-          tabs={docTabs}
-          activeKey={activeDocTab}
-          onChange={setActiveDocTab}
-        />
         <ActivityLog title="Activity Log" activities={[]} />
       </View>
     </ScrollView>

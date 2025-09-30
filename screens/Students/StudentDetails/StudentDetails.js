@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, Linking } from "react-native";
+import { ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { styles } from "./studentDetailsStyle";
-import SegmentTabs from "../../../components/Common/SegmentTabs";
+
 import ActivityLog from "../../../components/Common/ActivityLog";
 import { useSelector } from "react-redux";
 import {
@@ -11,15 +11,18 @@ import {
   getCountryName,
   getSubStatusName,
 } from "../../../helpers/bootstrapHelpers";
-import HeaderSection from "./components/HeaderSection";
-import ActionButtonsRow from "./components/ActionButtonsRow";
-import StatusCard from "./components/StatusCard";
-import ContactCard from "./components/ContactCard";
-import DetailsCard from "./components/DetailsCard";
+
 import RemarkCard from "./components/RemarkCard";
-import ChatCTA from "./components/ChatCTA";
-import DocumentsCTA from "./components/DocumentsCTA";
-import UniversityCTA from "./components/UniversityCTA";
+
+import LeadHeader from "../../../components/Leads/LeadDetails/LeadHeader";
+import PrimaryActions from "../../../components/Leads/LeadDetails/PrimaryActions";
+import StatusControls from "../../../components/Leads/LeadDetails/StatusControls";
+import ContactInfoCard from "../../../components/Leads/LeadDetails/ContactInfoCard";
+import LeadDetailsCard from "../../../components/Leads/LeadDetails/LeadDetailsCard";
+import { useGetStudent } from "../hooks/useGetStudent";
+import { formatDate } from "../../../helpers/dateFormater";
+import CTACards from "../../../components/Leads/LeadDetails/CTACards";
+import SelectedCourseSection from "../../../components/Leads/LeadDetails/SelectedCourseSection";
 
 // Use same status/substatus model as Leads
 
@@ -28,56 +31,14 @@ export default function StudentDetails({ route }) {
   const { branches, statuses, substatuses, countries } = useSelector(
     (state) => state.bootstrap
   );
+  const {
+    data: studentData,
+    isLoading,
+    error,
+    refetch,
+  } = useGetStudent(curStudent?._id);
 
-  const [editable, setEditable] = useState(curStudent);
   const navigation = useNavigation();
-
-  useEffect(() => {
-    setEditable(curStudent);
-  }, [curStudent]);
-
-  if (!editable) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>No student data available</Text>
-      </View>
-    );
-  }
-
-  // Derived display helpers
-  const handleCall = () => {
-    if (editable?.phone) Linking.openURL(`tel:${editable.phone}`);
-  };
-  const handleSms = () => {
-    if (editable?.phone) Linking.openURL(`sms:${editable.phone}`);
-  };
-  const handleEmail = () => {
-    if (editable?.email) Linking.openURL(`mailto:${editable.email}`);
-  };
-
-  const statusName = getStatusName(editable?.status, statuses);
-  const subStatusName = getSubStatusName(
-    editable?.subStatus || editable?.substatus,
-    substatuses
-  );
-  const branchName = getBranchName(editable?.branch, branches);
-  const primaryCountryName = Array.isArray(editable?.countries)
-    ? editable.countries[0]
-      ? getCountryName(editable.countries[0], countries)
-      : null
-    : editable?.country
-    ? getCountryName(editable.country, countries)
-    : null;
-
-  const countryNames =
-    Array.isArray(editable?.countries) && editable.countries.length
-      ? editable.countries
-          .map((cid) => getCountryName(cid, countries))
-          .filter(Boolean)
-          .join(", ")
-      : editable?.country
-      ? getCountryName(editable.country, countries)
-      : "Not provided";
 
   // Remark handled inside RemarkCard
 
@@ -87,75 +48,114 @@ export default function StudentDetails({ route }) {
     } catch (error) {}
   };
 
+  const handleContactChange = async (data) => {
+    try {
+      // api call
+      const response = await updateLeadDetails(studentData?._id, data);
+      showSuccess("Lead contact updated successfully!");
+      refetch();
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update lead contact";
+      showError(errorMessage);
+    }
+  };
+  const saveRemark = async (data) => {
+    try {
+      // api call
+      const response = await updateLead(studentData?._id, data);
+      showSuccess("Lead remark updated successfully!");
+      refetch();
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update lead remark";
+      showError(errorMessage);
+    }
+  };
+  let hasSelectedCourse = false;
+  if (
+    Array.isArray(studentData?.university) &&
+    Array.isArray(studentData?.course) &&
+    studentData?.university?.length &&
+    studentData?.course?.length
+  ) {
+    hasSelectedCourse = true;
+  }
+
+  if (!studentData) return null;
+
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
-      <HeaderSection
+      <LeadHeader
         data={{
-          branch: getBranchName(curStudent.branch, branches),
-          name: curStudent.name,
-          country: getCountryName(curStudent?.countries?.[0], countries),
-          followupDate: curStudent.followupDate,
-          source: curStudent.leadSource,
+          branch: getBranchName(studentData.branch, branches),
+          name: studentData.name,
+          country: getCountryName(studentData?.countries?.[0], countries),
+          followupDate: studentData.followupDate,
+          source: studentData.leadSource,
         }}
       />
 
-      <ActionButtonsRow
-        onCall={handleCall}
-        onSms={handleSms}
-        onEmail={handleEmail}
+      <PrimaryActions
+        data={{ phone: studentData?.phone, email: studentData?.email }}
       />
 
       <StatusControls
         onHandleChange={handleStatusChange}
-        curStatus={curStudent.status}
-        curSubStatus={curStudent.subStatus}
+        curStatus={studentData.status}
+        curSubStatus={studentData.subStatus}
       />
 
-      <ContactCard
-        initial={{
-          phone: editable?.phone,
-          email: editable?.email,
-          district: editable?.district,
+      <ContactInfoCard
+        data={{
+          phone: studentData?.phone,
+          email: studentData?.email,
+          district: studentData?.district,
+          leadId: studentData?._id,
         }}
-        onSave={(draft) => setEditable((p) => ({ ...p, ...draft }))}
+        onHandleChange={handleContactChange}
       />
 
-      <DetailsCard
-        displayCountries={countryNames}
-        initialFollowup={editable?.followupDate}
-        onSave={(draft) =>
-          setEditable((prev) => ({
-            ...prev,
-            country: draft.country,
-            followupDate: draft.followupDate,
-          }))
-        }
+      <LeadDetailsCard
+        data={{
+          source: studentData?.leadSource,
+          countryId: studentData?.countries?.[0],
+          countryName: getCountryName(studentData?.countries?.[0], countries),
+          followupDate: studentData?.followupDate,
+          leadId: studentData?._id,
+          createdAt: formatDate(studentData?.createdAt),
+          countries: countries,
+        }}
+        refetch={refetch}
+        title="Student Details"
       />
 
-      <RemarkCard
-        initialRemark={editable?.remark || editable?.remarks}
-        onSave={(text) => setEditable((prev) => ({ ...prev, remark: text }))}
-      />
+      <RemarkCard remarkText={studentData?.remark} onSave={saveRemark} />
 
-      <View>
-        <ChatCTA
-          navigation={navigation}
-          leadId={editable?.id || editable?._id}
-          leadName={editable?.name}
+      {hasSelectedCourse && (
+        <SelectedCourseSection
+          universityId={studentData?.university?.[0]}
+          courseId={studentData?.course?.[0]}
+          intakeMonth={studentData?.intakeMonth}
+          intakeYear={studentData?.intakeYear}
+          countries={countries}
         />
+      )}
 
-        <DocumentsCTA navigation={navigation} />
-        <SegmentTabs
-          tabs={[{ key: "all", label: "All" }]}
-          activeKey={"all"}
-          onChange={() => {}}
-        />
-        <UniversityCTA navigation={navigation} />
-        <ActivityLog title="Activity Log" activities={[]} />
-      </View>
+      <CTACards
+        navigation={navigation}
+        lead={studentData}
+        hasSelectedCourse={hasSelectedCourse}
+      />
+
+      <ActivityLog title="Activity Log" activities={[]} />
     </ScrollView>
   );
 }

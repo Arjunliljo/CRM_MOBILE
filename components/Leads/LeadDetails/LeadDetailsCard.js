@@ -15,7 +15,11 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { updateLead } from "../../../api/Leads/leadBackEndHandler";
 import { useToast } from "../../../contexts/ToastContext";
 
-export default function LeadDetailsCard({ data, refetch }) {
+export default function LeadDetailsCard({
+  data,
+  refetch,
+  title = "Lead Details",
+}) {
   const [isEditing, setIsEditing] = useState(false);
   const [isCountryOpen, setIsCountryOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
@@ -63,10 +67,11 @@ export default function LeadDetailsCard({ data, refetch }) {
       setIsEditing(false);
     }
   };
+
   return (
     <View style={styles.card}>
       <View style={styles.cardHeaderRow}>
-        <Text style={styles.cardTitle}>Lead Details</Text>
+        <Text style={styles.cardTitle}>{title}</Text>
         {!isEditing ? (
           <TouchableOpacity
             style={styles.editChip}
