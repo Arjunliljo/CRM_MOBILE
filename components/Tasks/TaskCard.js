@@ -175,7 +175,6 @@ const TaskCard = memo(({ task, activeTab, onRefresh }) => {
   };
 
   const cardContent = (
-    
     <TouchableOpacity
       activeOpacity={0.8}
       style={[

@@ -1,6 +1,10 @@
 import axios from "axios";
 
-const baseURL = "http://localhost:3000/api/v2";
+// Prefer env var, then Expo manifest extra, then default localhost
+const baseURL =
+  process.env.EXPO_PUBLIC_API_URL ||
+  (typeof expo !== "undefined" && expo?.manifest?.extra?.apiUrl) ||
+  "http://localhost:3000/api/v2";
 // const baseURL = "http://192.168.1.24:3000/api/v2";
 
 // In-memory auth token cache
@@ -57,6 +61,9 @@ api.interceptors.response.use(
     if (error.response) {
       const { status, data } = error.response;
 
+      const reqUrl = `${error?.config?.baseURL || baseURL}${
+        error?.config?.url || ""
+      }`;
       switch (status) {
         case 401:
           // Handle unauthorized - redirect to login
@@ -68,7 +75,7 @@ api.interceptors.response.use(
           console.error("Forbidden access");
           break;
         case 404:
-          console.error("Resource not found");
+          console.error("Resource not found:", reqUrl);
           break;
         case 500:
           console.error("Server error");

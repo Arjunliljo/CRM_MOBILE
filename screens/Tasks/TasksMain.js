@@ -77,7 +77,7 @@ export default function TasksMain() {
         <SafeAreaView style={styles.modalContainer}>
           <View style={styles.modalHeader}>
             <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-              <Ionicons name="close" size={24} color={colors.primaryText} />
+              <Ionicons name="close" size={16} color={colors.primaryText} />
             </TouchableOpacity>
             <Text style={styles.modalTitle}>
               {tabs.find((t) => t.id === activeTab)?.label || ""}
@@ -101,7 +101,7 @@ export default function TasksMain() {
             <View style={styles.iconContainer}>
               <Ionicons
                 name={tab.icon}
-                size={20}
+                size={14}
                 color={activeTab === tab.id ? colors.primary : colors.iconLight}
               />
               {tab.id === "filters" && hasActiveFilters && (
@@ -131,34 +131,34 @@ const styles = StyleSheet.create({
     backgroundColor: colors.cardBackground,
     borderTopWidth: 1,
     borderTopColor: colors.border,
-    paddingVertical: 8,
-    paddingHorizontal: 4,
+    paddingVertical: 4,
+    paddingHorizontal: 0,
   },
   tabButton: {
     flex: 1,
     alignItems: "center",
-    paddingVertical: 8,
-    paddingHorizontal: 4,
+    paddingVertical: 4,
+    paddingHorizontal: 0,
   },
-  activeTabButton: { backgroundColor: colors.navActive, borderRadius: 8 },
+  activeTabButton: { backgroundColor: colors.navActive, borderRadius: 4 },
   iconContainer: {
     position: "relative",
   },
   filterDot: {
     position: "absolute",
-    top: -2,
-    right: -2,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    top: -1,
+    right: -1,
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
     backgroundColor: colors.error,
     borderWidth: 1,
     borderColor: colors.cardBackground,
   },
   tabLabel: {
-    fontSize: 10,
+    fontSize: 8,
     color: colors.iconLight,
-    marginTop: 4,
+    marginTop: 1,
     textAlign: "center",
   },
   activeTabLabel: { color: colors.primary, fontWeight: "600" },
@@ -167,14 +167,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 15,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     backgroundColor: colors.cardBackground,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  closeButton: { padding: 5 },
-  modalTitle: { fontSize: 18, fontWeight: "bold", color: colors.primaryText },
-  placeholder: { width: 34 },
+  closeButton: { padding: 2 },
+  modalTitle: { fontSize: 14, fontWeight: "bold", color: colors.primaryText },
+  placeholder: { width: 24 },
   modalContent: { flex: 1 },
 });

@@ -1,21 +1,21 @@
 export const colors = {
   // Primary Theme Colors
-  primary: "#0B6ECA",
+  primary: "#244EA2", // Button blue from Figma
   primaryDark: "#084A9E",
   primaryLight: "#4A90E2",
 
   // Secondary Colors
-  secondary: "#5856D6",
+  secondary: "#6bb440",
   secondaryLight: "#8B7AE8",
 
   // Background Colors
-  background: "#F5F5F5",
+  background: "#C1EDFA", // top gradient target
   backgroundLight: "#FFFFFF",
   cardBackground: "#FFFFFF",
 
   // Text Colors
-  primaryText: "#333333",
-  secondaryText: "#666666",
+  primaryText: "#072769", // deep navy from Figma
+  secondaryText: "rgba(7,39,105,0.7)",
   lightText: "#999999",
   whiteText: "#FFFFFF",
 
@@ -25,10 +25,10 @@ export const colors = {
   iconLight: "#999999",
 
   // Input Colors
-  inputBackground: "rgba(0, 0, 0, 0.05)",
-  inputBorder: "rgba(0, 0, 0, 0.1)",
+  inputBackground: "#F5F7FA",
+  inputBorder: "rgba(7,39,105,0.10)",
   inputFocus: "#0B6ECA",
-  placeholderText: "rgba(0, 0, 0, 0.5)",
+  placeholderText: "rgba(7,39,105,0.6)",
 
   // Dropdown Colors
   dropdownBackground: "#FAFAFA",
