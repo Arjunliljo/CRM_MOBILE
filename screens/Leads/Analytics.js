@@ -67,79 +67,81 @@ export default function Analytics() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Lead Analytics</Text>
+    <View style={{ flex: 1 }}>
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>Lead Analytics</Text>
 
-      {/* Summary Cards */}
-      <View style={styles.summaryCards}>
-        <View style={styles.summaryCard}>
-          <Text style={styles.summaryNumber}>{getTotalLeads()}</Text>
-          <Text style={styles.summaryLabel}>Total Leads</Text>
-        </View>
-        <View style={styles.summaryCard}>
-          <Text style={styles.summaryNumber}>{getNewLeads()}</Text>
-          <Text style={styles.summaryLabel}>New Leads</Text>
-        </View>
-        <View style={styles.summaryCard}>
-          <Text style={styles.summaryNumber}>{getConvertedLeads()}</Text>
-          <Text style={styles.summaryLabel}>Converted</Text>
-        </View>
-      </View>
-
-      {/* Conversion Rate Card */}
-      <View style={styles.conversionCard}>
-        <Text style={styles.conversionRate}>{getConversionRate()}%</Text>
-        <Text style={styles.conversionLabel}>Conversion Rate</Text>
-      </View>
-
-      {/* Lead Sources Chart */}
-      <View style={styles.chartSection}>
-        <Text style={styles.chartTitle}>Lead Sources</Text>
-        {getLeadsBySource().map(({ source, count, percentage }) => (
-          <View key={source} style={styles.chartItem}>
-            <Text style={styles.chartLabel}>{source}</Text>
-            <View style={styles.chartBar}>
-              <View style={[styles.chartFill, { width: `${percentage}%` }]} />
-            </View>
-            <Text style={styles.chartValue}>{count}</Text>
+        {/* Summary Cards */}
+        <View style={styles.summaryCards}>
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryNumber}>{getTotalLeads()}</Text>
+            <Text style={styles.summaryLabel}>Total Leads</Text>
           </View>
-        ))}
-      </View>
-
-      {/* Lead Countries Chart */}
-      <View style={styles.chartSection}>
-        <Text style={styles.chartTitle}>Leads by Country</Text>
-        {getLeadsByCountry().map(({ country, count, percentage }) => (
-          <View key={country} style={styles.chartItem}>
-            <Text style={styles.chartLabel}>{country}</Text>
-            <View style={styles.chartBar}>
-              <View style={[styles.chartFill, { width: `${percentage}%` }]} />
-            </View>
-            <Text style={styles.chartValue}>{count}</Text>
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryNumber}>{getNewLeads()}</Text>
+            <Text style={styles.summaryLabel}>New Leads</Text>
           </View>
-        ))}
-      </View>
-
-      {/* Performance Metrics */}
-      <View style={styles.metricsSection}>
-        <Text style={styles.chartTitle}>Performance Metrics</Text>
-
-        <View style={styles.metricItem}>
-          <Text style={styles.metricLabel}>Average Response Time</Text>
-          <Text style={styles.metricValue}>2.5 hours</Text>
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryNumber}>{getConvertedLeads()}</Text>
+            <Text style={styles.summaryLabel}>Converted</Text>
+          </View>
         </View>
 
-        <View style={styles.metricItem}>
-          <Text style={styles.metricLabel}>Follow-up Rate</Text>
-          <Text style={styles.metricValue}>85%</Text>
+        {/* Conversion Rate Card */}
+        <View style={styles.conversionCard}>
+          <Text style={styles.conversionRate}>{getConversionRate()}%</Text>
+          <Text style={styles.conversionLabel}>Conversion Rate</Text>
         </View>
 
-        <View style={styles.metricItem}>
-          <Text style={styles.metricLabel}>Quality Score</Text>
-          <Text style={styles.metricValue}>4.2/5.0</Text>
+        {/* Lead Sources Chart */}
+        <View style={styles.chartSection}>
+          <Text style={styles.chartTitle}>Lead Sources</Text>
+          {getLeadsBySource().map(({ source, count, percentage }) => (
+            <View key={source} style={styles.chartItem}>
+              <Text style={styles.chartLabel}>{source}</Text>
+              <View style={styles.chartBar}>
+                <View style={[styles.chartFill, { width: `${percentage}%` }]} />
+              </View>
+              <Text style={styles.chartValue}>{count}</Text>
+            </View>
+          ))}
         </View>
-      </View>
-    </ScrollView>
+
+        {/* Lead Countries Chart */}
+        <View style={styles.chartSection}>
+          <Text style={styles.chartTitle}>Leads by Country</Text>
+          {getLeadsByCountry().map(({ country, count, percentage }) => (
+            <View key={country} style={styles.chartItem}>
+              <Text style={styles.chartLabel}>{country}</Text>
+              <View style={styles.chartBar}>
+                <View style={[styles.chartFill, { width: `${percentage}%` }]} />
+              </View>
+              <Text style={styles.chartValue}>{count}</Text>
+            </View>
+          ))}
+        </View>
+
+        {/* Performance Metrics */}
+        <View style={styles.metricsSection}>
+          <Text style={styles.chartTitle}>Performance Metrics</Text>
+
+          <View style={styles.metricItem}>
+            <Text style={styles.metricLabel}>Average Response Time</Text>
+            <Text style={styles.metricValue}>2.5 hours</Text>
+          </View>
+
+          <View style={styles.metricItem}>
+            <Text style={styles.metricLabel}>Follow-up Rate</Text>
+            <Text style={styles.metricValue}>85%</Text>
+          </View>
+
+          <View style={styles.metricItem}>
+            <Text style={styles.metricLabel}>Quality Score</Text>
+            <Text style={styles.metricValue}>4.2/5.0</Text>
+          </View>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 

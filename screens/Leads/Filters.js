@@ -112,136 +112,143 @@ export default function Filters({ onClose }) {
   };
 
   return (
-    <ScrollView style={styles.container} alwaysBounceVertical={false}>
-      {/* <Text style={styles.title}>Filter Options</Text> */}
+    <View style={{ flex: 1 }}>
+      <ScrollView style={styles.container} alwaysBounceVertical={false}>
+        {/* <Text style={styles.title}>Filter Options</Text> */}
 
-      {/* Filter Grid - 2 columns */}
-      <View style={styles.filterGrid}>
-        <View style={styles.filterColumn}>
-          <Selector
-            options={branches.map((branch) => ({
-              label: branch.name,
-              value: branch.id,
-            }))}
-            selectedValue={selectedFilters.branch}
-            onValueChange={createFilterHandler("branch")}
-            placeholder="Select Branch"
-            label="Branch"
-            open={openDropdown === "branch"}
-            onOpen={(isOpen) => handleDropdownOpen("branch", isOpen)}
-            zIndex={getZIndex("branch")}
-            zIndexInverse={1000}
-          />
-          <Selector
-            options={substatuses.map((sub) => ({
-              label: sub.subStatus || sub.name || sub.label,
-              value: sub.id || sub._id || sub.value,
-            }))}
-            selectedValue={selectedFilters.subStatus}
-            onValueChange={createFilterHandler("subStatus")}
-            placeholder="Sub Status"
-            label="Sub Status"
-            open={openDropdown === "subStatus"}
-            onOpen={(isOpen) => handleDropdownOpen("subStatus", isOpen)}
-            zIndex={getZIndex("subStatus")}
-            zIndexInverse={1000}
-          />
-          <Selector
-            options={filterOptions.form}
-            selectedValue={selectedFilters.form}
-            onValueChange={createFilterHandler("form")}
-            placeholder="Select Form"
-            label="Form"
-            open={openDropdown === "form"}
-            onOpen={(isOpen) => handleDropdownOpen("form", isOpen)}
-            zIndex={getZIndex("form")}
-            zIndexInverse={1000}
-            disabled={true}
-          />
-          <Selector
-            options={filterOptions.role}
-            selectedValue={selectedFilters.role}
-            onValueChange={createFilterHandler("role")}
-            placeholder="Select Role"
-            label="Role"
-            open={openDropdown === "role"}
-            onOpen={(isOpen) => handleDropdownOpen("role", isOpen)}
-            zIndex={getZIndex("role")}
-            zIndexInverse={1000}
-            disabled={true}
-          />
-        </View>
-
-        <View style={styles.filterColumn}>
-          <Selector
-            options={statuses
-              .filter((status) => !status.isApplication)
-              .map((status) => ({
-                label: status.name,
-                value: status.id,
+        {/* Filter Grid - 2 columns */}
+        <View style={styles.filterGrid}>
+          <View style={styles.filterColumn}>
+            <Selector
+              options={branches.map((branch) => ({
+                label: branch.name,
+                value: branch.id,
               }))}
-            selectedValue={selectedFilters.status}
-            onValueChange={createFilterHandler("status")}
-            placeholder="Select Status"
-            label="Status"
-            open={openDropdown === "status"}
-            onOpen={(isOpen) => handleDropdownOpen("status", isOpen)}
-            zIndex={getZIndex("status")}
-            zIndexInverse={1000}
-          />
-          <Selector
-            options={countries.map((country) => ({
-              label: country.name,
-              value: country.id,
-            }))}
-            selectedValue={selectedFilters.country}
-            onValueChange={createFilterHandler("country")}
-            placeholder="Select Country"
-            label="Country"
-            open={openDropdown === "country"}
-            onOpen={(isOpen) => handleDropdownOpen("country", isOpen)}
-            zIndex={getZIndex("country")}
-            zIndexInverse={1000}
-          />
-          <Selector
-            options={filterOptions.source}
-            selectedValue={selectedFilters.source}
-            onValueChange={createFilterHandler("source")}
-            placeholder="Select Source"
-            label="Source"
-            open={openDropdown === "source"}
-            onOpen={(isOpen) => handleDropdownOpen("source", isOpen)}
-            zIndex={getZIndex("source")}
-            zIndexInverse={1000}
-            disabled={true}
-          />
-          <Selector
-            options={filterOptions.user}
-            selectedValue={selectedFilters.user}
-            onValueChange={createFilterHandler("user")}
-            placeholder="Select User"
-            label="User"
-            open={openDropdown === "user"}
-            onOpen={(isOpen) => handleDropdownOpen("user", isOpen)}
-            zIndex={getZIndex("user")}
-            zIndexInverse={1000}
-            disabled={true}
-          />
+              selectedValue={selectedFilters.branch}
+              onValueChange={createFilterHandler("branch")}
+              placeholder="Select Branch"
+              label="Branch"
+              open={openDropdown === "branch"}
+              onOpen={(isOpen) => handleDropdownOpen("branch", isOpen)}
+              zIndex={getZIndex("branch")}
+              zIndexInverse={1000}
+            />
+            <Selector
+              options={substatuses.map((sub) => ({
+                label: sub.subStatus || sub.name || sub.label,
+                value: sub.id || sub._id || sub.value,
+              }))}
+              selectedValue={selectedFilters.subStatus}
+              onValueChange={createFilterHandler("subStatus")}
+              placeholder="Sub Status"
+              label="Sub Status"
+              open={openDropdown === "subStatus"}
+              onOpen={(isOpen) => handleDropdownOpen("subStatus", isOpen)}
+              zIndex={getZIndex("subStatus")}
+              zIndexInverse={1000}
+            />
+            <Selector
+              options={filterOptions.form}
+              selectedValue={selectedFilters.form}
+              onValueChange={createFilterHandler("form")}
+              placeholder="Select Form"
+              label="Form"
+              open={openDropdown === "form"}
+              onOpen={(isOpen) => handleDropdownOpen("form", isOpen)}
+              zIndex={getZIndex("form")}
+              zIndexInverse={1000}
+              disabled={true}
+            />
+            <Selector
+              options={filterOptions.role}
+              selectedValue={selectedFilters.role}
+              onValueChange={createFilterHandler("role")}
+              placeholder="Select Role"
+              label="Role"
+              open={openDropdown === "role"}
+              onOpen={(isOpen) => handleDropdownOpen("role", isOpen)}
+              zIndex={getZIndex("role")}
+              zIndexInverse={1000}
+              disabled={true}
+            />
+          </View>
+
+          <View style={styles.filterColumn}>
+            <Selector
+              options={statuses
+                .filter((status) => !status.isApplication)
+                .map((status) => ({
+                  label: status.name,
+                  value: status.id,
+                }))}
+              selectedValue={selectedFilters.status}
+              onValueChange={createFilterHandler("status")}
+              placeholder="Select Status"
+              label="Status"
+              open={openDropdown === "status"}
+              onOpen={(isOpen) => handleDropdownOpen("status", isOpen)}
+              zIndex={getZIndex("status")}
+              zIndexInverse={1000}
+            />
+            <Selector
+              options={countries.map((country) => ({
+                label: country.name,
+                value: country.id,
+              }))}
+              selectedValue={selectedFilters.country}
+              onValueChange={createFilterHandler("country")}
+              placeholder="Select Country"
+              label="Country"
+              open={openDropdown === "country"}
+              onOpen={(isOpen) => handleDropdownOpen("country", isOpen)}
+              zIndex={getZIndex("country")}
+              zIndexInverse={1000}
+            />
+            <Selector
+              options={filterOptions.source}
+              selectedValue={selectedFilters.source}
+              onValueChange={createFilterHandler("source")}
+              placeholder="Select Source"
+              label="Source"
+              open={openDropdown === "source"}
+              onOpen={(isOpen) => handleDropdownOpen("source", isOpen)}
+              zIndex={getZIndex("source")}
+              zIndexInverse={1000}
+              disabled={true}
+            />
+            <Selector
+              options={filterOptions.user}
+              selectedValue={selectedFilters.user}
+              onValueChange={createFilterHandler("user")}
+              placeholder="Select User"
+              label="User"
+              open={openDropdown === "user"}
+              onOpen={(isOpen) => handleDropdownOpen("user", isOpen)}
+              zIndex={getZIndex("user")}
+              zIndexInverse={1000}
+              disabled={true}
+            />
+          </View>
         </View>
-      </View>
 
-      {/* Action Buttons */}
-      <View style={styles.actionButtons}>
-        <TouchableOpacity style={styles.clearButton} onPress={clearAllFilters}>
-          <Ionicons name="refresh" size={16} color={colors.primary} />
-          <Text style={styles.clearButtonText}>Clear All</Text>
-        </TouchableOpacity>
+        {/* Action Buttons */}
+        <View style={styles.actionButtons}>
+          <TouchableOpacity
+            style={styles.clearButton}
+            onPress={clearAllFilters}
+          >
+            <Ionicons name="refresh" size={16} color={colors.primary} />
+            <Text style={styles.clearButtonText}>Clear All</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity style={styles.applyButton} onPress={applyFilters}>
-          <Text style={styles.applyButtonText}>Apply Filters</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+          <TouchableOpacity style={styles.applyButton} onPress={applyFilters}>
+            <Text style={styles.applyButtonText}>Apply Filters</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+
+      {/* Bottom nav moved to Leads stack wrapper */}
+    </View>
   );
 }
 

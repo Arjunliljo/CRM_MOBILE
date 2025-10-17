@@ -78,6 +78,7 @@ export default function Route() {
             headerShown: true,
             headerBackTitle: "Back",
             title: "Add Lead",
+            animation: "none",
           }}
         />
       </Stack.Navigator>

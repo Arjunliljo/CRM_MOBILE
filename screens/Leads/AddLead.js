@@ -143,222 +143,224 @@ export default function AddLead() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Add New Lead</Text>
+    <View style={{ flex: 1 }}>
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>Add New Lead</Text>
 
-      <View style={styles.formContainer}>
-        {/* Name Input */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>Full Name *</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter full name"
-            placeholderTextColor={colors.placeholderText}
-            value={formData.name}
-            onChangeText={(value) => handleInputChange("name", value)}
-          />
-        </View>
+        <View style={styles.formContainer}>
+          {/* Name Input */}
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>Full Name *</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter full name"
+              placeholderTextColor={colors.placeholderText}
+              value={formData.name}
+              onChangeText={(value) => handleInputChange("name", value)}
+            />
+          </View>
 
-        {/* Email Input */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>Email Address</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter email address"
-            placeholderTextColor={colors.placeholderText}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            value={formData.email}
-            onChangeText={(value) => handleInputChange("email", value)}
-          />
-        </View>
+          {/* Email Input */}
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>Email Address</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter email address"
+              placeholderTextColor={colors.placeholderText}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              value={formData.email}
+              onChangeText={(value) => handleInputChange("email", value)}
+            />
+          </View>
 
-        {/* Phone Input */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>Phone Number *</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter phone number"
-            placeholderTextColor={colors.placeholderText}
-            keyboardType="phone-pad"
-            value={formData.phone}
-            onChangeText={(value) => handleInputChange("phone", value)}
-          />
-        </View>
+          {/* Phone Input */}
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>Phone Number *</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter phone number"
+              placeholderTextColor={colors.placeholderText}
+              keyboardType="phone-pad"
+              value={formData.phone}
+              onChangeText={(value) => handleInputChange("phone", value)}
+            />
+          </View>
 
-        {/* Lead Source Selector */}
-        <View style={styles.inputGroup}>
-          <Selector
-            label="Lead Source"
-            options={leadSourceManualVisible?.map((source) => ({
-              label: source,
-              value: source,
-            }))}
-            selectedValue={formData.leadSource}
-            onValueChange={(value) => handleInputChange("leadSource", value)}
-            placeholder="Select source"
-            open={openDropdown === "leadSource"}
-            onOpen={(isOpen) => handleDropdownOpen("leadSource", isOpen)}
-            zIndex={getZIndex("leadSource")}
-            zIndexInverse={1000}
-          />
-        </View>
+          {/* Lead Source Selector */}
+          <View style={styles.inputGroup}>
+            <Selector
+              label="Lead Source"
+              options={leadSourceManualVisible?.map((source) => ({
+                label: source,
+                value: source,
+              }))}
+              selectedValue={formData.leadSource}
+              onValueChange={(value) => handleInputChange("leadSource", value)}
+              placeholder="Select source"
+              open={openDropdown === "leadSource"}
+              onOpen={(isOpen) => handleDropdownOpen("leadSource", isOpen)}
+              zIndex={getZIndex("leadSource")}
+              zIndexInverse={1000}
+            />
+          </View>
 
-        {/* Country Selector */}
-        <View style={styles.inputGroup}>
-          <Selector
-            label="Country"
-            options={countries?.map((country) => ({
-              label: country?.name,
-              value: country?._id,
-            }))}
-            selectedValue={formData.country}
-            onValueChange={(value) => handleInputChange("country", value)}
-            placeholder="Select country"
-            open={openDropdown === "country"}
-            onOpen={(isOpen) => handleDropdownOpen("country", isOpen)}
-            zIndex={getZIndex("country")}
-            zIndexInverse={1000}
-          />
-        </View>
+          {/* Country Selector */}
+          <View style={styles.inputGroup}>
+            <Selector
+              label="Country"
+              options={countries?.map((country) => ({
+                label: country?.name,
+                value: country?._id,
+              }))}
+              selectedValue={formData.country}
+              onValueChange={(value) => handleInputChange("country", value)}
+              placeholder="Select country"
+              open={openDropdown === "country"}
+              onOpen={(isOpen) => handleDropdownOpen("country", isOpen)}
+              zIndex={getZIndex("country")}
+              zIndexInverse={1000}
+            />
+          </View>
 
-        {/* District Selector */}
-        <View style={styles.inputGroup}>
-          <Selector
-            label="District/City"
-            options={districts?.map((district) => ({
-              label: district,
-              value: district,
-            }))}
-            selectedValue={formData.district}
-            onValueChange={(value) => handleInputChange("district", value)}
-            placeholder="Select district or city"
-            searchable={true}
-            open={openDropdown === "district"}
-            onOpen={(isOpen) => handleDropdownOpen("district", isOpen)}
-            zIndex={getZIndex("district")}
-            zIndexInverse={1000}
-          />
-        </View>
+          {/* District Selector */}
+          <View style={styles.inputGroup}>
+            <Selector
+              label="District/City"
+              options={districts?.map((district) => ({
+                label: district,
+                value: district,
+              }))}
+              selectedValue={formData.district}
+              onValueChange={(value) => handleInputChange("district", value)}
+              placeholder="Select district or city"
+              searchable={true}
+              open={openDropdown === "district"}
+              onOpen={(isOpen) => handleDropdownOpen("district", isOpen)}
+              zIndex={getZIndex("district")}
+              zIndexInverse={1000}
+            />
+          </View>
 
-        {/* Branch Selector */}
-        <View style={styles.inputGroup}>
-          <Selector
-            label="Branch"
-            options={branches?.map((branch) => ({
-              label: branch?.name,
-              value: branch?._id,
-            }))}
-            selectedValue={formData.branch}
-            onValueChange={(value) => handleInputChange("branch", value)}
-            placeholder="Select branch"
-            open={openDropdown === "branch"}
-            onOpen={(isOpen) => handleDropdownOpen("branch", isOpen)}
-            zIndex={getZIndex("branch")}
-            zIndexInverse={1000}
-          />
-        </View>
+          {/* Branch Selector */}
+          <View style={styles.inputGroup}>
+            <Selector
+              label="Branch"
+              options={branches?.map((branch) => ({
+                label: branch?.name,
+                value: branch?._id,
+              }))}
+              selectedValue={formData.branch}
+              onValueChange={(value) => handleInputChange("branch", value)}
+              placeholder="Select branch"
+              open={openDropdown === "branch"}
+              onOpen={(isOpen) => handleDropdownOpen("branch", isOpen)}
+              zIndex={getZIndex("branch")}
+              zIndexInverse={1000}
+            />
+          </View>
 
-        {/* Notes Input */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>Notes</Text>
-          <TextInput
-            style={[styles.input, styles.textArea]}
-            placeholder="Enter any additional notes..."
-            placeholderTextColor={colors.placeholderText}
-            multiline
-            numberOfLines={4}
-            textAlignVertical="top"
-            value={formData.notes}
-            onChangeText={(value) => handleInputChange("notes", value)}
-          />
-        </View>
+          {/* Notes Input */}
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>Notes</Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              placeholder="Enter any additional notes..."
+              placeholderTextColor={colors.placeholderText}
+              multiline
+              numberOfLines={4}
+              textAlignVertical="top"
+              value={formData.notes}
+              onChangeText={(value) => handleInputChange("notes", value)}
+            />
+          </View>
 
-        {/* File Upload Section */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>Attach File (Optional)</Text>
+          {/* File Upload Section */}
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>Attach File (Optional)</Text>
 
-          {!selectedFile ? (
-            <TouchableOpacity
-              style={styles.fileUploadArea}
-              onPress={pickDocument}
-              activeOpacity={0.7}
-            >
-              <View style={styles.uploadIconContainer}>
-                <Ionicons
-                  name="cloud-upload-outline"
-                  size={32}
-                  color={colors.primary}
-                />
-              </View>
-              <Text style={styles.uploadTitle}>Tap to upload a file</Text>
-              <Text style={styles.uploadSubtitle}>
-                PDF, DOC, DOCX, JPG, PNG (Max 10MB)
-              </Text>
-              <View style={styles.browseButton}>
-                <Ionicons
-                  name="folder-outline"
-                  size={16}
-                  color={colors.primary}
-                />
-                <Text style={styles.browseButtonText}>Browse Files</Text>
-              </View>
-            </TouchableOpacity>
-          ) : (
-            <View style={styles.fileSelectedContainer}>
-              <View style={styles.filePreview}>
-                <View style={styles.fileIconContainer}>
-                  <Ionicons
-                    name="document-text"
-                    size={24}
-                    color={colors.primary}
-                  />
-                </View>
-                <View style={styles.fileDetails}>
-                  <Text style={styles.fileName} numberOfLines={1}>
-                    {selectedFile.name}
-                  </Text>
-                  <Text style={styles.fileSize}>
-                    {selectedFile.size
-                      ? `${(selectedFile.size / 1024).toFixed(1)} KB`
-                      : "Size unknown"}
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  onPress={removeFile}
-                  style={styles.removeButton}
-                  activeOpacity={0.7}
-                >
-                  <Ionicons
-                    name="trash-outline"
-                    size={18}
-                    color={colors.error}
-                  />
-                </TouchableOpacity>
-              </View>
-
+            {!selectedFile ? (
               <TouchableOpacity
-                style={styles.changeFileButton}
+                style={styles.fileUploadArea}
                 onPress={pickDocument}
                 activeOpacity={0.7}
               >
-                <Ionicons
-                  name="refresh-outline"
-                  size={16}
-                  color={colors.primary}
-                />
-                <Text style={styles.changeFileText}>Change File</Text>
+                <View style={styles.uploadIconContainer}>
+                  <Ionicons
+                    name="cloud-upload-outline"
+                    size={32}
+                    color={colors.primary}
+                  />
+                </View>
+                <Text style={styles.uploadTitle}>Tap to upload a file</Text>
+                <Text style={styles.uploadSubtitle}>
+                  PDF, DOC, DOCX, JPG, PNG (Max 10MB)
+                </Text>
+                <View style={styles.browseButton}>
+                  <Ionicons
+                    name="folder-outline"
+                    size={16}
+                    color={colors.primary}
+                  />
+                  <Text style={styles.browseButtonText}>Browse Files</Text>
+                </View>
               </TouchableOpacity>
-            </View>
-          )}
-        </View>
+            ) : (
+              <View style={styles.fileSelectedContainer}>
+                <View style={styles.filePreview}>
+                  <View style={styles.fileIconContainer}>
+                    <Ionicons
+                      name="document-text"
+                      size={24}
+                      color={colors.primary}
+                    />
+                  </View>
+                  <View style={styles.fileDetails}>
+                    <Text style={styles.fileName} numberOfLines={1}>
+                      {selectedFile.name}
+                    </Text>
+                    <Text style={styles.fileSize}>
+                      {selectedFile.size
+                        ? `${(selectedFile.size / 1024).toFixed(1)} KB`
+                        : "Size unknown"}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={removeFile}
+                    style={styles.removeButton}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons
+                      name="trash-outline"
+                      size={18}
+                      color={colors.error}
+                    />
+                  </TouchableOpacity>
+                </View>
 
-        {/* Submit Button */}
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Add Lead</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+                <TouchableOpacity
+                  style={styles.changeFileButton}
+                  onPress={pickDocument}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons
+                    name="refresh-outline"
+                    size={16}
+                    color={colors.primary}
+                  />
+                  <Text style={styles.changeFileText}>Change File</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+
+          {/* Submit Button */}
+          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+            <Text style={styles.submitButtonText}>Add Lead</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 

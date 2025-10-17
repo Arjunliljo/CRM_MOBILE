@@ -1,14 +1,13 @@
 import React, { useState, useLayoutEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, Text, Modal } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../constants/colors";
 import { useSelector } from "react-redux";
 
 // Import the separate screen components
 import AllLeads from "./AllLeads";
-import Filters from "./Filters";
-import Analytics from "./Analytics";
+
+// SVG strings removed; now shared via LeadsBottomNav
 
 export default function LeadsMain({ navigation }) {
   // Determine if any filters are applied
@@ -35,8 +34,6 @@ export default function LeadsMain({ navigation }) {
       curSource,
     ].some((v) => v && v !== "All") || (searchQuery || "").trim() !== "";
   const [activeTab, setActiveTab] = useState("all");
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalContent, setModalContent] = useState(null);
   const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [selectedLeads, setSelectedLeads] = useState([]);
 
@@ -92,37 +89,7 @@ export default function LeadsMain({ navigation }) {
     }
   }, [navigation, isSelectionMode, toggleSelectionMode]);
 
-  const handleTabPress = (tabId) => {
-    if (tabId === "all") {
-      // Show All Leads directly (not in modal)
-      setActiveTab(tabId);
-      setModalVisible(false);
-    } else if (tabId === "add") {
-      // Navigate to AddLead route instead of modal
-      navigation.navigate("AddLead");
-    } else {
-      // Show other tabs in modal
-      setActiveTab(tabId);
-      setModalContent(getModalContent(tabId));
-      setModalVisible(true);
-    }
-  };
-
-  const getModalContent = (tabId) => {
-    switch (tabId) {
-      case "filters":
-        return <Filters onClose={closeModal} />;
-      case "analytics":
-        return <Analytics onClose={closeModal} />;
-      default:
-        return null;
-    }
-  };
-
-  const closeModal = () => {
-    setModalVisible(false);
-    setActiveTab("all"); // Reset to All Leads when modal closes
-  };
+  // Bottom nav now handled by shared component; navigation occurs via that component
 
   const handleLeadSelection = (leadId) => {
     setSelectedLeads((prev) => {
@@ -144,12 +111,7 @@ export default function LeadsMain({ navigation }) {
     // Handle bulk actions like delete, assign, etc.
   };
 
-  const tabs = [
-    { id: "all", label: "All Leads", icon: "list" },
-    { id: "filters", label: "Filters", icon: "funnel" },
-    { id: "analytics", label: "Analytics", icon: "bar-chart" },
-    { id: "add", label: "Add Lead", icon: "add-circle" },
-  ];
+  const tabs = [];
 
   return (
     <View style={styles.container}>
@@ -201,62 +163,7 @@ export default function LeadsMain({ navigation }) {
         />
       </View>
 
-      {/* Modal for other tabs */}
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={modalVisible}
-        onRequestClose={closeModal}
-      >
-        <SafeAreaView style={styles.modalContainer}>
-          {/* Modal Header */}
-          <View style={styles.modalHeader}>
-            <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-              <Ionicons name="close" size={24} color={colors.primaryText} />
-            </TouchableOpacity>
-            <Text style={styles.modalTitle}>
-              {tabs.find((tab) => tab.id === activeTab)?.label || ""}
-            </Text>
-            <View style={styles.placeholder} />
-          </View>
-
-          {/* Modal Content */}
-          <View style={styles.modalContent}>{modalContent}</View>
-        </SafeAreaView>
-      </Modal>
-
-      {/* Bottom Tab Navigation */}
-      <View style={styles.bottomTabs}>
-        {tabs.map((tab) => (
-          <TouchableOpacity
-            key={tab.id}
-            style={[
-              styles.tabButton,
-              activeTab === tab.id && styles.activeTabButton,
-            ]}
-            onPress={() => handleTabPress(tab.id)}
-          >
-            <View style={styles.iconWrap}>
-              <Ionicons
-                name={tab.icon}
-                size={20}
-                color={activeTab === tab.id ? colors.primary : colors.iconLight}
-              />
-              {tab.id === "filters" && hasActiveFilters && (
-                <View style={styles.filterBadgeDot} />
-              )}
-            </View>
-            <Text
-              style={[
-                styles.tabLabel,
-                activeTab === tab.id && styles.activeTabLabel,
-              ]}
-            >
-              {tab.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      {/* Bottom Tab Navigation moved to Leads stack wrapper */}
     </View>
   );
 }
@@ -269,47 +176,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
   },
-  // Bottom Tabs
-  bottomTabs: {
-    flexDirection: "row",
-    backgroundColor: colors.cardBackground,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-  },
-  tabButton: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-  },
-  activeTabButton: {
-    backgroundColor: colors.navActive,
-    borderRadius: 8,
-  },
-  tabLabel: {
-    fontSize: 10,
-    color: colors.iconLight,
-    marginTop: 4,
-    textAlign: "center",
-  },
-  activeTabLabel: {
-    color: colors.primary,
-    fontWeight: "600",
-  },
-  iconWrap: {
-    position: "relative",
-  },
-  filterBadgeDot: {
-    position: "absolute",
-    top: -2,
-    right: -6,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: colors.primary,
-  },
+  // Bottom tabs are now in shared component
   // Modal Styles
   modalContainer: {
     flex: 1,
