@@ -18,7 +18,7 @@ import {
   getCountryName,
 } from "../../helpers/bootstrapHelpers";
 import { useSelector, useDispatch } from "react-redux";
-import { formatDate } from "../../helpers/dateFormater";
+import { formatDate, formatDateLong } from "../../helpers/dateFormater";
 import { setCurLead } from "../../global/leadSlice";
 
 const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
@@ -178,35 +178,63 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
           </View>
         </View>
 
-        {/* Expanded Details */}
-        {isExpanded && (
-          <View style={styles.expandedDetails}>
-            <View style={styles.detailRow}>
-              <Ionicons name="mail-outline" size={16} color={colors.primary} />
-              <Text style={styles.detailText}>{Lead?.email || "N/A"}</Text>
-            </View>
-            <View style={styles.detailRow}>
-              <Ionicons
-                name="chatbox-ellipses-outline"
-                size={16}
-                color={colors.warning}
-              />
-              <Text style={styles.detailText}>{Lead?.leadSource || "N/A"}</Text>
-            </View>
-          </View>
-        )}
-
-        {/* Footer */}
+        {/* Added On row (toggle) */}
         <TouchableOpacity style={styles.footer} onPress={toggleExpanded}>
           <Text style={styles.footerText}>
             Added on {formatDate(Lead?.createdAt) || "N/A"}
           </Text>
-          <Ionicons
-            name={isExpanded ? "chevron-up" : "chevron-down"}
-            size={20}
-            color="rgba(7,20,29,0.4)"
-          />
+          <View style={styles.toggleIconChip}>
+            <Ionicons
+              name={isExpanded ? "chevron-up" : "chevron-down"}
+              size={16}
+              color="#007AFF"
+            />
+          </View>
         </TouchableOpacity>
+
+        {/* Expanded Details */}
+        {isExpanded && (
+          <View style={styles.expandedDetails}>
+            {/* Contact rows */}
+            <View style={styles.detailRow}>
+              <Ionicons name="logo-whatsapp" size={16} color="#25D366" />
+              <Text style={styles.detailText}>{Lead?.phone || "N/A"}</Text>
+            </View>
+            <View style={styles.detailRow}>
+              <Ionicons name="mail-outline" size={16} color={colors.warning} />
+              <Text style={styles.detailText}>{Lead?.email || "N/A"}</Text>
+            </View>
+
+            {/* Divider */}
+            <View style={styles.dividerLine} />
+
+            {/* Meta rows */}
+            <View style={styles.metaBlock}>
+              <Text style={styles.metaRow}>
+                <Text style={styles.metaLabel}>Source: </Text>
+                <Text style={styles.metaValue}>
+                  {Lead?.leadSource || "N/A"}
+                </Text>
+              </Text>
+              <Text style={styles.metaRow}>
+                <Text style={styles.metaLabel}>Counsellor: </Text>
+                <Text style={styles.metaValue}>
+                  {Lead?.counsellor ||
+                    Lead?.counselor ||
+                    Lead?.counsellorName ||
+                    Lead?.assignedTo?.name ||
+                    "N/A"}
+                </Text>
+              </Text>
+              <Text style={styles.metaRow}>
+                <Text style={styles.metaLabel}>Last Updated: </Text>
+                <Text style={styles.metaValue}>
+                  {formatDateLong(Lead?.updatedAt) || "N/A"}
+                </Text>
+              </Text>
+            </View>
+          </View>
+        )}
       </TouchableOpacity>
     </Swipeable>
   );
@@ -333,6 +361,14 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "rgba(7,20,29,0.5)",
   },
+  toggleIconChip: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: colors.buttonLight,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   rightSwipeContainer: {
     backgroundColor: "#25D366",
     justifyContent: "center",
@@ -399,6 +435,26 @@ const styles = StyleSheet.create({
   },
   selectionIndicator: {
     marginRight: 12,
+  },
+  dividerLine: {
+    height: 1,
+    backgroundColor: colors.border,
+    marginVertical: 10,
+  },
+  metaBlock: {
+    gap: 6,
+  },
+  metaRow: {
+    fontSize: 13,
+    color: "rgba(7,20,29,0.6)",
+  },
+  metaLabel: {
+    fontWeight: "400",
+    color: "rgba(7,20,29,0.5)",
+  },
+  metaValue: {
+    fontWeight: "500",
+    color: "rgba(7,20,29,0.7)",
   },
 });
 

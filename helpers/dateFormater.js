@@ -16,3 +16,16 @@ function formatDate(input) {
 }
 
 export { formatDate };
+
+// Returns dates like "October 17, 2025"
+function formatDateLong(input) {
+  const date = coerceToDate(input);
+  if (!date) return "";
+  return date.toLocaleDateString("en-US", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+export { formatDateLong };
