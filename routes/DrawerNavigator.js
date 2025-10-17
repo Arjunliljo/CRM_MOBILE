@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Text } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { colors } from "../constants/colors";
 import DashBoard from "../screens/DashBoard";
@@ -21,11 +21,20 @@ export default function DrawerNavigator() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerStyle: {
-          backgroundColor: colors.headerBackground,
+          backgroundColor: "#FDFEFF",
+          elevation: 0,
+          shadowOpacity: 0,
+          borderBottomWidth: 0,
         },
-        headerTintColor: colors.headerTint,
+        headerTintColor: "#07141D",
         headerTitleStyle: {
-          fontWeight: "bold",
+          fontWeight: "500",
+          fontSize: 17,
+        },
+        headerShadowVisible: false,
+        contentStyle: {
+          paddingTop: 8,
+          paddingBottom: 8,
         },
         drawerStyle: {
           backgroundColor: colors.backgroundLight,
@@ -55,6 +64,7 @@ export default function DrawerNavigator() {
         options={{
           title: "Leads",
           headerTitle: "Leads",
+          headerTitleAlign: "center",
         }}
       />
       <Drawer.Screen

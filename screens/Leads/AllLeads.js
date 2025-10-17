@@ -82,7 +82,7 @@ export default function AllLeads({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: "#FFFFFF",
   },
   searchContainer: {
     flexDirection: "row",

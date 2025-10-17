@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../constants/colors";
 import { useSelector } from "react-redux";
 
@@ -18,8 +17,7 @@ import AllLeads from "./AllLeads";
 import Filters from "./Filters";
 import Analytics from "./Analytics";
 
-export default function LeadsMain() {
-  const navigation = useNavigation();
+export default function LeadsMain({ navigation }) {
   // Determine if any filters are applied
   const {
     searchQuery = "",
@@ -48,6 +46,58 @@ export default function LeadsMain() {
   const [modalContent, setModalContent] = useState(null);
   const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [selectedLeads, setSelectedLeads] = useState([]);
+
+  const toggleSelectionMode = () => {
+    setIsSelectionMode(!isSelectionMode);
+    if (isSelectionMode) {
+      // Exit selection mode - clear selections
+      setSelectedLeads([]);
+    }
+  };
+
+  // Update header button dynamically
+  useLayoutEffect(() => {
+    const parent = navigation.getParent();
+    if (parent) {
+      parent.setOptions({
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={toggleSelectionMode}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 6,
+              paddingHorizontal: 8,
+              paddingVertical: 6,
+              marginRight: 12,
+              borderRadius: 20,
+              backgroundColor: isSelectionMode ? colors.primary : "white",
+              borderWidth: 0.5,
+              borderColor: isSelectionMode
+                ? colors.primary
+                : "rgba(0, 0, 0, 0.2)",
+            }}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Ionicons
+              name={isSelectionMode ? "close" : "ellipse-outline"}
+              size={19}
+              color={isSelectionMode ? "white" : "black"}
+            />
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "500",
+                color: isSelectionMode ? "white" : "#000000",
+              }}
+            >
+              {isSelectionMode ? "Cancel" : "Select"}
+            </Text>
+          </TouchableOpacity>
+        ),
+      });
+    }
+  }, [navigation, isSelectionMode, toggleSelectionMode]);
 
   const handleTabPress = (tabId) => {
     if (tabId === "all") {
@@ -81,14 +131,6 @@ export default function LeadsMain() {
     setActiveTab("all"); // Reset to All Leads when modal closes
   };
 
-  const toggleSelectionMode = () => {
-    setIsSelectionMode(!isSelectionMode);
-    if (isSelectionMode) {
-      // Exit selection mode - clear selections
-      setSelectedLeads([]);
-    }
-  };
-
   const handleLeadSelection = (leadId) => {
     setSelectedLeads((prev) => {
       if (prev.includes(leadId)) {
@@ -118,41 +160,6 @@ export default function LeadsMain() {
 
   return (
     <View style={styles.container}>
-      {/* Header with Select Button */}
-      {activeTab === "all" && (
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>All Leads</Text>
-          <View style={styles.headerActions}>
-            {isSelectionMode && (
-              <Text style={styles.selectedCount}>
-                {selectedLeads.length} selected
-              </Text>
-            )}
-            <TouchableOpacity
-              style={[
-                styles.selectButton,
-                isSelectionMode && styles.selectButtonActive,
-              ]}
-              onPress={toggleSelectionMode}
-            >
-              <Ionicons
-                name={isSelectionMode ? "close" : "checkmark-circle-outline"}
-                size={20}
-                color={isSelectionMode ? colors.whiteText : colors.primary}
-              />
-              <Text
-                style={[
-                  styles.selectButtonText,
-                  isSelectionMode && styles.selectButtonTextActive,
-                ]}
-              >
-                {isSelectionMode ? "Cancel" : "Select"}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
-
       {/* Selection Actions Bar */}
       {isSelectionMode && selectedLeads.length > 0 && (
         <View style={styles.selectionActionsBar}>
@@ -264,7 +271,7 @@ export default function LeadsMain() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: "#FFFFFF",
   },
   content: {
     flex: 1,
@@ -313,7 +320,7 @@ const styles = StyleSheet.create({
   // Modal Styles
   modalContainer: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: "#FFFFFF",
   },
   modalHeader: {
     flexDirection: "row",
@@ -338,54 +345,6 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     flex: 1,
-  },
-  // Header Styles
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: colors.cardBackground,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: colors.primaryText,
-  },
-  headerActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-  selectedCount: {
-    fontSize: 14,
-    color: colors.secondaryText,
-    fontWeight: "600",
-  },
-  selectButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: colors.navActive,
-    borderWidth: 1,
-    borderColor: colors.primary,
-  },
-  selectButtonActive: {
-    backgroundColor: colors.primary,
-  },
-  selectButtonText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.primary,
-  },
-  selectButtonTextActive: {
-    color: colors.whiteText,
   },
   // Selection Actions Bar
   selectionActionsBar: {
