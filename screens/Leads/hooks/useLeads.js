@@ -1,4 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import api from "../../../conf/conf";
 import queryClient from "../../../conf/reactQuery";
 import { useSelector } from "react-redux";
@@ -85,8 +86,20 @@ export const useLeads = () => {
     // refetchInterval: 1000,
   });
 
-  // Flatten all pages of data into a single array
-  const leads = data?.pages?.flatMap((page) => page?.data?.data || []) || [];
+  // Flatten all pages of data into a single array and de-duplicate by _id
+  const rawLeads = data?.pages?.flatMap((page) => page?.data?.data || []) || [];
+  const leads = useMemo(() => {
+    const seenIds = new Set();
+    const unique = [];
+    for (const item of rawLeads) {
+      const id = String(item?._id ?? "");
+      if (!id) continue;
+      if (seenIds.has(id)) continue;
+      seenIds.add(id);
+      unique.push(item);
+    }
+    return unique;
+  }, [rawLeads]);
 
   return {
     leads,
