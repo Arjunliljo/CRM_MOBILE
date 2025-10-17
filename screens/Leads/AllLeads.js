@@ -41,11 +41,11 @@ export default function AllLeads({
     <View style={styles.container}>
       {/* Search Bar */}
       <View style={styles.searchContainer}>
-        <Ionicons name="search" size={20} color={colors.iconLight} />
+        <Ionicons name="search" size={24} color="#999999" />
         <TextInput
           style={styles.searchInput}
           placeholder="Search leads..."
-          placeholderTextColor={colors.placeholderText}
+          placeholderTextColor="rgba(7,20,29,0.6)"
           value={searchQuery}
           onChangeText={handleSearch}
         />
@@ -87,18 +87,16 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.cardBackground,
-    borderRadius: 12,
-    paddingHorizontal: 16,
+    backgroundColor: "#f7f7f7",
+    borderRadius: 74,
+    paddingHorizontal: 14,
     paddingVertical: 12,
     margin: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
   },
   searchInput: {
     flex: 1,
-    marginLeft: 12,
-    fontSize: 16,
+    marginLeft: 10,
+    fontSize: 13,
     color: colors.primaryText,
   },
   listContainer: {

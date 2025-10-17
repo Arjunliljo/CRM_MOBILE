@@ -1,12 +1,5 @@
 import React, { useState, useLayoutEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Text,
-  Modal,
-  Platform,
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../constants/colors";
