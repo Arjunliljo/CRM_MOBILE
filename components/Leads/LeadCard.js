@@ -8,7 +8,7 @@ import {
   Alert,
   Linking,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Swipeable } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../constants/colors";
@@ -20,9 +20,6 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { formatDate } from "../../helpers/dateFormater";
 import { setCurLead } from "../../global/leadSlice";
-
-const dummyImageUrl =
-  "https://static.vecteezy.com/system/resources/thumbnails/036/594/092/small/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg";
 
 const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -121,8 +118,8 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
         ]}
         onPress={handleCardPress}
       >
-        {/* Header */}
-        <View style={styles.header}>
+        {/* Header Row */}
+        <View style={styles.headerRow}>
           {isSelectionMode && (
             <View style={styles.selectionIndicator}>
               <Ionicons
@@ -132,32 +129,38 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
               />
             </View>
           )}
-          <View style={styles.avatar}>
-            <Image
-              source={{ uri: Lead?.img || dummyImageUrl }}
-              style={styles.avatarImage}
-            />
-          </View>
 
-          <View style={styles.info}>
+          <View style={styles.nameSection}>
             <Text style={styles.name}>{Lead?.name || "N/A"}</Text>
-            <Text style={styles.company}>
+            <Text style={styles.branch}>
               {getBranchName(Lead?.branch, branches) || "N/A"}
             </Text>
           </View>
+
+          <View style={styles.rightSection}>
+            <View style={styles.statusBadge}>
+              <Text style={styles.statusText}>
+                {getStatusName(Lead?.status, statuses) || "N/A"}
+              </Text>
+            </View>
+            <View style={styles.dateRow}>
+              <Ionicons
+                name="calendar-outline"
+                size={12}
+                color="rgba(7,20,29,0.6)"
+              />
+              <Text style={styles.dateText}>
+                {formatDate(Lead?.followupDate) || "N/A"}
+              </Text>
+            </View>
+          </View>
         </View>
 
-        {/* Actions Row */}
-        <View style={styles.actionsRow}>
-          <View style={styles.actionButton}>
-            <Ionicons name="flag" size={12} color={colors.primary} />
-            <Text style={styles.actionText}>
-              {getStatusName(Lead?.status, statuses) || "N/A"}
-            </Text>
-          </View>
-          <View style={styles.actionButton}>
-            <Ionicons name="flag-outline" size={12} color={colors.primary} />
-            <Text style={styles.actionText}>
+        {/* Country and Phone Row */}
+        <View style={styles.infoRow}>
+          <View style={styles.countryChip}>
+            <Text style={styles.countryFlag}>🇨🇦</Text>
+            <Text style={styles.countryText}>
               {Lead?.country ||
                 getCountryName(
                   Lead?.countries?.length > 0
@@ -168,15 +171,16 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
                 "N/A"}
             </Text>
           </View>
+
+          <View style={styles.phoneChip}>
+            <Ionicons name="call-outline" size={14} color={colors.primary} />
+            <Text style={styles.phoneText}>{Lead?.phone || "N/A"}</Text>
+          </View>
         </View>
 
-        {/* Details */}
+        {/* Expanded Details */}
         {isExpanded && (
-          <View style={styles.details}>
-            <View style={styles.detailRow}>
-              <Ionicons name="call-outline" size={16} color={colors.success} />
-              <Text style={styles.detailText}>{Lead?.phone || "N/A"}</Text>
-            </View>
+          <View style={styles.expandedDetails}>
             <View style={styles.detailRow}>
               <Ionicons name="mail-outline" size={16} color={colors.primary} />
               <Text style={styles.detailText}>{Lead?.email || "N/A"}</Text>
@@ -189,16 +193,6 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
               />
               <Text style={styles.detailText}>{Lead?.leadSource || "N/A"}</Text>
             </View>
-            <View style={styles.detailRow}>
-              <Ionicons
-                name="globe-outline"
-                size={16}
-                color={colors.secondary}
-              />
-              <Text style={styles.detailText}>
-                {formatDate(Lead?.followupDate) || "N/A"}
-              </Text>
-            </View>
           </View>
         )}
 
@@ -209,8 +203,8 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
           </Text>
           <Ionicons
             name={isExpanded ? "chevron-up" : "chevron-down"}
-            size={16}
-            color={colors.iconLight}
+            size={20}
+            color="rgba(7,20,29,0.4)"
           />
         </TouchableOpacity>
       </TouchableOpacity>
@@ -220,8 +214,8 @@ const LeadCard = ({ Lead, isSelectionMode, isSelected, onSelection }) => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: colors.cardBackground,
-    padding: 16,
+    backgroundColor: "#F7F7F7",
+    padding: 18,
     borderRadius: 16,
     marginBottom: 16,
     shadowColor: colors.shadow,
@@ -230,63 +224,93 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  header: {
+  headerRow: {
     flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 12,
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    overflow: "hidden",
-    marginRight: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  avatarImage: {
-    width: "100%",
-    height: "100%",
-  },
-  info: {
-    flex: 1,
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: colors.primaryText,
-  },
-  company: {
-    fontSize: 12,
-    color: colors.secondaryText,
-    marginTop: 2,
-  },
-  actionsRow: {
-    flexDirection: "row",
+    alignItems: "flex-start",
     justifyContent: "space-between",
     marginBottom: 12,
   },
-  actionButton: {
+  nameSection: {
     flex: 1,
+    gap: 4,
+  },
+  name: {
+    fontSize: 17,
+    fontWeight: "600",
+    color: "#000000",
+  },
+  branch: {
+    fontSize: 13,
+    fontWeight: "500",
+    color: "rgba(7,20,29,0.6)",
+  },
+  rightSection: {
+    alignItems: "flex-end",
+    gap: 6,
+  },
+  statusBadge: {
+    backgroundColor: "#00C217",
+    paddingHorizontal: 9,
+    paddingVertical: 6,
+    borderRadius: 50,
+  },
+  statusText: {
+    fontSize: 11,
+    fontWeight: "500",
+    color: "#FFFFFF",
+  },
+  dateRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.navActive,
-    marginHorizontal: 4,
-    paddingVertical: 8,
-    borderRadius: 12,
+    gap: 4,
   },
-  actionText: {
-    fontSize: 10,
-    fontWeight: "600",
-    color: colors.primaryText,
-    marginLeft: 4,
+  dateText: {
+    fontSize: 13,
+    fontWeight: "500",
+    color: "rgba(7,20,29,0.6)",
   },
-  details: {
+  infoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 12,
+  },
+  countryChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderRadius: 50,
+    gap: 6,
+  },
+  countryFlag: {
+    fontSize: 14,
+  },
+  countryText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#000000",
+  },
+  phoneChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 6,
+    paddingVertical: 4,
+    borderRadius: 40,
+    gap: 3,
+  },
+  phoneText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#000000",
+  },
+  expandedDetails: {
     borderTopWidth: 1,
     borderTopColor: colors.border,
     paddingTop: 12,
-    marginTop: 8,
+    marginTop: 4,
     gap: 8,
   },
   detailRow: {
@@ -302,11 +326,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 12,
+    marginTop: 8,
   },
   footerText: {
-    fontSize: 12,
-    color: colors.lightText,
+    fontSize: 13,
+    fontWeight: "500",
+    color: "rgba(7,20,29,0.5)",
   },
   rightSwipeContainer: {
     backgroundColor: "#25D366",
