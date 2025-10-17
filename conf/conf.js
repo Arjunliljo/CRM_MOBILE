@@ -1,11 +1,11 @@
 import axios from "axios";
 
 // Prefer env var, then Expo manifest extra, then default localhost
-const baseURL =
-  process.env.EXPO_PUBLIC_API_URL ||
-  (typeof expo !== "undefined" && expo?.manifest?.extra?.apiUrl) ||
-  "http://localhost:3000/api/v2";
-// const baseURL = "http://192.168.1.24:3000/api/v2";
+// const baseURL =
+//   process.env.EXPO_PUBLIC_API_URL ||
+//   (typeof expo !== "undefined" && expo?.manifest?.extra?.apiUrl) ||
+//   "http://localhost:3000/api/v2";
+const baseURL = "http://192.168.1.9:3000/api/v2";
 
 // In-memory auth token cache
 let __authToken = null;

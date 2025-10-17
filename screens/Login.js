@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,26 +7,22 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
   ActivityIndicator,
-  SafeAreaView,
   useWindowDimensions,
+  Image,
+  Animated,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../constants/colors";
 import api, { setAuthToken } from "../conf/conf";
 import { LinearGradient } from "expo-linear-gradient";
-import { Asset } from "expo-asset";
 import { SvgUri } from "react-native-svg";
+import { Keyboard } from "react-native";
 
-// We will load local SVGs via require() to get a URI, then render with SvgUri
-const Vector1 = require("../assets/c4c2b5f5bf242a9d1381cfbf475a231e81c29173.svg");
-const GroupBg = require("../assets/4d29e5998c01801cc124c243a3d36ffe04baf94f.svg");
-const Group1 = require("../assets/36cde60aa9ec349a8bdd4845f3e6d1379f2dc9b5.svg");
-const Group2 = require("../assets/1916e9deaa763fc308513e71647573634bae2925.svg");
-const Group3 = require("../assets/6a03039be0c69634d00a451059bea5e49bcd315d.svg");
-const Group4 = require("../assets/148780a42d4864f64b9009ae7374c6f40a6a4fe2.svg");
+// Single PNG background replacement for the decorative SVGs
+const LoginBg = require("../assets/Login_bg.png");
 const LOGO_URI =
   "https://res.cloudinary.com/ds07e7rod/image/upload/v1738836367/skymarkLogo_drgzcw.svg";
 
@@ -40,24 +36,41 @@ export default function Login() {
   const { height: screenHeight } = useWindowDimensions();
   const isSmallScreen = screenHeight < 700; // roughly iPhone SE and similar
 
-  const compact = {
-    paddingTop: isSmallScreen ? 24 : 60,
-    paddingBottom: isSmallScreen ? 16 : 40,
-    sectionGap: isSmallScreen ? 16 : 40,
-    logoSize: isSmallScreen ? 72 : 100,
-    logoGap: isSmallScreen ? 12 : 20,
-    formPadding: isSmallScreen ? 16 : 24,
-    inputPaddingV: isSmallScreen ? 10 : 12,
-    buttonMarginBottom: isSmallScreen ? 16 : 24,
-  };
-
   const { width: screenWidth } = useWindowDimensions();
 
-  // Cross-platform SVG renderer using uri from expo-asset
-  const renderSvg = (requiredAsset, width, height) => {
-    const uri = Asset.fromModule(requiredAsset).uri;
-    return <SvgUri uri={uri} width={width} height={height} />;
-  };
+  const emailInputRef = useRef(null);
+  const passwordInputRef = useRef(null);
+  const translateY = useRef(new Animated.Value(0)).current;
+
+  // Remote logo still uses SvgUri; background uses a static PNG
+
+  useEffect(() => {
+    const keyboardWillShow =
+      Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
+    const keyboardWillHide =
+      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
+
+    const showSubscription = Keyboard.addListener(keyboardWillShow, (e) => {
+      Animated.timing(translateY, {
+        toValue: -e.endCoordinates.height / 2,
+        duration: Platform.OS === "ios" ? e.duration : 250,
+        useNativeDriver: true,
+      }).start();
+    });
+
+    const hideSubscription = Keyboard.addListener(keyboardWillHide, (e) => {
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: Platform.OS === "ios" ? e.duration : 250,
+        useNativeDriver: true,
+      }).start();
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, [translateY]);
 
   const handleViewPassword = () => {
     setViewPassword(!viewPassword);
@@ -75,11 +88,9 @@ export default function Login() {
         password: password,
       });
 
+      console.log(res.data.accessToken, "token");
+
       if (res?.status === 200 || res?.status === 201) {
-        const token = res?.data?.token || res?.data?.accessToken;
-        if (token) {
-          setAuthToken(token);
-        }
         navigation.reset({ index: 0, routes: [{ name: "Main" }] });
       } else {
         setError("Login failed. Please try again.");
@@ -106,76 +117,39 @@ export default function Login() {
         end={{ x: 0, y: 0 }}
         style={styles.container}
       >
-        {/* Decorative background artwork */}
+        {/* Background artwork replaced by a single PNG */}
+        <Image
+          source={LoginBg}
+          style={{
+            position: "absolute",
+            top: 100,
+            left: 0,
+            right: 0,
+            height: pctH(40),
+            width: "100%",
+            resizeMode: "contain",
+          }}
+        />
+        {/* Top centered logo */}
         <View
           style={{
             position: "absolute",
-            top: 0,
+            top: pctH(6),
             left: 0,
             right: 0,
-            height: pctH(52),
-            overflow: "hidden",
+            alignItems: "center",
           }}
         >
-          <View
-            style={{ position: "absolute", top: pctH(18.4), left: pctW(0.5) }}
-          >
-            {renderSvg(Vector1, pctW(58), pctH(19))}
-          </View>
-          <View
-            style={{ position: "absolute", top: pctH(29.3), left: -pctW(33) }}
-          >
-            {renderSvg(GroupBg, pctW(63), pctH(12))}
-          </View>
-          <View
-            style={{ position: "absolute", top: pctH(21.6), right: -pctW(57) }}
-          >
-            {renderSvg(Group2, pctW(110), pctH(24))}
-          </View>
-          <View
-            style={{ position: "absolute", top: pctH(37.7), left: pctW(17.7) }}
-          >
-            {renderSvg(Group1, pctW(36), pctH(8))}
-          </View>
-          <View
-            style={{ position: "absolute", top: pctH(30.3), left: pctW(22.1) }}
-          >
-            {renderSvg(Group3, pctW(48), pctH(11))}
-          </View>
-          <View
-            style={{ position: "absolute", top: pctH(20.6), left: pctW(63.3) }}
-          >
-            {renderSvg(Group4, pctW(14), pctH(6))}
-          </View>
-          {/* Top centered logo */}
-          <View
-            style={{
-              position: "absolute",
-              top: pctH(6),
-              left: 0,
-              right: 0,
-              alignItems: "center",
-            }}
-          >
-            <SvgUri uri={LOGO_URI} width={pctW(60)} height={pctH(7)} />
-          </View>
+          <SvgUri uri={LOGO_URI} width={pctW(60)} height={pctH(7)} />
         </View>
 
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+        <Animated.View
+          style={{
+            flex: 1,
+            transform: [{ translateY }],
+          }}
         >
-          <ScrollView
-            style={styles.scroll}
-            contentContainerStyle={{
-              paddingTop: sheetTop,
-              minHeight: screenHeight - sheetTop,
-            }}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-            bounces={false}
-          >
+          <View style={[styles.scroll, { paddingTop: sheetTop }]}>
             {/* Bottom sheet card */}
             <View
               style={[styles.sheet, { minHeight: screenHeight - sheetTop }]}
@@ -198,6 +172,7 @@ export default function Login() {
                     <Text style={styles.fieldLabel}>Email address</Text>
                     <View style={styles.figmaInput}>
                       <TextInput
+                        ref={emailInputRef}
                         style={styles.figmaTextInput}
                         placeholder="Enter your email address"
                         placeholderTextColor={colors.placeholderText}
@@ -208,6 +183,9 @@ export default function Login() {
                         onChangeText={setEmail}
                         returnKeyType="next"
                         underlineColorAndroid="transparent"
+                        onSubmitEditing={() =>
+                          passwordInputRef.current?.focus()
+                        }
                       />
                     </View>
                   </View>
@@ -216,6 +194,7 @@ export default function Login() {
                     <Text style={styles.fieldLabel}>Password</Text>
                     <View style={styles.figmaInput}>
                       <TextInput
+                        ref={passwordInputRef}
                         style={styles.figmaTextInput}
                         placeholder="Enter your password"
                         placeholderTextColor={colors.placeholderText}
@@ -274,8 +253,8 @@ export default function Login() {
                 </View>
               </View>
             </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
+          </View>
+        </Animated.View>
       </LinearGradient>
     </SafeAreaView>
   );
@@ -304,8 +283,8 @@ const styles = StyleSheet.create({
   },
   sheetInner: {
     paddingHorizontal: 24,
-    paddingTop: 24,
-    paddingBottom: 70,
+    paddingTop: 16,
+    paddingBottom: 24,
   },
   sheetInnerCompact: {
     paddingHorizontal: 20,

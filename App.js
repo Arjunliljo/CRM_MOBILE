@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { store } from "./global/store";
 import Booktstrap from "./api/Booktstrap";
 import { ToastProvider } from "./contexts/ToastContext";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const queryClient = new QueryClient();
 
@@ -13,15 +14,17 @@ export default function App() {
   return (
     <>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <StatusBar style="auto" />
-        <Provider store={store}>
-          <QueryClientProvider client={queryClient}>
-            <ToastProvider>
-              <Booktstrap />
-              <Route />
-            </ToastProvider>
-          </QueryClientProvider>
-        </Provider>
+        <SafeAreaProvider>
+          <StatusBar style="auto" />
+          <Provider store={store}>
+            <QueryClientProvider client={queryClient}>
+              <ToastProvider>
+                <Booktstrap />
+                <Route />
+              </ToastProvider>
+            </QueryClientProvider>
+          </Provider>
+        </SafeAreaProvider>
       </GestureHandlerRootView>
     </>
   );

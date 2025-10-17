@@ -1,12 +1,7 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Text,
-  Modal,
-  SafeAreaView,
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text, Modal } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../constants/colors";
 import { useSelector } from "react-redux";
@@ -131,13 +126,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.cardBackground,
     borderTopWidth: 1,
     borderTopColor: colors.border,
-    paddingVertical: 4,
+    paddingVertical: 3,
     paddingHorizontal: 0,
   },
   tabButton: {
     flex: 1,
     alignItems: "center",
-    paddingVertical: 4,
+    paddingVertical: 3,
     paddingHorizontal: 0,
   },
   activeTabButton: { backgroundColor: colors.navActive, borderRadius: 4 },
@@ -158,7 +153,7 @@ const styles = StyleSheet.create({
   tabLabel: {
     fontSize: 8,
     color: colors.iconLight,
-    marginTop: 1,
+    marginTop: 0,
     textAlign: "center",
   },
   activeTabLabel: { color: colors.primary, fontWeight: "600" },
@@ -167,14 +162,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
     backgroundColor: colors.cardBackground,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
   closeButton: { padding: 2 },
-  modalTitle: { fontSize: 14, fontWeight: "bold", color: colors.primaryText },
+  modalTitle: { fontSize: 13, fontWeight: "bold", color: colors.primaryText },
   placeholder: { width: 24 },
   modalContent: { flex: 1 },
 });
